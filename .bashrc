@@ -148,6 +148,6 @@ if [[ $- == *i* ]]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;32m\]\$_\[\033[00m\] '
   fi
   if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-    source ~jaiap/.ble-sh/out/ble.sh
+    source /usr/share/blesh/ble.sh
   fi
 fi
