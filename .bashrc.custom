@@ -4,24 +4,15 @@ ANDROID_HOME=/opt/AndroidSDK
 FLUTTER_HOME=/opt/flutter
 PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin/:$ANDROID_HOME/platform-tools:/opt/flutter
 
+# customisations
 
 if [[ $- == *i* ]]; then
-  gcc() {
-	if [[ "$1" == *".c" ]]; then
-	    if ! [[ "$*" =~ "-o" ]]; then
-		command gcc $@ -o ${1%.c}
-	    else
-		command gcc $@
-	    fi
-	elif [[ "$1" == *".cpp" ]]; then
-	    if ! [[ "$*" =~ "-o" ]]; then
-		command g++ $@ -o ${1%.cpp}
-	    else
-		command g++ $@
-	    fi
-	fi
-  }    
-  
+  bind 'set completion-ignore-case on'
+  shopt -s autocd
+
+  HISTCONTROL=ignoreboth
+  export PIPENV_VENV_IN_PROJECT=1
+
   if [[ $EUID == 0 ]]; then
     PS1='${SUDO_USER:+(\033[01;33m$SUDO_USER\033[0m) }\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;31m\]\$_\[\033[00m\] '
   else
