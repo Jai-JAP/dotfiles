@@ -10,7 +10,7 @@
   AllowShortBlocksOnASingleLine: Always,
   AllowShortCaseLabelsOnASingleLine: false,
   AllowShortEnumsOnASingleLine: false,
-  AllowShortFunctionsOnASingleLine: Empty,
+  AllowShortFunctionsOnASingleLine: All,
   AllowShortIfStatementsOnASingleLine: AllIfsAndElse,
   AllowShortLambdasOnASingleLine: Inline,
   AllowShortLoopsOnASingleLine: true,
