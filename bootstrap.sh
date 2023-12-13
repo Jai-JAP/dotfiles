@@ -6,11 +6,39 @@ if [[ -f "~/.termux" ]]; then
   done
   exit
 else
-
-  for file in; do
+  for file in .blerc .clang-format .gitconfig; do
     ln -sf {"$(realpath .)",~}/$file
   done
 
-  echo "
-    . $(realpath .)/.custom.bashrc" >>~/.bashrc
+  for dir in modprobe.d profile.d skel xdg; do
+    sudo cp -r ./etc/$dir /etc
+  done
+
+  cp -r {./etc/skel,~}/.bashrc
+
+  sudo sed -i 's/^#MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
+
+  if ! $(grep ". $(realpath .)/.custom.bashrc" ~/.bashrc); then
+    echo -e "\n# customisations\n\n. $(realpath .)/.custom.bashrc" >>~/.bashrc
+  fi
+
+  for file in .bashrc .blerc; do
+    sudo ln -sf {/root, $HOME}/$file
+  done
+
+  sudo pacman -S --needed --noconfirm intel-media-driver libvdpau-va-gl \
+    libva-utils vdpauinfo intel-media-sdk thermald power-profiles-daemon yay
+
+  sudo systemctl enable --now thermald power-profiles-daemon
+
+  sudo update-desktop-database # global
+  update-desktop-database      # user directory
+  sudo mkinitcpio -P
+
+  echo -e "\033[33;1mManual intervention required.\033[0m"
+
+  echo -e " \033[31;1m-\033[0m Edit "/etc/{fstab, crypttab}" using the previous config files as reference"
+  echo -e " \033[31;1m-\033[0m Save your bitlocker key in "/etc/cryptsetup-keys.d/*.key" using the previous key file as reference"
+
+  echo -e "\033[32;1mAutomatic dotfiles sync successful.\033[0m\n"
 fi
