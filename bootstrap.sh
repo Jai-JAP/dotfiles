@@ -23,7 +23,7 @@ else
   fi
 
   for file in .bashrc .blerc; do
-    sudo ln -sf {/root, $HOME}/$file
+    sudo ln -sf {$HOME,/root}/$file
   done
 
   sudo pacman -S --needed --noconfirm intel-media-driver libvdpau-va-gl \
@@ -39,6 +39,7 @@ else
 
   echo -e " \033[31;1m-\033[0m Edit "/etc/{fstab, crypttab}" using the previous config files as reference"
   echo -e " \033[31;1m-\033[0m Save your bitlocker key in "/etc/cryptsetup-keys.d/*.key" using the previous key file as reference"
+  echo -e " \033[31;1m-\033[0m Previous confg files are in \033[34;1metc\033[0m subdir in current dir."
 
   echo -e "\033[32;1mAutomatic dotfiles sync successful.\033[0m\n"
 fi
