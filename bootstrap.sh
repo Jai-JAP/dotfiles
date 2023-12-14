@@ -1,24 +1,25 @@
 #!/bin/bash
 
+LOC=$(realpath $(dirname $0))
+
 if [[ -f "~/.termux" ]]; then
   for file in $(ls ./termux); do
-    ln -sf {"$(realpath ./termux)",~/.termux}/$file
+    ln -sf {$LOC/,~/.}termux/$file
   done
-  exit
 else
   for file in .blerc .clang-format .gitconfig; do
-    ln -sf {"$(realpath .)",~}/$file
+    ln -sf {$LOC,~}/$file
   done
 
   for dir in modprobe.d profile.d skel xdg; do
-    sudo cp -r ./etc/$dir /etc
+    sudo cp -r $LOC/etc/$dir /etc
   done
 
-  cp -r {./etc/skel,~}/.bashrc
+  cp {$LOC/etc/skel,~}/.bashrc
 
   sudo sed -i 's/^#MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
 
-  if ! $(grep ". $(realpath .)/.custom.bashrc" ~/.bashrc); then
+  if ! $(grep ". $LOC/.custom.bashrc" ~/.bashrc); then
     echo -e "\n# customisations\n\n. $(realpath .)/.custom.bashrc" >>~/.bashrc
   fi
 
@@ -33,12 +34,13 @@ else
 
   sudo update-desktop-database # global
   update-desktop-database      # user directory
+
   sudo mkinitcpio -P
 
-  echo -e "\033[33;1mManual intervention required.\033[0m"
+  echo -e "\n\n\033[33;1mManual intervention required.\033[0m"
 
-  echo -e " \033[31;1m-\033[0m Edit "/etc/{fstab, crypttab}" using the previous config files as reference"
-  echo -e " \033[31;1m-\033[0m Save your bitlocker key in "/etc/cryptsetup-keys.d/*.key" using the previous key file as reference"
+  echo -e " \033[31;1m-\033[0m Edit \"\033[34;1m/etc/{fstab,crypttab}\033[0m\" using the previous config files as reference"
+  echo -e " \033[31;1m-\033[0m Save your bitlocker key in \"\033[34;1m/etc/cryptsetup-keys.d/*.key\033[34;1m\" using the previous key file as reference"
   echo -e " \033[31;1m-\033[0m Previous confg files are in \033[34;1metc\033[0m subdir in current dir."
 
   echo -e "\033[32;1mAutomatic dotfiles sync successful.\033[0m\n"
