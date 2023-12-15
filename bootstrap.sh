@@ -20,7 +20,7 @@ else
   sudo sed -i 's/^#MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
 
   if ! $(grep ". $LOC/.custom.bashrc" ~/.bashrc); then
-    echo -e "\n# customisations\n\n. $(realpath .)/.custom.bashrc" >>~/.bashrc
+    echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
   fi
 
   for file in .bashrc .blerc; do
