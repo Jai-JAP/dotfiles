@@ -12,7 +12,9 @@ else
   done
 
   for dir in modprobe.d profile.d skel xdg; do
-    sudo cp -r $LOC/etc/$dir /etc
+    for file in $(ls -A $LOC/etc/$dir); do
+      sudo ln -sf {$LOC,}/etc/$dir/$file
+    done
   done
 
   cp {$LOC/etc/skel,~}/.bashrc
