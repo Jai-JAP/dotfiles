@@ -1,10 +1,11 @@
 {
-  "Alt-/": "lua:comment.comment",
+  "Alt-/": "None",
   "Alt-Backspace": "None",
   "Alt-CtrlH": "None",
   "Alt-MouseLeft": "MouseMultiCursor",
   "Alt-Shift-Down": "None",
   "Alt-Shift-Up": "None",
+  "Ctrl-/": "lua:comment.comment",
   "Ctrl-Delete": "DeleteWordRight",
   "Ctrl-Shift-Down": "SpawnMultiCursorDown",
   "Ctrl-Shift-Up": "SpawnMultiCursorUp",
