@@ -1,5 +1,10 @@
-ble-bind -f 'C-h' kill-backward-eword
-ble-import contrib/prompt-git
-bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}'
+if [[ "$TERM_PROGRAM" != "vscode" ]]; then
+  ble-import contrib/prompt-git
+  bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}'
+
+  ble-bind -f 'C-h' delete-backward-cword
+  ble-bind -m emacs -f 'C-w' ''
+fi
+
 bleopt edit_vbell= decode_error_char_vbell= decode_error_cseq_vbell= decode_error_kseq_vbell=
 ble-face -s auto_complete fg=240

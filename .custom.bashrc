@@ -1,8 +1,4 @@
 # customisations
-# HISTCONTROL=ignoreboth
-# ANDROID_HOME=/opt/AndroidSDK
-# FLUTTER_HOME=/opt/flutter
-# PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin/:$ANDROID_HOME/platform-tools:/opt/flutter
 
 if [[ $- == *i* ]]; then
   bind 'set completion-ignore-case on'
@@ -20,7 +16,7 @@ if [[ $- == *i* ]]; then
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;32m\]\$_\[\033[00m\] '
   fi
 
-  if [[ "$TERM_PROGRAM" != "vscode" ]]; then
+  # if [[ "$TERM_PROGRAM" != "vscode" ]]; then
     . /usr/share/blesh/ble.sh
-  fi
+  # fi
 fi

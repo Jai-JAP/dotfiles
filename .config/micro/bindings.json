@@ -1,0 +1,14 @@
+{
+  "Alt-/": "lua:comment.comment",
+  "Alt-Backspace": "None",
+  "Alt-CtrlH": "None",
+  "Alt-MouseLeft": "MouseMultiCursor",
+  "Alt-Shift-Down": "None",
+  "Alt-Shift-Up": "None",
+  "Ctrl-Delete": "DeleteWordRight",
+  "Ctrl-Shift-Down": "SpawnMultiCursorDown",
+  "Ctrl-Shift-Up": "SpawnMultiCursorUp",
+  "Ctrl-x": "Cut|CutLine",
+  "CtrlUnderscore": "None",
+  "OldBackspace": "DeleteWordLeft"
+}
