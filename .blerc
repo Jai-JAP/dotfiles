@@ -4,6 +4,8 @@ if [[ "$TERM_PROGRAM" != "vscode" ]]; then
 
   ble-bind -f 'C-h' delete-backward-cword
   ble-bind -m emacs -f 'C-w' ''
+else
+  ble-bind -m emacs -f 'C-w' delete-backward-cword
 fi
 
 bleopt edit_vbell= decode_error_char_vbell= decode_error_cseq_vbell= decode_error_kseq_vbell=
