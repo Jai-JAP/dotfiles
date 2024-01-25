@@ -17,17 +17,24 @@ if [[ -d "$HOME/.termux" ]]; then
     fi
   done
 
-else
+  termux-reload-settings
 
-  for file in .blerc .clang-format .gitconfig; do
+  echo -ne "\033[33;1m ->\033[0m "
+  if [[ ! -d "$HOME/.config/micro" ]]; then
+    mkdir -pv "$HOME/.config/micro"
+  else
+    echo "'~/.config/micro' exists"
+  fi
+  for file in $(ls "$LOC/.config/micro"); do
     echo -ne "\033[33;1m ->\033[0m "
-    if [[ ! -L "$HOME/$file" ]]; then
-      ln -svf {"$LOC","$HOME"}/"$file"
+    if [[ ! -L "$HOME/.config/micro/$file" ]]; then
+      ln -svf {"$LOC","$HOME"}/".config/micro/$file"
     else
-      echo "'~/$file' exists"
+      echo "'~/config/micro/$file' exists"
     fi
   done
-  echo
+
+else
 
   for file in $(ls -A "$LOC/.config"); do
     echo -ne "\033[33;1m ->\033[0m "
@@ -73,6 +80,7 @@ else
   else
     echo "'/etc/pacman.d/hooks' exists"
   fi
+
   for hook in $(ls "$LOC/etc/pacman.d/hooks"); do
     echo -ne "\033[33;1m ->\033[0m "
     if [[ ! -L "/etc/pacman.d/hooks/$hook" ]]; then
@@ -101,14 +109,6 @@ else
     sudo mkinitcpio -P
   else
     echo "'/etc/mkinitcpio.conf' already upto date"
-  fi
-  echo
-
-  if ! $(grep ". $LOC/.custom.bashrc" $HOME/.bashrc); then
-    echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
-    echo -e "\033[33;1m ->\033[0m '~/.bashrc' updated to add customizations"
-  else
-    echo -e "\033[33;1m ->\033[0m '~/.bashrc' already has customizations applied"
   fi
   echo
 
@@ -143,3 +143,21 @@ else
   fi
 
 fi
+
+for file in .blerc .clang-format .gitconfig; do
+  echo -ne "\033[33;1m ->\033[0m "
+  if [[ ! -L "$HOME/$file" ]]; then
+    ln -svf {"$LOC","$HOME"}/"$file"
+  else
+    echo "'~/$file' exists"
+  fi
+done
+echo
+
+if ! $(grep ". $LOC/.custom.bashrc" $HOME/.bashrc); then
+  echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
+  echo -e "\033[33;1m ->\033[0m '~/.bashrc' updated to add customizations"
+else
+  echo -e "\033[33;1m ->\033[0m '~/.bashrc' already has customizations applied"
+fi
+echo
