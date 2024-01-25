@@ -17,6 +17,6 @@ if [[ $- == *i* ]]; then
   fi
 
   if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-    . /usr/share/blesh/ble.sh
+    . "${PREFIX:-/usr}/share/blesh/ble.sh"
   fi
 fi
