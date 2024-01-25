@@ -6,10 +6,10 @@ hash() {
 
 LOC=$(realpath $(dirname $0))
 
-if [[ -f "$HOME/.termux" ]]; then
+if [[ -d "$HOME/.termux" ]]; then
 
   for file in $(ls "$LOC/termux"); do
-    echo -n "\033[33;1m ->\033[0m "
+    echo -ne "\033[33;1m ->\033[0m "
     if [[ ! -L "$HOME/.termux/$file" ]]; then
       ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
     else
