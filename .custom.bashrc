@@ -16,7 +16,9 @@ if [[ $- == *i* ]]; then
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;32m\]\$_\[\033[00m\] '
   fi
 
-  if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-    . "${PREFIX:-/usr}/share/blesh/ble.sh"
+  if [[ "$PREFIX" =~ "com.termux" ]]; then
+    . "$HOME/.local/ble.sh/ble.sh"
+  elif [[ "$TERM_PROGRAM" != "vscode" ]]; then
+    . "/usr/share/blesh/ble.sh"
   fi
 fi

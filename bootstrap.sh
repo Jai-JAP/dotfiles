@@ -6,9 +6,39 @@ hash() {
 
 LOC=$(realpath $(dirname $0))
 
-if [[ -d "$HOME/.termux" ]]; then
+if [[ "$PREFIX" =~ "com.termux" ]]; then
 
-  for file in $(ls "$LOC/termux"); do
+  if ! command -v git || ! command -v gmake || ! command -v gawk; then
+    echo -e "\033[33;1m -> \033[0m Installing packages."
+    pkg install git make gawk
+  fi
+
+  for file in $(ls "$LOC/termux/etc"); do
+    echo -ne "\033[33;1m ->\033[0m "
+    if [[ -d "$LOC/termux/etc/$file" ]]; then
+      if [[ ! -d "$PREFIX/etc/$file" ]]; then
+        mkdir -pv "$PREFIX/etc/$file"
+      else
+        echo "'$PREFIX/etc/$file' exists"
+      fi
+      for _file in $(ls -A "$LOC/termux/etc/$file"); do
+        echo -ne "\033[33;1m ->\033[0m "
+        if [[ ! -L "$PREFIX/etc/$file/$_file" ]]; then
+          ln -svf {"$LOC/termux","$PREFIX"}/"etc/$file/$_file"
+        else
+          echo "'$PREFIX/etc/$file/$_file' exists"
+        fi
+      done
+    elif [[ -f "$LOC/termux/etc/$file" ]]; then
+      if [[ ! -L "$PREFIX/etc/$file" ]]; then
+        ln -svf {"$LOC/termux","$PREFIX"}/"etc/$file"
+      else
+        echo "'$PREFIX/etc/$file' exists"
+      fi
+    fi
+  done
+
+  for file in $(ls "$LOC/termux" | grep -v "etc"); do
     echo -ne "\033[33;1m ->\033[0m "
     if [[ ! -L "$HOME/.termux/$file" ]]; then
       ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
