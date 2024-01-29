@@ -7,19 +7,19 @@ hash() {
 create_dirs() {
   find -mindepth 1 -type d \( \
     \( -exec test ! -d "$1/{}" \; \
-      -exec mkdir -pv "$1/{}" \; \) \
+    -exec mkdir -pv "$1/{}" \; \) \
     -o \
-      -exec echo "'$1/{}' exists" \; \
-  \)    
+    -exec echo "'$1/{}' exists" \; \
+    \)
 }
 
 link_files() {
   find -mindepth 1 -type f \( \
     \( -exec test ! -L "$2/{}" \; \
-      -exec ln -svf "$1/{}" "$2/{}" \; \) \
+    -exec ln -svf "$1/{}" "$2/{}" \; \) \
     -o \
-      -exec echo "'$2/{}' exists" \; \
-  \)
+    -exec echo "'$2/{}' exists" \; \
+    \)
 }
 
 process_configs() {
@@ -36,16 +36,16 @@ process_root_configs() {
 LOC=$(realpath $(dirname $0))
 
 if [[ "$PREFIX" =~ "com.termux" ]]; then
-  if ! command -v git || ! command -v gmake || ! command -v gawk || ! command -v micro; then
+  if ! command -v gmake || ! command -v gawk || ! command -v micro; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
-    pkg install git make gawk micro
+    pkg install make gawk micro
   fi
 
   process_configs {"$LOC/termux","$PREFIX"}/"etc"
   termux-reload-settings
   echo
 
-  process_configs {"$LOC","$HOME"}/".config/micro" 
+  process_configs {"$LOC","$HOME"}/".config/micro"
   echo
 
 else
@@ -97,7 +97,7 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   sudo pacman -S --needed --noconfirm intel-media-driver libvdpau-va-gl \
-    libva-utils vdpauinfo intel-media-sdk thermald power-profiles-daemon yay git gh 2>/dev/null
+    libva-utils vdpauinfo intel-media-sdk thermald power-profiles-daemon yay micro 2>/dev/null
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
