@@ -96,8 +96,14 @@ else
   echo
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  sudo pacman -S --needed --noconfirm intel-media-driver libvdpau-va-gl \
-    libva-utils vdpauinfo intel-media-sdk thermald power-profiles-daemon yay micro 2>/dev/null
+  sudo pacman -S --needed --noconfirm yay
+  yay -S --needed --noconfirm intel-media-driver libvdpau-va-gl libva-utils \
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro \
+    blesh-git mkinitcpio-firmware visual-studio-code-bin webcord-bin 2>/dev/null
+  if yay -Qq | grep -c gnome-desktop >/dev/null; then
+    yay -S --needed --noconfirm gnome-shell-extension-blur-my-shell \
+      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano 2>/dev/null
+  fi
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
