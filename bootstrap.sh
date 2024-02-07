@@ -55,7 +55,6 @@ else
 
   for dir in modprobe.d profile.d skel xdg; do
     for file in $(ls -A "$LOC/etc/$dir"); do
-      echo -ne "\033[33;1m ->\033[0m "
       if [[ ! -L "/etc/$dir/$file" ]]; then
         sudo ln -svf {"$LOC",}/"etc/$dir/$file"
       else
@@ -96,14 +95,14 @@ else
   echo
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  sudo pacman -S --needed --noconfirm yay
+  sudo pacman -S --needed --noconfirm yay 1>/dev/null 2>/dev/null
+  if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
+    GNOME_PKGS="gnome-shell-extension-blur-my-shell \
+      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
+  fi
   yay -S --needed --noconfirm intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald power-profiles-daemon micro \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin webcord-bin 2>/dev/null
-  if yay -Qq | grep -c gnome-desktop >/dev/null; then
-    yay -S --needed --noconfirm gnome-shell-extension-blur-my-shell \
-      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano 2>/dev/null
-  fi
+    blesh-git mkinitcpio-firmware visual-studio-code-bin webcord-bin $GNOME_PKGS 2>/dev/null
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
@@ -124,7 +123,6 @@ else
 fi
 
 for file in .blerc .clang-format .gitconfig; do
-  echo -ne "\033[33;1m ->\033[0m "
   if [[ ! -L "$HOME/$file" ]]; then
     ln -svf {"$LOC","$HOME"}/"$file"
   else
@@ -135,8 +133,8 @@ echo
 
 if ! $(grep ". $LOC/.custom.bashrc" $HOME/.bashrc); then
   echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
-  echo -e "\033[33;1m ->\033[0m '~/.bashrc' updated to add customizations"
+  echo -e "'~/.bashrc' updated to add customizations"
 else
-  echo -e "\033[33;1m ->\033[0m '~/.bashrc' already has customizations applied"
+  echo -e "'~/.bashrc' already has customizations applied"
 fi
 echo
