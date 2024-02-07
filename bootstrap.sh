@@ -1,7 +1,13 @@
 #!/bin/bash
 
+PASSWORD=""
+
 hash() {
   echo $(sha256sum "$1" | cut -d' ' -f1)
+}
+
+sudo() {
+  command sudo -S <<< "$PASSWORD" $@
 }
 
 create_dirs() {
@@ -30,7 +36,7 @@ process_configs() {
 }
 
 process_root_configs() {
-  sudo bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2"
+  command sudo -S <<< "$PASSWORD" bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2"
 }
 
 LOC=$(realpath $(dirname $0))
@@ -49,7 +55,9 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
   echo
 
 else
-
+  read -p "Password: " -s PASSWORD
+  echo
+  
   process_configs {"$LOC","$HOME"}/".config"
   echo
 
