@@ -94,7 +94,7 @@ else
   echo
 
   for file in .bashrc .blerc; do
-    if ! $(sudo test -L "/root/$file"); then
+    if ! $(command sudo -S <<< "$PASSWORD" test -L "/root/$file"); then
       sudo ln -svf {"$HOME",/root}/"$file"
     else
       echo -e "'/root/$file' exists"
@@ -108,9 +108,9 @@ else
     GNOME_PKGS="gnome-shell-extension-blur-my-shell \
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
   fi
-  yay -S --needed --noconfirm intel-media-driver libvdpau-va-gl libva-utils \
+  yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald power-profiles-daemon micro \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin webcord-bin $GNOME_PKGS 2>/dev/null
+    blesh-git mkinitcpio-firmware visual-studio-code-bin $GNOME_PKGS 2>/dev/null
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
