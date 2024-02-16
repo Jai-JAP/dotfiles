@@ -8,9 +8,15 @@ LOC=$(realpath $(dirname $0))
 
 if [[ "$PREFIX" =~ "com.termux" ]]; then
 
-  if ! command -v git || ! command -v gmake || ! command -v gawk; then
+  if $(command -v git >/dev/null && command -v gmake >/dev/null && command -v gawk >/dev/null); then
     echo -e "\033[33;1m -> \033[0m Installing packages."
     pkg install git make gawk
+  fi
+
+  if [[ ! -d "$PREFIX/home/.local/share/blesh" ]]; then
+    git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "$PREFIX/tmp/ble.sh"
+    make -C "$PREFIX/tmp/ble.sh" install PREFIX=~/.local
+    rm -rvf "$PREFIX/tmp/ble.sh"
   fi
 
   for file in $(ls "$LOC/termux/etc"); do

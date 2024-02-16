@@ -1,6 +1,8 @@
 if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-  ble-import contrib/prompt-git
-  bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}'
+  if [[ ! "$PREFIX" =~ "com.termux" ]]; then
+    ble-import contrib/prompt-git
+    bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}'
+  fi
 
   ble-bind -f 'C-h' delete-backward-cword
   ble-bind -m emacs -f 'C-w' ''

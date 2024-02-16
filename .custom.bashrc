@@ -17,7 +17,7 @@ if [[ $- == *i* ]]; then
   fi
 
   if [[ "$PREFIX" =~ "com.termux" ]]; then
-    . "$HOME/.local/ble.sh/ble.sh"
+    . "$HOME/.local/share/blesh/ble.sh"
   elif [[ "$TERM_PROGRAM" != "vscode" ]]; then
     . "/usr/share/blesh/ble.sh"
   fi
