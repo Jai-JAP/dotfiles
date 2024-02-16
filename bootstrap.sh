@@ -1,16 +1,50 @@
 #!/bin/bash
 
+PASSWORD=""
+
 hash() {
   echo $(sha256sum "$1" | cut -d' ' -f1)
+}
+
+sudo() {
+  command sudo -S <<< "$PASSWORD" $@
+}
+
+create_dirs() {
+  find -mindepth 1 -type d \( \
+    \( -exec test ! -d "$1/{}" \; \
+    -exec mkdir -pv "$1/{}" \; \) \
+    -o \
+    -exec echo "'$1/{}' exists" \; \
+    \)
+}
+
+link_files() {
+  find -mindepth 1 -type f \( \
+    \( -exec test ! -L "$2/{}" \; \
+    -exec ln -svf "$1/{}" "$2/{}" \; \) \
+    -o \
+    -exec echo "'$2/{}' exists" \; \
+    \)
+}
+
+process_configs() {
+  pushd "$1" >/dev/null
+  create_dirs "$2"
+  link_files "$1" "$2"
+  popd >/dev/null
+}
+
+process_root_configs() {
+  command sudo -S <<< "$PASSWORD" bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2"
 }
 
 LOC=$(realpath $(dirname $0))
 
 if [[ "$PREFIX" =~ "com.termux" ]]; then
-
-  if $(command -v git >/dev/null && command -v gmake >/dev/null && command -v gawk >/dev/null); then
+  if ! command -v gmake || ! command -v gawk || ! command -v micro; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
-    pkg install git make gawk
+    pkg install make gawk micro
   fi
 
   if [[ ! -d "$PREFIX/home/.local/share/blesh" ]]; then
@@ -19,88 +53,22 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
     rm -rvf "$PREFIX/tmp/ble.sh"
   fi
 
-  for file in $(ls "$LOC/termux/etc"); do
-    echo -ne "\033[33;1m ->\033[0m "
-    if [[ -d "$LOC/termux/etc/$file" ]]; then
-      if [[ ! -d "$PREFIX/etc/$file" ]]; then
-        mkdir -pv "$PREFIX/etc/$file"
-      else
-        echo "'$PREFIX/etc/$file' exists"
-      fi
-      for _file in $(ls -A "$LOC/termux/etc/$file"); do
-        echo -ne "\033[33;1m ->\033[0m "
-        if [[ ! -L "$PREFIX/etc/$file/$_file" ]]; then
-          ln -svf {"$LOC/termux","$PREFIX"}/"etc/$file/$_file"
-        else
-          echo "'$PREFIX/etc/$file/$_file' exists"
-        fi
-      done
-    elif [[ -f "$LOC/termux/etc/$file" ]]; then
-      if [[ ! -L "$PREFIX/etc/$file" ]]; then
-        ln -svf {"$LOC/termux","$PREFIX"}/"etc/$file"
-      else
-        echo "'$PREFIX/etc/$file' exists"
-      fi
-    fi
-  done
-
-  for file in $(ls "$LOC/termux" | grep -v "etc"); do
-    echo -ne "\033[33;1m ->\033[0m "
-    if [[ ! -L "$HOME/.termux/$file" ]]; then
-      ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
-    else
-      echo "~/.termux/$file exists"
-    fi
-  done
-
+  process_configs {"$LOC/termux","$PREFIX"}/"etc"
   termux-reload-settings
+  echo
 
-  echo -ne "\033[33;1m ->\033[0m "
-  if [[ ! -d "$HOME/.config/micro" ]]; then
-    mkdir -pv "$HOME/.config/micro"
-  else
-    echo "'~/.config/micro' exists"
-  fi
-  for file in $(ls "$LOC/.config/micro"); do
-    echo -ne "\033[33;1m ->\033[0m "
-    if [[ ! -L "$HOME/.config/micro/$file" ]]; then
-      ln -svf {"$LOC","$HOME"}/".config/micro/$file"
-    else
-      echo "'~/config/micro/$file' exists"
-    fi
-  done
+  process_configs {"$LOC","$HOME"}/".config/micro"
+  echo
 
 else
-
-  for file in $(ls -A "$LOC/.config"); do
-    echo -ne "\033[33;1m ->\033[0m "
-    if [[ -d "$LOC/.config/$file" ]]; then
-      if [[ ! -d "$HOME/.config/$file" ]]; then
-        mkdir -pv "$HOME/.config/$file"
-      else
-        echo "'~/.config/$file' exists"
-      fi
-      for _file in $(ls -A "$LOC/.config/$file"); do
-        echo -ne "\033[33;1m ->\033[0m "
-        if [[ ! -L "$HOME/.config/$file/$_file" ]]; then
-          ln -svf {"$LOC","$HOME"}/".config/$file/$_file"
-        else
-          echo "'~/config/$file/$_file' exists"
-        fi
-      done
-    elif [[ -f "$LOC/.config/$file" ]]; then
-      if [[ ! -L "$HOME/.config/$file" ]]; then
-        ln -svf {"$LOC","$HOME"}/".config/$file"
-      else
-        echo "'~/.config/$file' exists"
-      fi
-    fi
-  done
+  read -p "Password: " -s PASSWORD
+  echo
+  
+  process_configs {"$LOC","$HOME"}/".config"
   echo
 
   for dir in modprobe.d profile.d skel xdg; do
     for file in $(ls -A "$LOC/etc/$dir"); do
-      echo -ne "\033[33;1m ->\033[0m "
       if [[ ! -L "/etc/$dir/$file" ]]; then
         sudo ln -svf {"$LOC",}/"etc/$dir/$file"
       else
@@ -110,35 +78,18 @@ else
   done
   echo
 
-  echo -ne "\033[33;1m ->\033[0m "
-  if [[ ! -d "/etc/pacman.d/hooks" ]]; then
-    sudo mkdir -pv /etc/pacman.d/hooks
-  else
-    echo "'/etc/pacman.d/hooks' exists"
-  fi
-
-  for hook in $(ls "$LOC/etc/pacman.d/hooks"); do
-    echo -ne "\033[33;1m ->\033[0m "
-    if [[ ! -L "/etc/pacman.d/hooks/$hook" ]]; then
-      sudo ln -svf {"$LOC",}/"etc/pacman.d/hooks/$hook"
-    else
-      echo "'/etc/pacman.d/hooks/$hook' exists"
-    fi
-  done
+  process_root_configs {"$LOC",}/"etc/pacman.d/hooks"
   echo
 
   if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") ]]; then
     sudo rm /etc/skel/.bashrc
-    echo -ne "\033[33;1m ->\033[0m "
     sudo cp -v {"$LOC",}/etc/skel/.bashrc
-    echo -ne "\033[33;1m ->\033[0m "
     cp -v {"$LOC/etc/skel","$HOME"}/.bashrc
   else
-    echo -e "\033[33;1m ->\033[0m '/etc/skel/.bashrc' & '~/.bashrc' already upto date"
+    echo -e "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
   fi
   echo
 
-  echo -ne "\033[33;1m ->\033[0m "
   if $(grep "MODULES=()" /etc/mkinitcpio.conf); then
     sudo sed -i 's/MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
     echo "'/etc/mkinitcpio.conf' updated"
@@ -149,18 +100,23 @@ else
   echo
 
   for file in .bashrc .blerc; do
-    if ! $(sudo test -L "/root/$file"); then
-      echo -ne "\033[33;1m ->\033[0m "
+    if ! command sudo -S <<< "$PASSWORD" test -L "/root/$file"; then
       sudo ln -svf {"$HOME",/root}/"$file"
     else
-      echo -e "\033[33;1m ->\033[0m '/root/$file' exists"
+      echo -e "'/root/$file' exists"
     fi
   done
   echo
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  sudo pacman -S --needed --noconfirm intel-media-driver libvdpau-va-gl \
-    libva-utils vdpauinfo intel-media-sdk thermald power-profiles-daemon yay 2>/dev/null
+  sudo pacman -S --needed --noconfirm yay 1>/dev/null 2>/dev/null
+  if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
+    GNOME_PKGS="gnome-shell-extension-blur-my-shell \
+      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
+  fi
+  yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro \
+    blesh-git mkinitcpio-firmware visual-studio-code-bin $GNOME_PKGS 2>/dev/null
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
@@ -181,7 +137,6 @@ else
 fi
 
 for file in .blerc .clang-format .gitconfig; do
-  echo -ne "\033[33;1m ->\033[0m "
   if [[ ! -L "$HOME/$file" ]]; then
     ln -svf {"$LOC","$HOME"}/"$file"
   else
@@ -192,8 +147,8 @@ echo
 
 if ! $(grep ". $LOC/.custom.bashrc" $HOME/.bashrc); then
   echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
-  echo -e "\033[33;1m ->\033[0m '~/.bashrc' updated to add customizations"
+  echo -e "'~/.bashrc' updated to add customizations"
 else
-  echo -e "\033[33;1m ->\033[0m '~/.bashrc' already has customizations applied"
+  echo -e "'~/.bashrc' already has customizations applied"
 fi
 echo
