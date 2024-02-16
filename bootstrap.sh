@@ -53,8 +53,18 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
     rm -rvf "$PREFIX/tmp/ble.sh"
   fi
 
-  process_configs {"$LOC/termux","$PREFIX"}/"etc"
+  for file in $(ls "$LOC/termux" | grep -v "etc"); do
+  echo -ne "\033[33;1m ->\033[0m "
+    if [[ ! -L "$HOME/.termux/$file" ]]; then
+      ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
+    else
+      echo "~/.termux/$file exists"
+    fi
+  done
   termux-reload-settings
+  echo
+
+  process_configs {"$LOC/termux","$PREFIX"}/"etc"
   echo
 
   process_configs {"$LOC","$HOME"}/".config/micro"
