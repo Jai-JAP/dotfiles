@@ -73,6 +73,12 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
 else
   read -p "Password: " -s PASSWORD
   echo
+  sudo -k
+  while ! sudo -S <<< $PASSWORD true &>/dev/null; do
+    read -p "Incorrect Password, Try again: " -s PASSWORD
+    echo
+  done     
+  echo
   
   process_configs {"$LOC","$HOME"}/".config"
   echo
@@ -118,8 +124,11 @@ else
   done
   echo
 
+  echo -e "\033[33;1mInstalling \033[32;1myay\033[33;1m package manager...\033[0m"
+  sudo pacman -S --needed --noconfirm yay 2>/dev/null
+  echo
+  
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  sudo pacman -S --needed --noconfirm yay 1>/dev/null 2>/dev/null
   if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
     GNOME_PKGS="gnome-shell-extension-blur-my-shell \
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
