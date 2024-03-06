@@ -5,11 +5,11 @@
   "Alt-MouseLeft": "MouseMultiCursor",
   "Alt-Shift-Down": "None",
   "Alt-Shift-Up": "None",
-  "Ctrl-/": "lua:comment.comment",
+  "Ctrl-Underscore": "lua:comment.comment",
   "Ctrl-Delete": "DeleteWordRight",
   "Ctrl-Shift-Down": "SpawnMultiCursorDown",
   "Ctrl-Shift-Up": "SpawnMultiCursorUp",
   "Ctrl-x": "Cut|CutLine",
-  "CtrlUnderscore": "None",
+  "Ctrl-k": "None",
   "OldBackspace": "DeleteWordLeft"
 }
