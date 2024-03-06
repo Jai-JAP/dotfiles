@@ -1,14 +1,31 @@
 if [[ "$TERM_PROGRAM" != "vscode" ]]; then
   if [[ ! "$PREFIX" =~ "com.termux" ]]; then
     ble-import contrib/prompt-git
-    bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}'
+    bleopt prompt_rps1='\q{contrib/git-branch} \q{contrib/git-hash}' prompt_rps1_transient=1
   fi
 
   ble-bind -f 'C-h' delete-backward-cword
   ble-bind -m emacs -f 'C-w' ''
 else
+  ble-bind -f 'C-h' ''
   ble-bind -m emacs -f 'C-w' delete-backward-cword
 fi
 
-bleopt edit_vbell= decode_error_char_vbell= decode_error_cseq_vbell= decode_error_kseq_vbell=
-ble-face -s auto_complete fg=240
+bleopt edit_vbell= \
+  decode_error_char_vbell= \
+  decode_error_cseq_vbell= \
+  decode_error_kseq_vbell=
+
+ble-face auto_complete='fg=240' \
+  command_builtin='fg=86' \
+  command_builtin_dot='fg=86' \
+  syntax_quotation='fg=124,bold' \
+  syntax_quoted='fg=136,bold' \
+  syntax_delimiter='fg=88,bold' \
+  syntax_function_name='fg=108,bold'
+
+bleopt prompt_ps1_final="\g{bold,fg=70}🠶🡆  "
+
+bleopt indent_offset=2 indent_tabs=0
+blehook CHPWD="echo -ne '\Uf024b ➞ \033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -e '\033[0m'"
+blehook POSTEXEC="echo ''" # Separate command outputs
