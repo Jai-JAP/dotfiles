@@ -19,6 +19,7 @@ bleopt edit_vbell= \
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
   command_builtin_dot='fg=86' \
+  command_function='fg=108,bold' \
   syntax_quotation='fg=124,bold' \
   syntax_quoted='fg=136,bold' \
   syntax_delimiter='fg=88,bold' \
