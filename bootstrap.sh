@@ -76,7 +76,7 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
   echo
 
 else
-  read -p "Password: " -s PASSWORD
+  read -p "[sudo] Password: " -s PASSWORD
   echo
   sudo -k
   while ! sudo -S <<< $PASSWORD true &>/dev/null; do
@@ -139,7 +139,7 @@ else
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
   fi
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro \
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code\
     blesh-git mkinitcpio-firmware visual-studio-code-bin $GNOME_PKGS 2>/dev/null
   echo
 

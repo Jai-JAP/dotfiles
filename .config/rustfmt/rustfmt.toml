@@ -1,0 +1,18 @@
+tab_spaces = 2
+brace_style = "PreferSameLine"
+combine_control_expr = false
+wrap_comments = true
+fn_args_layout = "Compressed"
+fn_single_line = true
+force_multiline_blocks = true
+format_code_in_doc_comments = true
+format_macro_matchers = true
+format_strings = true
+hex_literal_case = "Lower"
+imports_layout = "Vertical"
+imports_granularity = "Crates"
+newline_style = "Unix"
+normalize_comments = true
+normalize_doc_attributes = true
+trailing_comma = "Never"
+
