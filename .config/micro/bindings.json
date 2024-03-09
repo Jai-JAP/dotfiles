@@ -5,11 +5,13 @@
   "Alt-MouseLeft": "MouseMultiCursor",
   "Alt-Shift-Down": "None",
   "Alt-Shift-Up": "None",
+  "Alt-z": "Redo",
   "Ctrl-Underscore": "lua:comment.comment",
   "Ctrl-Delete": "DeleteWordRight",
   "Ctrl-Shift-Down": "SpawnMultiCursorDown",
   "Ctrl-Shift-Up": "SpawnMultiCursorUp",
   "Ctrl-x": "Cut|CutLine",
   "Ctrl-k": "None",
+  "Ctrl-y": "None",
   "OldBackspace": "DeleteWordLeft"
 }
