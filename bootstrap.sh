@@ -46,12 +46,17 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
     pkg install make gawk micro
   fi
+  echo
 
-  if [[ ! -d "$PREFIX/home/.local/share/blesh" ]]; then
+  if [[ ! -d "$HOME/.local/share/blesh" ]]; then
+    echo -e "\033[33;1m -> \033[0m Installing ble.sh"
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "$PREFIX/tmp/ble.sh"
-    make -C "$PREFIX/tmp/ble.sh" install PREFIX=~/.local
+    make -C "$PREFIX/tmp/ble.sh" install PREFIX="$HOME/.local"
     rm -rvf "$PREFIX/tmp/ble.sh"
+  else
+      echo -e "\033[33;1m -> \033[0m ble.sh already installed"
   fi
+  echi
 
   for file in $(ls "$LOC/termux" | grep -v "etc"); do
   echo -ne "\033[33;1m ->\033[0m "
