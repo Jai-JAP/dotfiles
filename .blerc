@@ -17,7 +17,8 @@ bleopt edit_vbell= \
   decode_error_cseq_vbell= \
   decode_error_kseq_vbell= \
   prompt_ruler=empty-line \
-  tab_width=2
+  tab_width=2 \
+  edit_magic_accept=autocd
 
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
@@ -36,3 +37,4 @@ blehook CHPWD="echo -ne '\Uf024b ➞ \033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo
 ble/function#advice around ble/widget/default/accept-line '
   ble-edit/content/clear-arg
   [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
+
