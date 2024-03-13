@@ -140,7 +140,7 @@ else
   fi
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin chromium $GNOME_PKGS 2>/dev/null
+    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
