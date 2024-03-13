@@ -7,7 +7,7 @@ hash() {
 }
 
 sudo() {
-  command sudo -S <<< "$PASSWORD" $@
+  command sudo -S $@ <<<"$PASSWORD"
 }
 
 create_dirs() {
@@ -36,7 +36,7 @@ process_configs() {
 }
 
 process_root_configs() {
-  command sudo -S <<< "$PASSWORD" bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2"
+  command sudo -S bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2" <<<"$PASSWORD"
 }
 
 LOC=$(realpath $(dirname $0))
@@ -54,12 +54,12 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
     make -C "$PREFIX/tmp/ble.sh" install PREFIX="$HOME/.local"
     rm -rvf "$PREFIX/tmp/ble.sh"
   else
-      echo -e "\033[33;1m -> \033[0m ble.sh already installed"
+    echo -e "\033[33;1m -> \033[0m ble.sh already installed"
   fi
   echi
 
   for file in $(ls "$LOC/termux" | grep -v "etc"); do
-  echo -ne "\033[33;1m ->\033[0m "
+    echo -ne "\033[33;1m ->\033[0m "
     if [[ ! -L "$HOME/.termux/$file" ]]; then
       ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
     else
@@ -79,12 +79,12 @@ else
   read -p "[sudo] Password: " -s PASSWORD
   echo
   sudo -k
-  while ! sudo -S <<< $PASSWORD true &>/dev/null; do
+  while ! sudo -S true <<<$PASSWORD &>/dev/null; do
     read -p "Incorrect Password, Try again: " -s PASSWORD
     echo
-  done     
+  done
   echo
-  
+
   process_configs {"$LOC","$HOME"}/".config"
   echo
 
@@ -121,7 +121,7 @@ else
   echo
 
   for file in .bashrc .blerc; do
-    if ! command sudo -S <<< "$PASSWORD" test -L "/root/$file"; then
+    if ! command sudo -S test -L "/root/$file" <<<"$PASSWORD"; then
       sudo ln -svf {"$HOME",/root}/"$file"
     else
       echo -e "'/root/$file' exists"
@@ -132,15 +132,40 @@ else
   echo -e "\033[33;1mInstalling \033[32;1myay\033[33;1m package manager...\033[0m"
   sudo pacman -S --needed --noconfirm yay 2>/dev/null
   echo
-  
+
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
     GNOME_PKGS="gnome-shell-extension-blur-my-shell \
-      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano"
+      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano firefox-gnome-theme"
   fi
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code\
-    blesh-git mkinitcpio-firmware visual-studio-code-bin $GNOME_PKGS 2>/dev/null
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code \
+    blesh-git mkinitcpio-firmware visual-studio-code-bin chromium $GNOME_PKGS 2>/dev/null
+  echo
+
+  echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
+  FIREFOX_PROFILE=$(find ~/.mozilla/firefox/ -name *.default-release)
+  FIREFOX_CHROME_DIR=$FIREFOX_PROFILE/chrome
+  mkdir -p $FIREFOX_CHROME_DIR
+  ln -sv {/usr/lib,$FIREFOX_CHROME_DIR}/firefox-gnome-theme
+  echo '@import "firefox-gnome-theme/userChrome.css";' >$FIREFOX_CHROME_DIR/userChrome.css
+  echo '@import "firefox-gnome-theme/userContent.css";' >$FIREFOX_CHROME_DIR/userContent.css
+  ln -sv {$FIREFOX_CHROME_DIR/configuration,$FIREFOX_PROFILE}/user.js
+  cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
+user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+user_pref("widget.use-xdg-desktop-portal.location", 1);
+user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
+user_pref("widget.use-xdg-desktop-portal.settings", 1);
+user_pref("gnomeTheme.activeTabContrast", true);
+user_pref("gnomeTheme.hideSingleTab", false);
+user_pref("gnomeTheme.tabsAsHeaderbar", true);
+EOF
+  echo
+
+  echo -e "\033[33;1mCustomizing \033[32;1mChromium\033[33;1m installation...\033[0m"
+  mkdir -pv "/etc/chromium/policies/managed"
+  ln -sv {"$LOC",}"/etc/chromium/policies/managed"
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
