@@ -161,10 +161,12 @@ user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
 EOF
+  mkdir -pv "etc/firefox/policies"
+  ln -sv {"$LOC",}"/etc/firefox/policies/policies.json"
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mChromium\033[33;1m installation...\033[0m"
-  mkdir -pv "/etc/chromium/policies/managed"
+  mkdir -pv "/etc/chromium/policies"
   ln -sv {"$LOC",}"/etc/chromium/policies/managed"
   echo
 
