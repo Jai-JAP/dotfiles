@@ -6,7 +6,7 @@ hash() {
   sha256sum "$1" | cut -d' ' -f1
 }
 
-sudo() { 
+sudo() {
   command sudo -S "$@" <<<"$PASSWORD"
 }
 
@@ -102,6 +102,7 @@ else
       link {"$LOC",}/"etc/$dir/$file"
     done
   done
+  link {"$LOC",}/"etc/tlp.conf"
   echo
 
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
@@ -145,7 +146,7 @@ else
   fi
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code \
+    vdpauinfo intel-media-sdk thermald tlp micro ttf-firacode-nerd ttf-fira-code \
     blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
   echo
 
@@ -162,10 +163,10 @@ EOF
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
     mkdir -p "$FIREFOX_CHROME_DIR"
-    link {"/usr/lib","$FIREFOX_CHROME_DIR"}"/firefox-gnome-theme"
+    link {"/usr/lib","$FIREFOX_CHROME_DIR"}/"firefox-gnome-theme"
     echo '@import "firefox-gnome-theme/userChrome.css";' >"$FIREFOX_CHROME_DIR/userChrome.css"
     echo '@import "firefox-gnome-theme/userContent.css";' >"$FIREFOX_CHROME_DIR/userContent.css"
-    link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}"/user.js"
+    link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}/"user.js"
 
     cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
@@ -175,15 +176,15 @@ EOF
   fi
 
   sudo mkdir -pv "/etc/firefox/policies"
-  link {"$LOC",}"/etc/firefox/policies/policies.json"
+  link {"$LOC",}/"etc/firefox/policies/policies.json"
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mChromium\033[33;1m installation...\033[0m"
   sudo mkdir -pv "/etc/chromium/policies"
-  link {"$LOC",}"/etc/chromium/policies/managed"
+  link {"$LOC",}/"etc/chromium/policies/managed"
   echo
 
-  sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
+  sudo systemctl enable --now thermald tlp 2>/dev/null
 
   sudo update-desktop-database
 
