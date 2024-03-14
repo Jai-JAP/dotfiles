@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install 
+Operation = Upgrade
+Type = Package
+Target = bruno-bin
+
+[Action]
+Description = Patch Bruno desktop shortcut to use wayland and xdg-desktop-portals
+Depends = sed
+When = PostTransaction
+Exec = /usr/bin/sed -i -e 's|^Exec=|&env GTK_USE_PORTAL=1 |' -e '/^Exec=/ s/$/ --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto/' /usr/share/applications/bruno.desktop

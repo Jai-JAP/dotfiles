@@ -6,11 +6,11 @@ hash() {
   sha256sum "$1" | cut -d' ' -f1
 }
 
-sudo() {
+sudo() { 
   command sudo -S "$@" <<<"$PASSWORD"
 }
 
-create_dirs() {
+create_cfg_dirs() {
   find . -mindepth 1 -type d \( \
     \( -exec test ! -d "$1/{}" \; \
     -exec mkdir -pv "$1/{}" \; \) \
@@ -19,7 +19,7 @@ create_dirs() {
     \)
 }
 
-link_files() {
+link_cfg_files() {
   find . -mindepth 1 -type f \( \
     \( -exec test ! -L "$2/{}" \; \
     -exec ln -svf "$1/{}" "$2/{}" \; \) \
@@ -28,17 +28,26 @@ link_files() {
     \)
 }
 
-process_configs() {
+link() {
+  # shellcheck disable=SC2088
+  if [[ -L "$2" ]]; then
+    echo "'$2' exists"
+  else
+    ln -svf "$1" "$2" 2>/dev/null || sudo ln -svf "$1" "$2"
+  fi
+}
+
+process_cfgs() {
   # shellcheck disable=SC2164
   pushd "$1" >/dev/null
-  create_dirs "$2"
-  link_files "$1" "$2"
+  create_cfg_dirs "$2"
+  link_cfg_files "$1" "$2"
   # shellcheck disable=SC2164
   popd >/dev/null
 }
 
-process_root_configs() {
-  command sudo -S bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2" <<<"$PASSWORD"
+process_root_cfgs() {
+  command sudo -S bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files); process_cfgs $1 $2" <<<"$PASSWORD"
 }
 
 LOC=$(realpath "$(dirname "$0")")
@@ -63,20 +72,15 @@ if [[ "$PREFIX" =~ com.termux ]]; then
   # shellcheck disable=SC2045
   for file in $(ls "$LOC/termux" --ignore "etc"); do
     echo -ne "\033[33;1m ->\033[0m "
-    if [[ ! -L "$HOME/.termux/$file" ]]; then
-      ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
-    else
-      # shellcheck disable=SC2088
-      echo "~/.termux/$file exists"
-    fi
+    link {"$LOC/","$HOME/."}"termux/$file"
   done
   termux-reload-settings
   echo
 
-  process_configs {"$LOC/termux","$PREFIX"}/"etc"
+  process_cfgs {"$LOC/termux","$PREFIX"}/"etc"
   echo
 
-  process_configs {"$LOC","$HOME"}/".config/micro"
+  process_cfgs {"$LOC","$HOME"}/".config/micro"
   echo
 
 else
@@ -84,27 +88,23 @@ else
   echo
   sudo -k
   while ! sudo -S true <<<"$PASSWORD" &>/dev/null; do
-    read -r -p "Incorrect Password, Try again: " -s PASSWORD
+    read -r -p "[sudo] Incorrect Password, Try again: " -s PASSWORD
     echo
   done
   echo
 
-  process_configs {"$LOC","$HOME"}/".config"
+  process_cfgs {"$LOC","$HOME"}/".config"
   echo
 
   for dir in modprobe.d profile.d skel xdg; do
     # shellcheck disable=SC2045
     for file in $(ls -A "$LOC/etc/$dir"); do
-      if [[ ! -L "/etc/$dir/$file" ]]; then
-        sudo ln -svf {"$LOC",}/"etc/$dir/$file"
-      else
-        echo "'/etc/$dir/$file' exists"
-      fi
+      link {"$LOC",}/"etc/$dir/$file"
     done
   done
   echo
 
-  process_root_configs {"$LOC",}/"etc/pacman.d/hooks"
+  process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
   echo
 
   if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") ]]; then
@@ -116,7 +116,7 @@ else
   fi
   echo
 
-  if "$(grep "MODULES=()" /etc/mkinitcpio.conf)"; then
+  if grep -c "MODULES=()" "/etc/mkinitcpio.conf" 1>/dev/null; then
     sudo sed -i 's/MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
     echo "'/etc/mkinitcpio.conf' updated"
     sudo mkinitcpio -P
@@ -126,10 +126,10 @@ else
   echo
 
   for file in .bashrc .blerc; do
-    if ! command sudo -S test -L "/root/$file" <<<"$PASSWORD"; then
-      sudo ln -svf {"$HOME",/root}/"$file"
-    else
+    if sudo test -L "/root/$file"; then
       echo -e "'/root/$file' exists"
+    else
+      sudo ln -svf {"$HOME",/root}/"$file"
     fi
   done
   echo
@@ -139,7 +139,7 @@ else
   echo
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
+  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     GNOME_PKGS="gnome-shell-extension-blur-my-shell \
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano firefox-gnome-theme"
   fi
@@ -159,13 +159,14 @@ user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
 user_pref("widget.use-xdg-desktop-portal.settings", 1);
 EOF
 
-  if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
+  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
     mkdir -p "$FIREFOX_CHROME_DIR"
-    ln -sv {"/usr/lib","$FIREFOX_CHROME_DIR"}"/firefox-gnome-theme"
+    link {"/usr/lib","$FIREFOX_CHROME_DIR"}"/firefox-gnome-theme"
     echo '@import "firefox-gnome-theme/userChrome.css";' >"$FIREFOX_CHROME_DIR/userChrome.css"
     echo '@import "firefox-gnome-theme/userContent.css";' >"$FIREFOX_CHROME_DIR/userContent.css"
-    ln -sv {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}"/user.js"
+    link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}"/user.js"
+
     cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
@@ -173,13 +174,13 @@ user_pref("gnomeTheme.tabsAsHeaderbar", true);
 EOF
   fi
 
-  mkdir -pv "etc/firefox/policies"
-  ln -sv {"$LOC",}"/etc/firefox/policies/policies.json"
+  sudo mkdir -pv "/etc/firefox/policies"
+  link {"$LOC",}"/etc/firefox/policies/policies.json"
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mChromium\033[33;1m installation...\033[0m"
-  mkdir -pv "/etc/chromium/policies"
-  ln -sv {"$LOC",}"/etc/chromium/policies/managed"
+  sudo mkdir -pv "/etc/chromium/policies"
+  link {"$LOC",}"/etc/chromium/policies/managed"
   echo
 
   sudo systemctl enable --now thermald power-profiles-daemon 2>/dev/null
@@ -200,15 +201,11 @@ EOF
 fi
 
 for file in .blerc .clang-format .gitconfig; do
-  if [[ ! -L "$HOME/$file" ]]; then
-    ln -svf {"$LOC","$HOME"}/"$file"
-  else
-    echo "'~/$file' exists"
-  fi
+  link {"$LOC","$HOME"}/"$file"
 done
 echo
 
-if ! "$(grep . "$LOC/.custom.bashrc" "$HOME/.bashrc")"; then
+if ! "$(grep "$LOC/.custom.bashrc" "$HOME/.bashrc")"; then
   echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
   echo -e "'~/.bashrc' updated to add customizations"
 else
