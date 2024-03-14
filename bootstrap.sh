@@ -3,15 +3,15 @@
 PASSWORD=""
 
 hash() {
-  echo $(sha256sum "$1" | cut -d' ' -f1)
+  sha256sum "$1" | cut -d' ' -f1
 }
 
 sudo() {
-  command sudo -S $@ <<<"$PASSWORD"
+  command sudo -S "$@" <<<"$PASSWORD"
 }
 
 create_dirs() {
-  find -mindepth 1 -type d \( \
+  find . -mindepth 1 -type d \( \
     \( -exec test ! -d "$1/{}" \; \
     -exec mkdir -pv "$1/{}" \; \) \
     -o \
@@ -20,7 +20,7 @@ create_dirs() {
 }
 
 link_files() {
-  find -mindepth 1 -type f \( \
+  find . -mindepth 1 -type f \( \
     \( -exec test ! -L "$2/{}" \; \
     -exec ln -svf "$1/{}" "$2/{}" \; \) \
     -o \
@@ -29,9 +29,11 @@ link_files() {
 }
 
 process_configs() {
+  # shellcheck disable=SC2164
   pushd "$1" >/dev/null
   create_dirs "$2"
   link_files "$1" "$2"
+  # shellcheck disable=SC2164
   popd >/dev/null
 }
 
@@ -39,9 +41,9 @@ process_root_configs() {
   command sudo -S bash -c "$(declare -f process_configs create_dirs link_files); process_configs $1 $2" <<<"$PASSWORD"
 }
 
-LOC=$(realpath $(dirname $0))
+LOC=$(realpath "$(dirname "$0")")
 
-if [[ "$PREFIX" =~ "com.termux" ]]; then
+if [[ "$PREFIX" =~ com.termux ]]; then
   if ! command -v gmake || ! command -v gawk || ! command -v micro; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
     pkg install make gawk micro
@@ -58,11 +60,13 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
   fi
   echi
 
-  for file in $(ls "$LOC/termux" | grep -v "etc"); do
+  # shellcheck disable=SC2045
+  for file in $(ls "$LOC/termux" --ignore "etc"); do
     echo -ne "\033[33;1m ->\033[0m "
     if [[ ! -L "$HOME/.termux/$file" ]]; then
       ln -svf "$LOC/termux/$file" "$HOME/.termux/$file"
     else
+      # shellcheck disable=SC2088
       echo "~/.termux/$file exists"
     fi
   done
@@ -76,11 +80,11 @@ if [[ "$PREFIX" =~ "com.termux" ]]; then
   echo
 
 else
-  read -p "[sudo] Password: " -s PASSWORD
+  read -r -p "[sudo] Password: " -s PASSWORD
   echo
   sudo -k
-  while ! sudo -S true <<<$PASSWORD &>/dev/null; do
-    read -p "Incorrect Password, Try again: " -s PASSWORD
+  while ! sudo -S true <<<"$PASSWORD" &>/dev/null; do
+    read -r -p "Incorrect Password, Try again: " -s PASSWORD
     echo
   done
   echo
@@ -89,6 +93,7 @@ else
   echo
 
   for dir in modprobe.d profile.d skel xdg; do
+    # shellcheck disable=SC2045
     for file in $(ls -A "$LOC/etc/$dir"); do
       if [[ ! -L "/etc/$dir/$file" ]]; then
         sudo ln -svf {"$LOC",}/"etc/$dir/$file"
@@ -111,7 +116,7 @@ else
   fi
   echo
 
-  if $(grep "MODULES=()" /etc/mkinitcpio.conf); then
+  if "$(grep "MODULES=()" /etc/mkinitcpio.conf)"; then
     sudo sed -i 's/MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
     echo "'/etc/mkinitcpio.conf' updated"
     sudo mkinitcpio -P
@@ -138,29 +143,36 @@ else
     GNOME_PKGS="gnome-shell-extension-blur-my-shell \
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano firefox-gnome-theme"
   fi
+  # shellcheck disable=SC2086
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald power-profiles-daemon micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin chromium $GNOME_PKGS 2>/dev/null
+    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
-  FIREFOX_PROFILE=$(find ~/.mozilla/firefox/ -name *.default-release)
-  FIREFOX_CHROME_DIR=$FIREFOX_PROFILE/chrome
-  mkdir -p $FIREFOX_CHROME_DIR
-  ln -sv {/usr/lib,$FIREFOX_CHROME_DIR}/firefox-gnome-theme
-  echo '@import "firefox-gnome-theme/userChrome.css";' >$FIREFOX_CHROME_DIR/userChrome.css
-  echo '@import "firefox-gnome-theme/userContent.css";' >$FIREFOX_CHROME_DIR/userContent.css
-  ln -sv {$FIREFOX_CHROME_DIR/configuration,$FIREFOX_PROFILE}/user.js
+  FIREFOX_PROFILE="$(find "$HOME/.mozilla/firefox/" -name "*.default-release")"
   cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 user_pref("widget.use-xdg-desktop-portal.location", 1);
 user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
 user_pref("widget.use-xdg-desktop-portal.settings", 1);
+EOF
+
+  if yay -Qq | grep -c gnome-desktop 1>/dev/null 2>/dev/null; then
+    FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
+    mkdir -p "$FIREFOX_CHROME_DIR"
+    ln -sv {"/usr/lib","$FIREFOX_CHROME_DIR"}"/firefox-gnome-theme"
+    echo '@import "firefox-gnome-theme/userChrome.css";' >"$FIREFOX_CHROME_DIR/userChrome.css"
+    echo '@import "firefox-gnome-theme/userContent.css";' >"$FIREFOX_CHROME_DIR/userContent.css"
+    ln -sv {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}"/user.js"
+    cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
 EOF
+  fi
+
   mkdir -pv "etc/firefox/policies"
   ln -sv {"$LOC",}"/etc/firefox/policies/policies.json"
   echo
@@ -182,7 +194,7 @@ EOF
     echo -e " \033[31;1m-\033[0m Previous confg files are in \033[34;1metc\033[0m subdir in current dir."
 
     echo -e "\033[32;1mAutomatic dotfiles sync successful.\033[0m\n"
-    touch $LOC/.firstRunSuccess
+    touch "$LOC/.firstRunSuccess"
   fi
 
 fi
@@ -196,7 +208,7 @@ for file in .blerc .clang-format .gitconfig; do
 done
 echo
 
-if ! $(grep ". $LOC/.custom.bashrc" $HOME/.bashrc); then
+if ! "$(grep . "$LOC/.custom.bashrc" "$HOME/.bashrc")"; then
   echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
   echo -e "'~/.bashrc' updated to add customizations"
 else

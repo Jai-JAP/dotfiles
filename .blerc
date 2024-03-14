@@ -38,3 +38,6 @@ ble/function#advice around ble/widget/default/accept-line '
   ble-edit/content/clear-arg
   [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
 
+ble/function#advice around ble/widget/discard-line '
+  ble-edit/content/clear-arg
+  [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
