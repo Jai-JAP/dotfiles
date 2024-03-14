@@ -146,7 +146,7 @@ else
   fi
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald tlp micro ttf-firacode-nerd ttf-fira-code \
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
     blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
   echo
 
@@ -184,7 +184,7 @@ EOF
   link {"$LOC",}/"etc/chromium/policies/managed"
   echo
 
-  sudo systemctl enable --now thermald tlp 2>/dev/null
+  sudo systemctl enable --now thermald tlp power-profiles-daemon 2>/dev/null
 
   sudo update-desktop-database
 
