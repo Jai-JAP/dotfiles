@@ -12,19 +12,19 @@ sudo() {
 
 create_cfg_dirs() {
   find . -mindepth 1 -type d \( \
-    \( -exec test ! -d "$1/{}" \; \
-    -exec mkdir -pv "$1/{}" \; \) \
+    \( -exec test -d "$1/{}" \; \
+    -exec echo "'$1/{}' exists" \; \) \
     -o \
-    -exec echo "'$1/{}' exists" \; \
+    -exec mkdir -pv "$1/{}" \; \
     \)
 }
 
 link_cfg_files() {
   find . -mindepth 1 -type f \( \
-    \( -exec test ! -L "$2/{}" \; \
-    -exec ln -svf "$1/{}" "$2/{}" \; \) \
+    \( -exec test -L "$2/{}" \; \
+    -exec echo "'$2/{}' exists" \; \) \
     -o \
-    -exec echo "'$2/{}' exists" \; \
+    -exec ln -svf "$1/{}" "$2/{}" \; \
     \)
 }
 
@@ -102,7 +102,9 @@ else
       link {"$LOC",}/"etc/$dir/$file"
     done
   done
-  link {"$LOC",}/"etc/tlp.conf"
+  for file in tlp.conf makepkg.conf; do
+    link {"$LOC",}/"etc/$file"
+  done
   echo
 
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
@@ -206,10 +208,10 @@ for file in .blerc .clang-format .gitconfig; do
 done
 echo
 
-if ! "$(grep "$LOC/.custom.bashrc" "$HOME/.bashrc")"; then
+if grep -q "$LOC/.custom.bashrc" "$HOME/.bashrc"; then
+  echo -e "'~/.bashrc' already has customizations applied"
+else
   echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
   echo -e "'~/.bashrc' updated to add customizations"
-else
-  echo -e "'~/.bashrc' already has customizations applied"
 fi
 echo
