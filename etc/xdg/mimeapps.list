@@ -1,5 +1,5 @@
 [Added Associations]
-text/css=micro.desktop;
+text/css=code.desktop;
 text/x-c++hdr=code.desktop;
 text/x-c++src=code.desktop;
 text/x-chdr=code.desktop;
@@ -22,7 +22,7 @@ application/x-php=micro.desktop;
 application/xml=micro.desktop;
 
 [Default Applications]
-text/css=micro.desktop;
+text/css=code.desktop;
 text/x-c++hdr=code.desktop;
 text/x-c++src=code.desktop;
 text/x-chdr=code.desktop;
