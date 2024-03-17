@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # customisations
 
 if [[ $- == *i* ]]; then
@@ -22,7 +24,7 @@ if [[ $- == *i* ]]; then
     # Return a colour that contrasts with the given colour
     # Bash only does integer division, so keep it integral
     function contrast_colour {
-        local r g b luminance
+        local r g b luminance res
         colour="$1"
     
         if (( colour < 16 )); then # Initial 16 ANSI colours
@@ -40,14 +42,13 @@ if [[ $- == *i* ]]; then
         # 6x6x6 colour cube = 16 + 36*R + 6*G + B  # Where RGB are [0..5]
         # See http://stackoverflow.com/a/27165165/5353461
     
-        # r=$(( (colour-16) / 36 ))
+        r=$(( (colour-16) / 36 ))
         g=$(( ((colour-16) % 36) / 6 ))
-        # b=$(( (colour-16) % 6 ))
-    
+        b=$(( (colour-16) % 6 ))
+
         # If luminance is bright, print number in black, white otherwise.
         # Green contributes 587/1000 to human perceived luminance - ITU R-REC-BT.601
-        (( g > 2)) && printf "0" || printf "15"
-        return
+        (( g > 2)) && res="0" || res="15"
     
         # Uncomment the below for more precise luminance calculations
     
@@ -55,8 +56,10 @@ if [[ $- == *i* ]]; then
         # # See https://www.w3.org/TR/AERT#color-contrast
         # # and http://www.itu.int/rec/R-REC-BT.601
         # # Luminance is in range 0..5000 as each value is 0..5
-        # luminance=$(( (r * 299) + (g * 587) + (b * 114) ))
-        # (( $luminance > 2500 )) && printf "0" || printf "15"
+        luminance=$(( (r * 299) + (g * 587) + (b * 114) ))
+        (( luminance > 2500 )) && res="0" || res="15"
+
+        printf "%s" $res
     }
     
     # Print a coloured block with the number of that colour
@@ -105,18 +108,20 @@ if [[ $- == *i* ]]; then
     printf "\n"
     print_blocks 16 231 6 6 3 # 6x6x6 colour cube between 16 and 231 inclusive
     print_blocks 232 255 12 2 1 # Not 50, but 24 Shades of Grey
-    
+
   }
 
   if [[ $EUID == 0 ]]; then
-    PS1='${SUDO_USER:+(\033[01;33m$SUDO_USER\033[0m) }\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;31m\]\$_\[\033[00m\] '
+    PS1='${SUDO_USER:+(\[\033[01;33m$SUDO_USER\033[0m\]) }\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;31m\]\$_\[\033[00m\] '
   else
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;32m\]\$_\[\033[00m\] '
   fi
 
-  if [[ "$PREFIX" =~ "com.termux" ]]; then
+  if [[ "$PREFIX" =~ com.termux ]]; then
+    # shellcheck disable=SC1091
     . "$HOME/.local/share/blesh/ble.sh"
   else # [[ "$TERM_PROGRAM" != "vscode" ]]; then
+    # shellcheck disable=SC1091
     . "/usr/share/blesh/ble.sh"
   fi
 fi
