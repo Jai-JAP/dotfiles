@@ -123,5 +123,6 @@ if [[ $- == *i* ]]; then
   else # [[ "$TERM_PROGRAM" != "vscode" ]]; then
     # shellcheck disable=SC1091
     . "/usr/share/blesh/ble.sh"
+    eval "$(atuin init bash)"
   fi
 fi

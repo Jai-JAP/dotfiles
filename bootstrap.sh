@@ -149,7 +149,7 @@ else
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
+    blesh-git atuin mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
@@ -166,14 +166,20 @@ EOF
     FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
     mkdir -p "$FIREFOX_CHROME_DIR"
     link {"/usr/lib","$FIREFOX_CHROME_DIR"}/"firefox-gnome-theme"
-    echo '@import "firefox-gnome-theme/userChrome.css";' >"$FIREFOX_CHROME_DIR/userChrome.css"
-    echo '@import "firefox-gnome-theme/userContent.css";' >"$FIREFOX_CHROME_DIR/userContent.css"
+    for file in userChrome.css userContent.css; do
+      if [[ -f "$FIREFOX_CHROME_DIR/$file" ]]; then
+        echo "'$FIREFOX_CHROME_DIR/$file' exists"
+      else
+        echo "@import \"firefox-gnome-theme/$file\";" >"$FIREFOX_CHROME_DIR/$file"
+      fi
+    done
     link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}/"user.js"
 
     cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
+user_pref("gnomeTheme.hideWebrtcIndicator", true)
 EOF
   fi
 
@@ -211,7 +217,7 @@ echo
 if grep -q "$LOC/.custom.bashrc" "$HOME/.bashrc"; then
   echo -e "'~/.bashrc' already has customizations applied"
 else
-  echo -e "\n# customisations\n\n. $LOC/.custom.bashrc" >>~/.bashrc
+  echo -e "\n# customisations\n\n. \"$LOC/.custom.bashrc\"" >>~/.bashrc
   echo -e "'~/.bashrc' updated to add customizations"
 fi
 echo
