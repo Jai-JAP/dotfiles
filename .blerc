@@ -18,7 +18,8 @@ bleopt edit_vbell= \
   decode_error_kseq_vbell= \
   prompt_ruler=empty-line \
   tab_width=2 \
-  edit_magic_accept=autocd
+  edit_magic_accept=autocd \
+  edit_magic_expand=autocd
 
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
