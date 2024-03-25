@@ -4,6 +4,7 @@
 
 if [[ $- == *i* ]]; then
   bind 'set completion-ignore-case on'
+  bind '"\C-l":clear'
   shopt -s autocd
   shopt -s cdspell
   shopt -s dirspell
