@@ -94,6 +94,7 @@ else
   echo
 
   process_cfgs {"$LOC","$HOME"}/".config"
+  process_root_cfgs {"$LOC","/root"}/".config/micro"
   echo
 
   for dir in modprobe.d profile.d skel xdg; do
@@ -147,9 +148,29 @@ else
       gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano firefox-gnome-theme"
   fi
   # shellcheck disable=SC2086
-  yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git atuin mkinitcpio-firmware visual-studio-code-bin firefox chromium $GNOME_PKGS 2>/dev/null
+  yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils vdpauinfo \
+    intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
+    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind refind-theme-regular-git $GNOME_PKGS 2>/dev/null
+  echo
+
+  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
+    echo -e "\033[33;1mCustomizing \033[32;1mGnome\033[33;1m installation...\033[0m"
+    EXTENSION_ID="unblank@sun.wxg@gmail.com"
+    if ! gnome-extensions list | grep --quiet "$EXTENSION_ID"; then
+      busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s ${EXTENSION_ID}
+    fi
+    gnome-extensions enable ${EXTENSION_ID}
+    dconf load /org/ <"$LOC/etc/settings.dconf"
+    echo
+  fi
+
+  echo -e "\033[33;1mCustomizing \033[32;Bootscreen\033[0m"
+  if sudo test -d "/boot/efi/EFI/refind"; then
+    echo "Bootscreen customisations already applied."
+  else 
+    sudo refind-install
+    sudo cp {"$LOC","/boot/efi/EFI"}/"refind/refind.conf"
+  fi
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
