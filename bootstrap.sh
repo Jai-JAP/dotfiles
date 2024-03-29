@@ -1,13 +1,8 @@
 #!/bin/bash
 
-PASSWORD=""
 
 hash() {
   sha256sum "$1" | cut -d' ' -f1
-}
-
-sudo() {
-  command sudo -S "$@" <<<"$PASSWORD"
 }
 
 create_cfg_dirs() {
@@ -84,6 +79,8 @@ if [[ "$PREFIX" =~ com.termux ]]; then
   echo
 
 else
+  PASSWORD=""
+
   read -r -p "[sudo] Password: " -s PASSWORD
   echo
   sudo -k
@@ -92,6 +89,10 @@ else
     echo
   done
   echo
+
+  sudo() {
+    command sudo -S "$@" <<<"$PASSWORD"
+  }
 
   process_cfgs {"$LOC","$HOME"}/".config"
   process_root_cfgs {"$LOC","/root"}/".config/micro"
@@ -176,13 +177,15 @@ else
           continue
         fi
 
-        wget -O "${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
-        gnome-extensions install --force "${ext}.zip"
+        sudo wget -O "/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
+        gnome-extensions install --force "/tmp/${ext}.zip"
         if ! gnome-extensions list | grep --quiet "$ext"; then
             busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"
         fi
         gnome-extensions enable "$ext"
-        rm "$ext.zip"
+        sudo rm "/tmp/$ext.zip"
+
+        echo -e "\033[32;1m -> $ext installed successfully\n"
     done
     echo
   fi
