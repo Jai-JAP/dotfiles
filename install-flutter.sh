@@ -22,6 +22,7 @@ else
   yay -S --needed --noconfirm glu libglvnd clang ninja pkgconf gtk3 2>/dev/null
   sudo git clone https://github.com/flutter/flutter -b stable --single-branch --depth=1 /opt/flutter
   flutter config --no-analytics
+  flutter bash-completion | sudo tee /usr/share/bash-completion/completions/flutter >/dev/null
   flutter doctor
   echo "Flutter installed successfully"
 fi
