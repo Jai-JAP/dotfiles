@@ -144,8 +144,7 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="gnome-shell-extension-blur-my-shell \
-      gnome-shell-extension-just-perfection-desktop gnome-shell-extension-pano firefox-gnome-theme"
+    GNOME_PKGS="firefox-gnome-theme"
   fi
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils vdpauinfo \
@@ -155,12 +154,36 @@ else
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     echo -e "\033[33;1mCustomizing \033[32;1mGnome\033[33;1m installation...\033[0m"
-    EXTENSION_ID="unblank@sun.wxg@gmail.com"
-    if ! gnome-extensions list | grep --quiet "$EXTENSION_ID"; then
-      busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s ${EXTENSION_ID}
-    fi
-    gnome-extensions enable ${EXTENSION_ID}
-    dconf load /org/ <"$LOC/etc/settings.dconf"
+    GNOME_VER=$(gnome-shell --version)
+    GNOME_VER="${GNOME_VER##* }"
+    GNOME_VER="${GNOME_VER%.*}"    
+
+    INSTALLED_EXTS=$(gnome-extensions list)
+
+    for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection; do
+        if [[ $INSTALLED_EXTS =~ $ext ]]; then
+          gnome-extensions enable "$ext"
+          echo -e "\033[32;1m -> $ext already installed"
+          continue
+        else
+          echo -e "\033[32;1m -> Installing $ext"
+        fi
+    
+        VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
+
+        if [[ -z $VERSION_TAG ]]; then
+          echo -e "\033[31;1m$ext is unavailable for GNOME $GNOME_VER\033[0m"
+          continue
+        fi
+
+        wget -O "${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
+        gnome-extensions install --force "${ext}.zip"
+        if ! gnome-extensions list | grep --quiet "$ext"; then
+            busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"
+        fi
+        gnome-extensions enable "$ext"
+        rm "$ext.zip"
+    done
     echo
   fi
 
