@@ -196,10 +196,6 @@ else
   else 
     sudo refind-install
     sudo cp {"$LOC","/boot/efi/EFI"}/"refind/refind.conf"
-    sudo cp {"$LOC/refind","/boot"}/"refind_linux.conf"
-    ROOT_DEV="$(mount | grep 'on / ' | cut -d' ' -f1)"
-    ROOT_UUID="$(blkid "$ROOT_DEV" -s UUID -o value)"
-    sed -i '/s/root=UUID=/&'"$ROOT_UUID"'/g' "/boot/refind_linux.conf"
   fi
   echo
 
