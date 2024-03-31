@@ -164,7 +164,7 @@ else
     for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection; do
         if [[ $INSTALLED_EXTS =~ $ext ]]; then
           gnome-extensions enable "$ext"
-          echo -e "\033[32;1m -> $ext already installed"
+          echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed"
           continue
         else
           echo -e "\033[32;1m -> Installing $ext"
@@ -190,14 +190,18 @@ else
     echo
   fi
 
-  echo -e "\033[33;1mCustomizing \033[32;Bootscreen\033[0m"
+  echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
   if sudo test -d "/boot/efi/EFI/refind"; then
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
     sudo cp {"$LOC","/boot/efi/EFI"}/"refind/refind.conf"
+    sudo cp {"$LOC/refind","/boot"}/"refind_linux.conf"
+    ROOT_DEV="$(mount | grep 'on / ' | cut -d' ' -f1)"
+    ROOT_UUID="$(sudo -S blkid "$ROOT_DEV" -s UUID -o value <<<"$PASSWORD")"
+    sudo sed -i 's|root=UUID=|&'"$ROOT_UUID"'|g' "/boot/refind_linux.conf"
+    sudo sed -i 's|ro root=|&'"$ROOT_DEV"'|g' "/boot/refind_linux.conf"
   fi
-  echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
   FIREFOX_PROFILE="$(find "$HOME/.mozilla/firefox/" -name "*.default-release")"
@@ -267,4 +271,3 @@ else
   echo -e "\n# customisations\n\n. \"$LOC/.custom.bashrc\"" >>~/.bashrc
   echo -e "'~/.bashrc' updated to add customizations"
 fi
-echo
