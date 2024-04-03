@@ -148,8 +148,8 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6"
   fi
   # shellcheck disable=SC2086
-  yay -S --needed --noconfirm discord intel-media-driver libvdpau-va-gl libva-utils vdpauinfo \
-    intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
+  yay -S --needed --noconfirm discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
+    vdpauinfo intel-media-sdk thermald power-profiles-daemon tlp micro ttf-firacode-nerd ttf-fira-code \
     blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind refind-theme-regular-git $GNOME_PKGS 2>/dev/null
   echo
 
@@ -161,7 +161,7 @@ else
 
     INSTALLED_EXTS=$(gnome-extensions list)
 
-    for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection; do
+    for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection Vitals@CoreCoding.com; do
         if [[ $INSTALLED_EXTS =~ $ext ]]; then
           gnome-extensions enable "$ext"
           echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed"
