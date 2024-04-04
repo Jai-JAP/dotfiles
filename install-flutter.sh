@@ -10,6 +10,7 @@ while ! sudo -S true <<<"$PASSWORD" &>/dev/null; do
   echo
 done
 echo
+
 sudo() {
   command sudo -S "$@" <<<"$PASSWORD"
 }
@@ -19,7 +20,9 @@ if [[ -d "/opt/flutter" ]]; then
 else
   echo -e "\033[33;1mInstalling \033[32;1mFlutter\033[0m"
   sudo true
-  yay -S --needed --noconfirm glu libglvnd clang ninja pkgconf gtk3 2>/dev/null
+  yay -S --needed --noconfirm glu libglvnd clang ninja pkgconf gtk3 android-sdk-platform-tools android-sdk-cmdline-tools-latest 2>/dev/null
+  sudo chown root:users /opt/android-sdk
+  sudo chmod g+w /opt/android-sdk
   sudo git clone https://github.com/flutter/flutter -b stable --single-branch --depth=1 /opt/flutter
   flutter config --no-analytics
   flutter bash-completion | sudo tee /usr/share/bash-completion/completions/flutter >/dev/null
