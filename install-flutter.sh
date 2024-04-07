@@ -15,24 +15,32 @@ sudo() {
   command sudo -S "$@" <<<"$PASSWORD"
 }
 
-if [[ -d "/opt/flutter" ]]; then
-  echo "Flutter already installed"
+PACKAGES="glu libglvnd clang ninja pkgconf gtk3 android-sdk-platform-tools android-sdk-cmdline-tools-latest"
+#shellcheck disable=2086
+if yay -Qq $PACKAGES &>/dev/null; then
+  echo "Dependencies already installed"
 else
-  sudo true
-
   echo -e "\033[33;1mInstalling dependencies\033[0m"
-  yay -S --needed --noconfirm glu libglvnd clang ninja pkgconf gtk3 android-sdk-platform-tools android-sdk-cmdline-tools-latest 2>/dev/null
+  yay -S --needed --noconfirm $PACKAGES 2>/dev/null
   sudo chown root:users /opt/android-sdk
   sudo chmod g+w /opt/android-sdk
   echo
+fi
 
+if [[ "$(sdkmanager --list_installed | grep -e 'build-tools' -e 'platforms' -e 'sources' -c)" -ge 3 ]]; then
+  echo "Required android-sdk components already installed."
+else
   echo -e "\033[33;1mInstalling required \033[32;1mandroid-sdk\033[33;1m components\033[0m"
   BUILD_TOOLS="$(sdkmanager --list | awk '/build-tools/ && !/rc/ {print $1}' | sort -uV | tail -n1)" 
   PLATFORM="$(sdkmanager --list | awk '/platforms;android-[0-9]+/ && !/ext/ {print $1}' | sort -uV | tail -n1)" 
   SOURCES="${PLATFORM/platforms/sources}"
   sdkmanager "$BUILD_TOOLS" "$PLATFORM" "$SOURCES"
   echo
+fi
 
+if [[ -d "/opt/flutter" ]]; then
+  echo "Flutter already installed"
+else
   echo -e "\033[33;1mInstalling \033[32;1mFlutter\033[0m"
   # DATA="$(curl -fSsl https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json)"
   # BASEURL="$(jq -r <<<$DATA .base_url)"
