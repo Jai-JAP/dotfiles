@@ -20,7 +20,7 @@ PACKAGES="glu libglvnd clang ninja pkgconf gtk3 android-sdk-platform-tools andro
 if yay -Qq $PACKAGES &>/dev/null; then
   echo "Dependencies already installed"
 else
-  echo -e "\033[33;1mInstalling dependencies\033[0m"
+  echo -e "\n\033[33;1mInstalling dependencies\033[0m"
   yay -S --needed --noconfirm $PACKAGES 2>/dev/null
   sudo chown root:users /opt/android-sdk
   sudo chmod g+w /opt/android-sdk
@@ -30,7 +30,7 @@ fi
 if [[ "$(sdkmanager --list_installed | grep -e 'build-tools' -e 'platforms' -e 'sources' -c)" -ge 3 ]]; then
   echo "Required android-sdk components already installed."
 else
-  echo -e "\033[33;1mInstalling required \033[32;1mandroid-sdk\033[33;1m components\033[0m"
+  echo -e "\n\033[33;1mInstalling required \033[32;1mandroid-sdk\033[33;1m components\033[0m"
   BUILD_TOOLS="$(sdkmanager --list | awk '/build-tools/ && !/rc/ {print $1}' | sort -uV | tail -n1)" 
   PLATFORM="$(sdkmanager --list | awk '/platforms;android-[0-9]+/ && !/ext/ {print $1}' | sort -uV | tail -n1)" 
   SOURCES="${PLATFORM/platforms/sources}"
@@ -41,7 +41,7 @@ fi
 if [[ -d "/opt/flutter" ]]; then
   echo "Flutter already installed"
 else
-  echo -e "\033[33;1mInstalling \033[32;1mFlutter\033[0m"
+  echo -e "\n\033[33;1mInstalling \033[32;1mFlutter\033[0m"
   # DATA="$(curl -fSsl https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json)"
   # BASEURL="$(jq -r <<<$DATA .base_url)"
   # HASH="$(jq -r <<<$DATA .current_release.stable)"
@@ -61,11 +61,22 @@ else
   # # or
    
   sudo mkdir -p /opt/flutter
-  sudo chown "$USER:$USER" /opt/flutter
+  sudo chown "$USER" /opt/flutter
   git clone https://github.com/flutter/flutter -b stable --single-branch --depth=1 /opt/flutter
+  echo
+
+  echo "  Checking flutter internal dependencies"
+  export PATH="$PATH:/opt/flutter/bin"
   flutter doctor
+  echo
   
+  echo "  Fixing permissions"
+  sudo chown -R root:users /opt/flutter
+  sudo chmod g+w -R /opt/flutter 
+  echo
+
+  echo "  Finishing installation"
   flutter config --no-analytics
-  flutter bash-completion | sudo tee /usr/share/bash-completion/completions/flutter >/dev/null
-  echo "Flutter installed successfully"
+  flutter doctor --android-licenses
+  echo -e "\033[32;1mFlutter installed successfully\033[0m"
 fi
