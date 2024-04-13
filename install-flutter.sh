@@ -68,11 +68,12 @@ else
   echo "  Checking flutter internal dependencies"
   export PATH="$PATH:/opt/flutter/bin"
   flutter doctor
+  flutter bash-completion | sudo tee /usr/share/bash-completion/completions/flutter >/dev/null
   echo
   
   echo "  Fixing permissions"
   sudo chown -R root:users /opt/flutter
-  sudo chmod g+w -R /opt/flutter 
+  sudo chmod g+w -R /opt/flutter
   echo
 
   echo "  Finishing installation"
