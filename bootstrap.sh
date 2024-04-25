@@ -204,8 +204,8 @@ else
   fi
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
-  FIREFOX_PROFILE="$(find "$HOME/.mozilla/firefox/" -name "*.default-release")"
-  cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
+  while IFS= read -r -d '' FIREFOX_PROFILE; do
+    cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 user_pref("widget.use-xdg-desktop-portal.location", 1);
@@ -213,26 +213,29 @@ user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
 user_pref("widget.use-xdg-desktop-portal.settings", 1);
 EOF
 
-  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
-    mkdir -p "$FIREFOX_CHROME_DIR"
-    link {"/usr/lib","$FIREFOX_CHROME_DIR"}/"firefox-gnome-theme"
-    for file in userChrome.css userContent.css; do
-      if [[ -f "$FIREFOX_CHROME_DIR/$file" ]]; then
-        echo "'$FIREFOX_CHROME_DIR/$file' exists"
-      else
-        echo "@import \"firefox-gnome-theme/$file\";" >"$FIREFOX_CHROME_DIR/$file"
-      fi
-    done
-    link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}/"user.js"
+    if yay -Qq | grep -c gnome-desktop &>/dev/null; then
+      FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
+      mkdir -p "$FIREFOX_CHROME_DIR"
+      link {"/usr/lib","$FIREFOX_CHROME_DIR"}/"firefox-gnome-theme"
+      for file in userChrome.css userContent.css; do
+        if [[ -f "$FIREFOX_CHROME_DIR/$file" ]]; then
+          echo "'$FIREFOX_CHROME_DIR/$file' exists"
+        else
+          echo "@import \"firefox-gnome-theme/$file\";" >"$FIREFOX_CHROME_DIR/$file"
+        fi
+      done
+      link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}/"user.js"
 
-    cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
+      cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
 user_pref("gnomeTheme.hideWebrtcIndicator", true)
 EOF
-  fi
+    fi
+
+    echo -e " - Customizations applied to ${FIREFOX_PROFILE##*/}\n"
+  done < <(find "$HOME/.mozilla/firefox/" -maxdepth 1 -type d -name "*.default*" -print0)
 
   sudo mkdir -pv "/etc/firefox/policies"
   link {"$LOC",}/"etc/firefox/policies/policies.json"
