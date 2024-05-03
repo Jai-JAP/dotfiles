@@ -111,7 +111,7 @@ else
   echo
 
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
-  sudo sed -e '/Color/s/^#[[:space:]]//' \
+  sudo sed -i -e '/Color/s/^#[[:space:]]//' \
     -e '/ILoveCandy/s/^/#/' \
     -e '/CheckSpace/s/^#[[:space:]]//' \
     -e '/ParallelDownloads/s/^#[[:space:]]//' \
