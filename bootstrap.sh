@@ -111,7 +111,7 @@ else
   echo
 
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
-  sudo sed -e '/Color/s/^#[[:space:]]//' \
+  sudo sed -i -e '/Color/s/^#[[:space:]]//' \
     -e '/ILoveCandy/s/^/#/' \
     -e '/CheckSpace/s/^#[[:space:]]//' \
     -e '/ParallelDownloads/s/^#[[:space:]]//' \
@@ -157,9 +157,9 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6"
   fi
   # shellcheck disable=SC2086
-  yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl \
-    libva-utils vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
+  yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
+    vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
+    blesh-git visual-studio-code-bin firefox chromium refind $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
