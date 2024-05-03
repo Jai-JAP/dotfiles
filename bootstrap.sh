@@ -111,6 +111,11 @@ else
   echo
 
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
+  sudo sed -e '/Color/s/^#[[:space:]]//' \
+    -e '/ILoveCandy/s/^/#/' \
+    -e '/CheckSpace/s/^#[[:space:]]//' \
+    -e '/ParallelDownloads/s/^#[[:space:]]//' \
+    -e '/ParallelDownloads = /s/= ./= 8/' /etc/pacman.conf
   echo
 
   if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") ]]; then
