@@ -48,6 +48,20 @@ process_root_cfgs() {
 
 LOC=$(realpath "$(dirname "$0")")
 
+config_common() {
+  for file in .blerc .clang-format .gitconfig; do
+    link {"$LOC","$HOME"}/"$file"
+  done
+  echo
+
+  if grep -q "$LOC/.custom.bashrc" "$HOME/.bashrc"; then
+    echo -e "'~/.bashrc' already has customizations applied"
+  else
+    echo -e "\n# customisations\n\n. \"$LOC/.custom.bashrc\"" >>~/.bashrc
+    echo -e "'~/.bashrc' updated to add customizations"
+  fi
+}
+
 if [[ "$PREFIX" =~ com.termux ]]; then
   if ! command -v gmake || ! command -v gawk || ! command -v micro; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
@@ -63,7 +77,9 @@ if [[ "$PREFIX" =~ com.termux ]]; then
   else
     echo -e "\033[33;1m -> \033[0m ble.sh already installed"
   fi
-  echi
+  echo
+
+  config_common
 
   # shellcheck disable=SC2045
   for file in $(ls "$LOC/termux" --ignore "etc"); do
@@ -94,6 +110,8 @@ else
   sudo() {
     command sudo -S "$@" <<<"$PASSWORD"
   }
+
+  config_common
 
   process_cfgs {"$LOC","$HOME"}/".config"
   process_root_cfgs {"$LOC","/root"}/".config/micro"
@@ -179,7 +197,7 @@ else
     
         VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
 
-        if [[ -n $VERSION_TAG ]]; then
+        if [[ $VERSION_TAG == "null" ]]; then
           echo -e "\033[31;1m -> $ext is unavailable for GNOME $GNOME_VER\033[0m"
           continue
         else
@@ -289,16 +307,4 @@ EOF
     touch "$LOC/.firstRunSuccess"
   fi
 
-fi
-
-for file in .blerc .clang-format .gitconfig; do
-  link {"$LOC","$HOME"}/"$file"
-done
-echo
-
-if grep -q "$LOC/.custom.bashrc" "$HOME/.bashrc"; then
-  echo -e "'~/.bashrc' already has customizations applied"
-else
-  echo -e "\n# customisations\n\n. \"$LOC/.custom.bashrc\"" >>~/.bashrc
-  echo -e "'~/.bashrc' updated to add customizations"
 fi
