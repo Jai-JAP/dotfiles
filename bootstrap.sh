@@ -122,14 +122,17 @@ else
   fi
   echo
 
-  if grep -c "MODULES=()" "/etc/mkinitcpio.conf" 1>/dev/null; then
-    sudo sed -i 's/MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
-    echo "'/etc/mkinitcpio.conf' updated"
-    sudo mkinitcpio -P
-  else
-    echo "'/etc/mkinitcpio.conf' already upto date"
+  if command -v mkinitcpio &>/dev/null; then
+    if grep -c "MODULES=()" "/etc/mkinitcpio.conf" 1>/dev/null; then
+      sudo sed -i 's/MODULES=()/MODULES=(i2c_hid i915)/' /etc/mkinitcpio.conf
+      echo "'/etc/mkinitcpio.conf' updated"
+      sudo mkinitcpio -P
+    else
+      echo "'/etc/mkinitcpio.conf' already upto date"
+    fi
+    MKINITCPIO_PKGS="mkinitcpio-firmware"
+    echo
   fi
-  echo
 
   for file in .bashrc .blerc; do
     if sudo test -L "/root/$file"; then
@@ -151,7 +154,8 @@ else
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl \
     libva-utils vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind refind-theme-regular-git $GNOME_PKGS 2>/dev/null
+    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind refind-theme-regular-git \
+    $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
@@ -165,7 +169,7 @@ else
     for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection Vitals@CoreCoding.com; do
         if [[ $INSTALLED_EXTS =~ $ext ]]; then
           gnome-extensions enable "$ext"
-          echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed"
+          echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed\033[0m"
           continue
         else
           echo -e "\033[32;1m -> Installing $ext"
@@ -173,7 +177,7 @@ else
     
         VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
 
-        if [[ -z $VERSION_TAG ]]; then
+        if [[ -n $VERSION_TAG ]]; then
           echo -e "\033[31;1m$ext is unavailable for GNOME $GNOME_VER\033[0m"
           continue
         fi
@@ -186,7 +190,7 @@ else
         gnome-extensions enable "$ext"
         sudo rm "/tmp/$ext.zip"
 
-        echo -e "\033[32;1m -> $ext installed successfully\n"
+        echo -e "\033[32;1m -> $ext installed successfully/033[0m\n"
     done
     echo
   fi
@@ -196,8 +200,8 @@ else
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
-    sudo cp {"$LOC","/boot/efi/EFI"}/"refind/refind.conf"
-    sudo cp {"$LOC/refind","/boot"}/"refind_linux.conf"
+    sudo cp -v {"$LOC","/boot/efi/EFI"}/"refind/refind.conf"
+    sudo cp -v {"$LOC/refind","/boot"}/"refind_linux.conf"
     ROOT_DEV="$(mount | grep 'on / ' | cut -d' ' -f1)"
     ROOT_UUID="$(sudo -S blkid "$ROOT_DEV" -s UUID -o value <<<"$PASSWORD")"
     sudo sed -i 's|root=UUID=|&'"$ROOT_UUID"'|g' "/boot/refind_linux.conf"
