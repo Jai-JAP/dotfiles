@@ -154,8 +154,7 @@ else
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl \
     libva-utils vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro ttf-firacode-nerd ttf-fira-code \
-    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind refind-theme-regular-git \
-    $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
+    blesh-git mkinitcpio-firmware visual-studio-code-bin firefox chromium refind $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
@@ -171,15 +170,15 @@ else
           gnome-extensions enable "$ext"
           echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed\033[0m"
           continue
-        else
-          echo -e "\033[32;1m -> Installing $ext"
         fi
     
         VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
 
         if [[ -n $VERSION_TAG ]]; then
-          echo -e "\033[31;1m$ext is unavailable for GNOME $GNOME_VER\033[0m"
+          echo -e "\033[31;1m -> $ext is unavailable for GNOME $GNOME_VER\033[0m"
           continue
+        else
+          echo -e "\033[32;1m -> Installing $ext\033[0m]"
         fi
 
         sudo wget -O "/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
@@ -206,7 +205,23 @@ else
     ROOT_UUID="$(sudo -S blkid "$ROOT_DEV" -s UUID -o value <<<"$PASSWORD")"
     sudo sed -i 's|root=UUID=|&'"$ROOT_UUID"'|g' "/boot/refind_linux.conf"
     sudo sed -i 's|ro root=|&'"$ROOT_DEV"'|g' "/boot/refind_linux.conf"
+    echo
+    
+    # shellcheck disable=SC2164
+    pushd "$HOME/.cache/yay" >/dev/null
+    yay -G refind-theme-regular-git && sed -i 's|/boot/EFI|/boot/efi/EFI/|' ./refind-theme-regular-git/PKGBUILD
+    # shellcheck disable=SC2164
+    pushd "refind-theme-regular-git" >/dev/null
+    if ! git diff --quiet HEAD -- . ':PKGBUILD'; then
+      git commit -am "Fix refind_home path"
+    fi
+    yay -S refind-theme-regular-git --noredownload --noconfirm 2>/dev/null
+    # shellcheck disable=SC2164
+    popd >/dev/null
+    # shellcheck disable=SC2164
+    popd >/dev/null
   fi
+  echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
   while IFS= read -r -d '' FIREFOX_PROFILE; do
