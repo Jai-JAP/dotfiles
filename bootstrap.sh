@@ -16,7 +16,7 @@ create_cfg_dirs() {
 
 link_cfg_files() {
   find . -mindepth 1 -type f \( \
-    \( -exec test -L "$2/{}" \; \
+    \( -exec test -L "$2/{}" \; -a -exec test -e "$2/{}" \; \
     -exec echo "'$2/{}' exists" \; \) \
     -o \
     -exec ln -svf "$1/{}" "$2/{}" \; \
@@ -25,7 +25,7 @@ link_cfg_files() {
 
 link() {
   # shellcheck disable=SC2088
-  if [[ -L "$2" ]]; then
+  if [[ -L "$2" && -e "$2" ]]; then
     echo "'$2' exists"
   else
     ln -svf "$1" "$2" 2>/dev/null || sudo ln -svf "$1" "$2"
@@ -135,7 +135,7 @@ else
   fi
 
   for file in .bashrc .blerc; do
-    if sudo test -L "/root/$file"; then
+    if sudo test -L "/root/$file" && sudo test -e "/root/$file"; then
       echo -e "'/root/$file' exists"
     else
       sudo ln -svf {"$HOME",/root}/"$file"
@@ -191,6 +191,9 @@ else
 
         echo -e "\033[32;1m -> $ext installed successfully/033[0m\n"
     done
+
+    # dconf reset -f /
+    dconf load / < "$LOC/etc/settings.dconf"
     echo
   fi
 
