@@ -171,31 +171,34 @@ else
     INSTALLED_EXTS=$(gnome-extensions list)
 
     for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection Vitals@CoreCoding.com; do
-        if [[ $INSTALLED_EXTS =~ $ext ]]; then
-          gnome-extensions enable "$ext"
-          echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed\033[0m"
-          continue
-        fi
-    
-        VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
-
-        if [[ -n $VERSION_TAG ]]; then
-          echo -e "\033[31;1m -> $ext is unavailable for GNOME $GNOME_VER\033[0m"
-          continue
-        else
-          echo -e "\033[32;1m -> Installing $ext\033[0m]"
-        fi
-
-        sudo wget -O "/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
-        gnome-extensions install --force "/tmp/${ext}.zip"
-        if ! gnome-extensions list | grep --quiet "$ext"; then
-            busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"
-        fi
+      if [[ $INSTALLED_EXTS =~ $ext ]]; then
         gnome-extensions enable "$ext"
-        sudo rm "/tmp/$ext.zip"
+        echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed\033[0m"
+        continue
+      fi
+  
+      VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
 
-        echo -e "\033[32;1m -> $ext installed successfully/033[0m\n"
+      if [[ -n $VERSION_TAG ]]; then
+        echo -e "\033[31;1m -> $ext is unavailable for GNOME $GNOME_VER\033[0m"
+        continue
+      else
+        echo -e "\033[32;1m -> Installing $ext\033[0m]"
+      fi
+
+      mkdir -p "$HOME/.cache/tmp"
+      curl -sLo "$HOME/.cache/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
+      gnome-extensions install --force "$HOME/.cache/tmp/${ext}.zip"
+      # if ! gnome-extensions list | grep --quiet "$ext"; then
+      #   if ! busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"; then
+      #     echo -e "\033[31;1m -> Unable to install $ext\033[0m"
+      #   fi
+      # fi
+      gnome-extensions enable "$ext"
+
+      echo -e "\033[32;1m -> $ext installed successfully/033[0m\n"
     done
+    rm -rf "$HOME/.cache/tmp/"
 
     # dconf reset -f /
     dconf load / < "$LOC/etc/settings.dconf"
