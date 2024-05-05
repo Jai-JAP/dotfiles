@@ -172,58 +172,52 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6"
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3"
   fi
   # shellcheck disable=SC2086
   yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
-    blesh-git visual-studio-code-bin firefox chromium refind $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
+    blesh-git visual-studio-code-bin firefox chromium refind gnome-extensions-cli python-tqdm \
+    $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     echo -e "\033[33;1mCustomizing \033[32;1mGnome\033[33;1m installation...\033[0m"
-    GNOME_VER=$(gnome-shell --version)
-    GNOME_VER="${GNOME_VER##* }"
-    GNOME_VER="${GNOME_VER%.*}"    
+# apps-menu@gnome-shell-extensions.gcampax.github.com
+# arcmenu@arcmenu.com
+# auto-move-windows@gnome-shell-extensions.gcampax.github.com
+# custom-accent-colors@demiskp
+# dash-to-panel@jderose9.github.com
+# drive-menu@gnome-shell-extensions.gcampax.github.com
+# forge@jmmaranan.com
+# gsconnect@andyholmes.github.io
+# gtk4-ding@smedius.gitlab.com
+# launch-new-instance@gnome-shell-extensions.gcampax.github.com
+# native-window-placement@gnome-shell-extensions.gcampax.github.com
+# pamac-updates@manjaro.org
+# places-menu@gnome-shell-extensions.gcampax.github.com
+# screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
+# space-bar@luchrioh
+# user-theme@gnome-shell-extensions.gcampax.github.com
+# window-list@gnome-shell-extensions.gcampax.github.com
+# windowsNavigator@gnome-shell-extensions.gcampax.github.com
+# workspace-indicator@gnome-shell-extensions.gcampax.github.com
+# x11gestures@joseexposito.github.io
+# light-style@gnome-shell-extensions.gcampax.github.com
 
-    INSTALLED_EXTS=$(gnome-extensions list)
-
-    for ext in unblank@sun.wxg@gmail.com pano@elhan.io blur-my-shell@aunetx just-perfection-desktop@just-perfection Vitals@CoreCoding.com; do
-      if [[ $INSTALLED_EXTS =~ $ext ]]; then
-
-        sudo wget -O "/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
-        gnome-extensions install --force "/tmp/${ext}.zip"
-        if ! gnome-extensions list | grep --quiet "$ext"; then
-            busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"
-        fi
-        gnome-extensions enable "$ext"
-        echo -e "\033[33;1m -> \033[32;1m$ext\033[33;1m already installed\033[0m"
-        continue
-      fi
-  
-      VERSION_TAG=$(curl -fsL "https://extensions.gnome.org/extension-query/?search=$ext" | jq ".extensions[] | select(.uuid == \"$ext\") | .shell_version_map | .\"$GNOME_VER\" | .pk")
-
-      if [[ $VERSION_TAG == "null" ]]; then
-        echo -e "\033[31;1m -> $ext is unavailable for GNOME $GNOME_VER\033[0m"
-        continue
-      else
-        echo -e "\033[32;1m -> Installing $ext\033[0m]"
-      fi
-
-      mkdir -p "$HOME/.cache/tmp"
-      curl -sLo "$HOME/.cache/tmp/${ext}.zip" "https://extensions.gnome.org/download-extension/${ext}.shell-extension.zip?version_tag=$VERSION_TAG"
-      gnome-extensions install --force "$HOME/.cache/tmp/${ext}.zip"
-      # if ! gnome-extensions list | grep --quiet "$ext"; then
-      #   if ! busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions org.gnome.Shell.Extensions InstallRemoteExtension s "$ext"; then
-      #     echo -e "\033[31;1m -> Unable to install $ext\033[0m"
-      #   fi
-      # fi
-      gnome-extensions enable "$ext"
-
-      echo -e "\033[32;1m -> $ext installed successfully/033[0m\n"
-    done
-    rm -rf "$HOME/.cache/tmp/"
-
+    gext install \
+      just-perfection-desktop@just-perfection \
+      Vitals@CoreCoding.com \
+      unblank@sun.wxg@gmail.com \
+      pano@elhan.io \
+      blur-my-shell@aunetx \
+      appindicatorsupport@rgcjonas.gmail.com \
+      dash-to-dock@micxgx.gmail.com \
+      gnome-ui-tune@itstime.tech \
+      gsconnect@andyholmes.github.io \
+      legacyschemeautoswitcher@joshimukul29.gmail.com 
+    
+    echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
     dconf load / < "$LOC/etc/settings.dconf"
     echo

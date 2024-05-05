@@ -82,122 +82,8 @@ gtk-theme='Adwaita-dark'
 icon-theme='Papirus-Dark'
 monospace-font-name='Fira Code weight=450 14'
 show-battery-percentage=true
-text-scaling-factor=0.99999999999999978
+text-scaling-factor=1
 toolkit-accessibility=false
-
-[gnome/desktop/notifications]
-application-children=['chrome-hnpfjngllnobngcgfapefoaidbinmjnm-default', 'gnome-network-panel', 'ca-desrt-dconf-editor', 'org-gnome-console', 'firefox']
-
-[gnome/desktop/notifications/application/audacious]
-application-id='audacious.desktop'
-
-[gnome/desktop/notifications/application/bruno]
-application-id='bruno.desktop'
-
-[gnome/desktop/notifications/application/ca-desrt-dconf-editor]
-application-id='ca.desrt.dconf-editor.desktop'
-
-[gnome/desktop/notifications/application/chrome-hnpfjngllnobngcgfapefoaidbinmjnm-default]
-application-id='chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default.desktop'
-
-[gnome/desktop/notifications/application/chrome-magkoliahgffibhgfkmoealggombgknl-default]
-application-id='chrome-magkoliahgffibhgfkmoealggombgknl-Default.desktop'
-
-[gnome/desktop/notifications/application/chromium]
-application-id='chromium.desktop'
-
-[gnome/desktop/notifications/application/code-url-handler]
-application-id='code-url-handler.desktop'
-
-[gnome/desktop/notifications/application/code]
-application-id='code.desktop'
-
-[gnome/desktop/notifications/application/discord]
-application-id='discord.desktop'
-
-[gnome/desktop/notifications/application/firefox]
-application-id='firefox.desktop'
-
-[gnome/desktop/notifications/application/freeoffice-planmaker]
-application-id='freeoffice-planmaker.desktop'
-
-[gnome/desktop/notifications/application/gimp]
-application-id='gimp.desktop'
-
-[gnome/desktop/notifications/application/gnome-network-panel]
-application-id='gnome-network-panel.desktop'
-
-[gnome/desktop/notifications/application/gnome-power-panel]
-application-id='gnome-power-panel.desktop'
-
-[gnome/desktop/notifications/application/google-chrome]
-application-id='google-chrome.desktop'
-
-[gnome/desktop/notifications/application/grub-customizer]
-application-id='grub-customizer.desktop'
-
-[gnome/desktop/notifications/application/jetbrains-idea-edcbc4f5-b3fb-4182-9917-9d3b38f539e1]
-application-id='jetbrains-idea-edcbc4f5-b3fb-4182-9917-9d3b38f539e1.desktop'
-
-[gnome/desktop/notifications/application/jetbrains-toolbox]
-application-id='jetbrains-toolbox.desktop'
-
-[gnome/desktop/notifications/application/libreoffice-draw]
-application-id='libreoffice-draw.desktop'
-
-[gnome/desktop/notifications/application/libreoffice-impress]
-application-id='libreoffice-impress.desktop'
-
-[gnome/desktop/notifications/application/libreoffice-writer]
-application-id='libreoffice-writer.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-baobab]
-application-id='org.gnome.baobab.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-characters]
-application-id='org.gnome.Characters.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-console]
-application-id='org.gnome.Console.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-evince]
-application-id='org.gnome.Evince.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-extensions-desktop]
-application-id='org.gnome.Extensions.desktop.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-fileroller]
-application-id='org.gnome.FileRoller.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-geary]
-application-id='org.gnome.Geary.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-lollypop]
-application-id='org.gnome.Lollypop.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-nautilus]
-application-id='org.gnome.Nautilus.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-settings]
-application-id='org.gnome.Settings.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-shell-extensions-gsconnect]
-application-id='org.gnome.Shell.Extensions.GSConnect.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-texteditor]
-application-id='org.gnome.TextEditor.desktop'
-
-[gnome/desktop/notifications/application/org-gnome-tweaks]
-application-id='org.gnome.tweaks.desktop'
-
-[gnome/desktop/notifications/application/org-manjaro-pamac-manager]
-application-id='org.manjaro.pamac.manager.desktop'
-
-[gnome/desktop/notifications/application/vlc]
-application-id='vlc.desktop'
-
-[gnome/desktop/notifications/application/webcord]
-application-id='webcord.desktop'
 
 [gnome/desktop/peripherals/keyboard]
 numlock-state=true
@@ -460,12 +346,9 @@ sleep-inactive-battery-type='suspend'
 enabled-connections=@as []
 
 [gnome/shell]
-app-picker-layout=[{'org.gnome.Geary.desktop': <{'position': <0>}>, 'accessories': <{'position': <1>}>, 'org.manjaro.pamac.manager.desktop': <{'position': <2>}>, 'audacious.desktop': <{'position': <3>}>, 'bruno.desktop': <{'position': <4>}>, 'org.gnome.Snapshot.desktop': <{'position': <5>}>, 'chromium.desktop': <{'position': <6>}>, 'org.gnome.Totem.desktop': <{'position': <7>}>, 'cmake-gui.desktop': <{'position': <8>}>, 'discord.desktop': <{'position': <9>}>, 'simple-scan.desktop': <{'position': <10>}>, 'me.dusansimic.DynamicWallpaper.desktop': <{'position': <11>}>, 'gimp.desktop': <{'position': <12>}>, 'org.gnome.Loupe.desktop': <{'position': <13>}>, 'jetbrains-toolbox.desktop': <{'position': <14>}>, 'gnome-layouts.desktop': <{'position': <15>}>, 'office': <{'position': <16>}>, '8e238230-ea9e-4d76-a471-b991191ba687': <{'position': <17>}>, 'system-tools': <{'position': <18>}>, 'org.gnome.TextEditor.desktop': <{'position': <19>}>, 'vlc.desktop': <{'position': <20>}>, 'chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default.desktop': <{'position': <21>}>}]
 disable-user-extensions=false
-disabled-extensions=['launch-new-instance@gnome-shell-extensions.gcampax.github.com', 'space-bar@luchrioh', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'forge@jmmaranan.com', 'auto-move-windows@gnome-shell-extensions.gcampax.github.com', 'native-window-placement@gnome-shell-extensions.gcampax.github.com', 'x11gestures@joseexposito.github.io', 'impatience@gfxmonk.net', 'arcmenu@arcmenu.com', 'dash-to-panel@jderose9.github.com', 'gtk4-ding@smedius.gitlab.com']
-enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'pamac-updates@manjaro.org', 'unblank@sun.wxg@gmail.com', 'rounded-window-corners@yilozt', 'Rounded_Corners@lennart-k', 'clipboard-indicator@tudmotu.com', 'bluetooth-battery@michalw.github.com', 'custom-accent-colors@demiskp', 'gsconnect@andyholmes.github.io', 'ControlBlurEffectOnLockScreen@pratap.fastmail.fm', 'blur-my-shell@aunetx', 'just-perfection-desktop@just-perfection', 'pano@elhan.io', 'quick-settings-avatar@d-go', 'quick-settings-tweaks@qwreey', 'Vitals@CoreCoding.com', 'openbar@neuromorph', 'xremap@k0kubun.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
+enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', 'just-perfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Console.desktop']
-last-selected-power-profile='power-saver'
 welcome-dialog-last-shown-version='99.9'
 
 [gnome/shell/app-switcher]
@@ -474,25 +357,6 @@ current-workspace-only=true
 [gnome/shell/extensions/appindicator]
 icon-opacity=242
 legacy-tray-enabled=true
-
-[gnome/shell/extensions/arcmenu]
-custom-menu-button-icon-size=32.0
-dash-to-panel-standalone=false
-distro-icon=3
-hide-overview-on-startup=true
-menu-background-color='rgba(48,48,49,0.98)'
-menu-border-color='rgb(60,60,60)'
-menu-button-appearance='Icon'
-menu-button-icon='Distro_Icon'
-menu-foreground-color='rgb(223,223,223)'
-menu-item-active-bg-color='rgb(25,98,163)'
-menu-item-active-fg-color='rgb(255,255,255)'
-menu-item-hover-bg-color='rgb(21,83,158)'
-menu-item-hover-fg-color='rgb(255,255,255)'
-menu-layout='Default'
-menu-separator-color='rgba(255,255,255,0.1)'
-prefs-visible-page=0
-search-entry-border-radius=(true, 25)
 
 [gnome/shell/extensions/blur-my-shell]
 brightness=0.40000000000000002
@@ -551,9 +415,6 @@ unblur-in-overview=true
 [gnome/shell/extensions/blur-my-shell/screenshot]
 blur=true
 
-[gnome/shell/extensions/custom-accent-colors]
-accent-color='default'
-
 [gnome/shell/extensions/dash-to-dock]
 always-center-icons=true
 app-hotkey-1=['<Super>1']
@@ -573,172 +434,15 @@ hot-keys=true
 hotkeys-overlay=false
 shortcut-timeout=1.0
 
-[gnome/shell/extensions/dash-to-panel]
-available-monitors=[0]
-panel-element-positions='{"0":[{"element":"showAppsButton","visible":false,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":true,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":true,"position":"stackedBR"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"dateMenu","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":true,"position":"stackedBR"}]}'
-panel-position='BOTTOM'
-panel-size=48
-primary-monitor=0
-show-running-apps=true
-
-[gnome/shell/extensions/forge/keybindings]
-con-split-horizontal=['<Super>z']
-con-split-layout-toggle=['<Super>g']
-con-split-vertical=['<Super>v']
-con-stacked-layout-toggle=['<Shift><Super>s']
-con-tabbed-layout-toggle=['<Shift><Super>t']
-con-tabbed-showtab-decoration-toggle=['<Control><Alt>y']
-focus-border-toggle=['<Super>x']
-prefs-tiling-toggle=['<Super>w']
-window-focus-down=['<Super>j']
-window-focus-left=['<Super>h']
-window-focus-right=['<Super>l']
-window-focus-up=['<Super>k']
-window-gap-size-decrease=['<Control><Super>minus']
-window-gap-size-increase=['<Control><Super>plus']
-window-move-down=['<Shift><Super>j']
-window-move-left=['<Shift><Super>h']
-window-move-right=['<Shift><Super>l']
-window-move-up=['<Shift><Super>k']
-window-resize-bottom-decrease=['<Shift><Control><Super>i']
-window-resize-bottom-increase=['<Control><Super>u']
-window-resize-left-decrease=['<Shift><Control><Super>o']
-window-resize-left-increase=['<Control><Super>y']
-window-resize-right-decrease=['<Shift><Control><Super>y']
-window-resize-right-increase=['<Control><Super>o']
-window-resize-top-decrease=['<Shift><Control><Super>u']
-window-resize-top-increase=['<Control><Super>i']
-window-snap-center=['<Control><Alt>c']
-window-snap-one-third-left=['<Control><Alt>d']
-window-snap-one-third-right=['<Control><Alt>g']
-window-snap-two-third-left=['<Control><Alt>e']
-window-snap-two-third-right=['<Control><Alt>t']
-window-swap-down=['<Control><Super>j']
-window-swap-last-active=['<Super>Return']
-window-swap-left=['<Control><Super>h']
-window-swap-right=['<Control><Super>l']
-window-swap-up=['<Control><Super>k']
-window-toggle-always-float=['<Shift><Super>c']
-window-toggle-float=['<Super>c']
-workspace-active-tile-toggle=['<Shift><Super>w']
-
 [gnome/shell/extensions/gnome-ui-tune]
 overview-firefox-pip=false
 
 [gnome/shell/extensions/gsconnect]
 debug=false
-devices=['ced295d7_982a_46c6_bebe_67dcd751913f']
+devices=['']
 enabled=false
-id='ac873291-b06a-4590-aaea-331e4191cec8'
 keep-alive-when-locked=false
-name='jaiap-Inspiron-15-3511'
-show-indicators=false
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.share.request.update', 'kdeconnect.sms.request', 'kdeconnect.sms.request_attachment', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-keybindings=@a{ss} {}
-last-connection='lan://192.168.12.240:1716'
-name='realme 9 5G Speed Edition'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.attachment_file', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-paired=false
-supported-plugins=['battery', 'clipboard', 'connectivity_report', 'contacts', 'findmyphone', 'mousepad', 'mpris', 'notification', 'ping', 'presenter', 'runcommand', 'sftp', 'share', 'sms', 'systemvolume', 'telephony']
-type='phone'
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc/plugin/battery]
-custom-battery-notification-value=uint32 80
-full-battery-notification=true
-send-statistics=true
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc/plugin/clipboard]
-receive-content=false
-send-content=false
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc/plugin/notification]
-applications='{"Printers":{"iconName":"printer","enabled":true},"Evolution Alarm Notify":{"iconName":"appointment-soon","enabled":true},"Add/Remove Software":{"iconName":"system-software-install","enabled":true},"Disks":{"iconName":"org.gnome.DiskUtility","enabled":true},"Date & Time":{"iconName":"org.gnome.Settings-time-symbolic","enabled":true},"Disk Usage Analyzer":{"iconName":"org.gnome.baobab","enabled":true},"Geary":{"iconName":"org.gnome.Geary","enabled":true},"Power":{"iconName":"org.gnome.Settings-power-symbolic","enabled":true},"Console":{"iconName":"org.gnome.Console","enabled":true},"Color":{"iconName":"org.gnome.Settings-color-symbolic","enabled":true},"Files":{"iconName":"org.gnome.Nautilus","enabled":true},"Clocks":{"iconName":"org.gnome.clocks","enabled":true},"Archive Manager":{"iconName":"org.gnome.FileRoller","enabled":true}}'
-send-active=false
-send-notifications=false
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc/plugin/sftp]
-automount=true
-
-[gnome/shell/extensions/gsconnect/device/21dcdcd7_17e3_4751_9b17_d76c4e85a9fc/plugin/share]
-receive-directory='/home/jaiap/Downloads'
-
-[gnome/shell/extensions/gsconnect/device/47e5d79e_2db6_4254_9301_3f9e1d08f896]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.share.request.update', 'kdeconnect.sms.request', 'kdeconnect.sms.request_attachment', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-last-connection='lan://10.11.56.44:1716'
-name="Rohith's OnePlus"
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.attachment_file', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-supported-plugins=['battery', 'clipboard', 'connectivity_report', 'contacts', 'findmyphone', 'mousepad', 'mpris', 'notification', 'ping', 'presenter', 'runcommand', 'sftp', 'share', 'sms', 'systemvolume', 'telephony']
-type='phone'
-
-[gnome/shell/extensions/gsconnect/device/584fdd15-e988-4bba-8040-e5e66f7729a4]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.photo', 'kdeconnect.photo.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-last-connection='lan://192.168.3.193:1716'
-name='viishhnu-IdeaPad-Gaming-3-15IAH7'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report.request', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.photo', 'kdeconnect.photo.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.sms.request', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-supported-plugins=['battery', 'clipboard', 'findmyphone', 'mpris', 'notification', 'ping', 'runcommand', 'share']
-type='laptop'
-
-[gnome/shell/extensions/gsconnect/device/6fcee9ee-3746-47b1-9a69-ee2203aed75e]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.photo', 'kdeconnect.photo.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-last-connection='lan://192.168.145.167:1716'
-name='fedora'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report.request', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.photo', 'kdeconnect.photo.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.sms.request', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-supported-plugins=['battery', 'clipboard', 'findmyphone', 'mousepad', 'mpris', 'notification', 'photo', 'ping', 'runcommand', 'share']
-type='laptop'
-
-[gnome/shell/extensions/gsconnect/device/74dd99fe-ab49-4e30-b2ae-24e3f3eea791]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-last-connection='lan://192.168.3.167:1716'
-name='Rohith-Asus-TUF-F15-Linux'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.battery.request', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report.request', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.runcommand.request', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.sms.request', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-supported-plugins=['battery', 'clipboard', 'findmyphone', 'mousepad', 'mpris', 'notification', 'ping', 'runcommand', 'share']
-type='laptop'
-
-[gnome/shell/extensions/gsconnect/device/9f6fe08b_3953_46c1_b130_f6a0933a2ba9]
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.share.request.update', 'kdeconnect.sms.request', 'kdeconnect.sms.request_attachment', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-last-connection='lan://192.168.12.240:1716'
-name='realme 9 5G Speed Edition'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.attachment_file', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-paired=false
-supported-plugins=['battery', 'clipboard', 'connectivity_report', 'contacts', 'findmyphone', 'mousepad', 'mpris', 'notification', 'ping', 'presenter', 'runcommand', 'sftp', 'share', 'sms', 'systemvolume', 'telephony']
-type='phone'
-
-[gnome/shell/extensions/gsconnect/device/9f6fe08b_3953_46c1_b130_f6a0933a2ba9/plugin/battery]
-custom-battery-notification-value=uint32 80
-
-[gnome/shell/extensions/gsconnect/device/9f6fe08b_3953_46c1_b130_f6a0933a2ba9/plugin/notification]
-applications='{"Printers":{"iconName":"printer","enabled":true},"Evolution Alarm Notify":{"iconName":"appointment-soon","enabled":true},"Add/Remove Software":{"iconName":"system-software-install","enabled":true},"Disks":{"iconName":"org.gnome.DiskUtility","enabled":true},"Date & Time":{"iconName":"org.gnome.Settings-time-symbolic","enabled":true},"Disk Usage Analyzer":{"iconName":"org.gnome.baobab","enabled":true},"Geary":{"iconName":"org.gnome.Geary","enabled":true},"Power":{"iconName":"org.gnome.Settings-power-symbolic","enabled":true},"Console":{"iconName":"org.gnome.Console","enabled":true},"Color":{"iconName":"org.gnome.Settings-color-symbolic","enabled":true},"Files":{"iconName":"org.gnome.Nautilus","enabled":true},"Clocks":{"iconName":"org.gnome.clocks","enabled":true},"Archive Manager":{"iconName":"org.gnome.FileRoller","enabled":true}}'
-
-[gnome/shell/extensions/gsconnect/device/9f6fe08b_3953_46c1_b130_f6a0933a2ba9/plugin/share]
-receive-directory='/home/jaiap/Downloads'
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f]
-certificate-pem='-----BEGIN CERTIFICATE-----\nMIIBlDCCATmgAwIBAgIBATAKBggqhkjOPQQDBDBTMS0wKwYDVQQDDCRjZWQyOTVk\nN185ODJhXzQ2YzZfYmViZV82N2RjZDc1MTkxM2YxFDASBgNVBAsMC0tERSBDb25u\nZWN0MQwwCgYDVQQKDANLREUwHhcNMjIxMTIzMTgzMDAwWhcNMzIxMTIzMTgzMDAw\nWjBTMS0wKwYDVQQDDCRjZWQyOTVkN185ODJhXzQ2YzZfYmViZV82N2RjZDc1MTkx\nM2YxFDASBgNVBAsMC0tERSBDb25uZWN0MQwwCgYDVQQKDANLREUwWTATBgcqhkjO\nPQIBBggqhkjOPQMBBwNCAASYNXbfk5P4UXjWtNlw6PQZ2nlfWpll+LJav2QJfGm6\nSrm8PBVw6KwH8HDyMRvuuahOfu2iz6CPsXwcgYeMhHyXMAoGCCqGSM49BAMEA0kA\nMEYCIQDuIQ8gtIA2XgKv9w2S/ZXIJ8i8OBs01utk95rUGSgWBQIhAMszs/qVsD18\nzfsG/VjgDWCN4xWOYUCIoww29ser4eaL\n-----END CERTIFICATE-----\n'
-incoming-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.contacts.request_all_uids_timestamps', 'kdeconnect.contacts.request_vcards_by_uid', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.action', 'kdeconnect.notification.reply', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.runcommand', 'kdeconnect.sftp.request', 'kdeconnect.share.request', 'kdeconnect.share.request.update', 'kdeconnect.sms.request', 'kdeconnect.sms.request_attachment', 'kdeconnect.sms.request_conversation', 'kdeconnect.sms.request_conversations', 'kdeconnect.systemvolume', 'kdeconnect.telephony.request', 'kdeconnect.telephony.request_mute']
-last-connection='lan://192.168.166.198:1716'
-name='realme 9 5G Speed Edition'
-outgoing-capabilities=['kdeconnect.battery', 'kdeconnect.bigscreen.stt', 'kdeconnect.clipboard', 'kdeconnect.clipboard.connect', 'kdeconnect.connectivity_report', 'kdeconnect.contacts.response_uids_timestamps', 'kdeconnect.contacts.response_vcards', 'kdeconnect.findmyphone.request', 'kdeconnect.mousepad.echo', 'kdeconnect.mousepad.keyboardstate', 'kdeconnect.mousepad.request', 'kdeconnect.mpris', 'kdeconnect.mpris.request', 'kdeconnect.notification', 'kdeconnect.notification.request', 'kdeconnect.ping', 'kdeconnect.presenter', 'kdeconnect.runcommand.request', 'kdeconnect.sftp', 'kdeconnect.share.request', 'kdeconnect.sms.attachment_file', 'kdeconnect.sms.messages', 'kdeconnect.systemvolume.request', 'kdeconnect.telephony']
-paired=true
-supported-plugins=['battery', 'clipboard', 'connectivity_report', 'contacts', 'findmyphone', 'mousepad', 'mpris', 'notification', 'ping', 'presenter', 'runcommand', 'sftp', 'share', 'sms', 'systemvolume', 'telephony']
-type='phone'
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f/plugin/battery]
-custom-battery-notification-value=uint32 80
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f/plugin/clipboard]
-receive-content=true
-send-content=true
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f/plugin/notification]
-applications='{"Printers":{"iconName":"printer","enabled":true},"Evolution Alarm Notify":{"iconName":"appointment-soon","enabled":true},"Add/Remove Software":{"iconName":"system-software-install","enabled":true},"Disks":{"iconName":"org.gnome.DiskUtility","enabled":true},"Date & Time":{"iconName":"org.gnome.Settings-time-symbolic","enabled":true},"Disk Usage Analyzer":{"iconName":"org.gnome.baobab","enabled":true},"Geary":{"iconName":"org.gnome.Geary","enabled":true},"Power":{"iconName":"org.gnome.Settings-power-symbolic","enabled":true},"Console":{"iconName":"org.gnome.Console","enabled":true},"Color":{"iconName":"org.gnome.Settings-color-symbolic","enabled":true},"Files":{"iconName":"org.gnome.Nautilus","enabled":true},"Clocks":{"iconName":"org.gnome.clocks","enabled":true},"Archive Manager":{"iconName":"org.gnome.FileRoller","enabled":true},"Chromium":{"iconName":"file:///tmp/.org.chromium.Chromium.pHS2Nh","enabled":true},"Firefox":{"iconName":"","enabled":true},"Characters":{"iconName":"org.gnome.Characters","enabled":true},"Guake":{"iconName":"/usr/share/guake/pixmaps/guake-notification.png","enabled":true},"Upscayl":{"iconName":"","enabled":true},"gnome-settings-daemon":{"iconName":"dialog-warning-symbolic","enabled":true}}'
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f/plugin/sftp]
-automount=false
-
-[gnome/shell/extensions/gsconnect/device/ced295d7_982a_46c6_bebe_67dcd751913f/plugin/share]
-receive-directory='/home/jaiap/Downloads'
+how-indicators=false
 
 [gnome/shell/extensions/gsconnect/messaging]
 window-maximized=false
@@ -811,9 +515,6 @@ body-font-size=14
 
 [gnome/shell/extensions/pano/emoji-item]
 emoji-size=64
-
-[gnome/shell/extensions/space-bar/shortcuts]
-open-menu=@as []
 
 [gnome/shell/extensions/vitals]
 alphabetize=true
