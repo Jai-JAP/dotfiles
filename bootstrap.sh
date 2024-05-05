@@ -219,12 +219,12 @@ else
     
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
-    dconf load / < "$LOC/etc/settings.dconf"
+    dconf load /org/ < "$LOC/etc/settings.dconf"
     echo
   fi
 
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
-  if sudo test -d "/boot/efi/EFI/refind"; then
+  if sudo test -f "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
