@@ -64,12 +64,14 @@ sources=[('xkb', 'us')]
 [gnome/desktop/interface]
 clock-format='12h'
 clock-show-weekday=true
+color-scheme='prefer-dark'
+cursor-theme='Bibata-Modern-Classic'
 document-font-name='Sans 14'
 enable-animations=true
 font-antialiasing='rgba'
 font-hinting='medium'
 font-name='Noto Sans 14'
-gtk-theme='Adwaita-dark'
+gtk-theme='adw-gtk3-dark'
 icon-theme='Papirus-Dark'
 monospace-font-name='FiraCode Nerd Font Mono weight=450 14'
 show-battery-percentage=true
@@ -175,8 +177,6 @@ sort-order=0
 
 [gnome/login-screen]
 enable-smartcard-authentication=false
-fallback-logo='/usr/share/icons/manjaro/white/white.svg'
-logo='/usr/share/icons/manjaro/white/watermark.png '
 
 [gnome/mutter]
 overlay-key='Super_L'
@@ -224,6 +224,7 @@ enabled-connections=@as []
 
 [gnome/shell]
 disable-user-extensions=false
+disabled-extensions=@as []
 enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', 'just-perfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Console.desktop']
 welcome-dialog-last-shown-version='99.9'
@@ -241,10 +242,13 @@ color=(0.0, 0.0, 0.0, 0.0)
 color-and-noise=false
 hacks-level=1
 noise-amount=0.0
+settings-version=2
 sigma=30
 
 [gnome/shell/extensions/blur-my-shell/appfolder]
 blur=true
+brightness=0.6
+sigma=30
 style-dialogs=3
 
 [gnome/shell/extensions/blur-my-shell/applications]
@@ -262,6 +266,8 @@ blur=false
 brightness=0.4
 customize=false
 override-background=false
+sigma=30
+static-blur=false
 style-dash-to-dock=0
 unblur-in-overview=false
 
@@ -292,6 +298,10 @@ unblur-in-overview=true
 [gnome/shell/extensions/blur-my-shell/screenshot]
 blur=true
 
+[gnome/shell/extensions/blur-my-shell/window-list]
+brightness=0.6
+sigma=30
+
 [gnome/shell/extensions/dash-to-dock]
 always-center-icons=true
 app-hotkey-1=['<Super>1']
@@ -303,13 +313,21 @@ app-hotkey-6=['<Super>6']
 app-hotkey-7=['<Super>7']
 app-hotkey-8=['<Super>8']
 app-hotkey-9=['<Super>9']
+apply-custom-theme=false
 background-color='rgb(0,0,0)'
 background-opacity=0.5
 click-action='minimize-or-previews'
 custom-background-color=true
+dash-max-icon-size=48
+dock-position='BOTTOM'
+height-fraction=1.0
 hot-keys=true
 hotkeys-overlay=false
+intellihide-mode='ALL_WINDOWS'
+preferred-monitor=-2
 shortcut-timeout=1.0
+transparency-mode='FIXED'
+show-trash=false
 
 [gnome/shell/extensions/gnome-ui-tune]
 overview-firefox-pip=false
@@ -318,8 +336,8 @@ overview-firefox-pip=false
 debug=false
 devices=['']
 enabled=false
-keep-alive-when-locked=false
 how-indicators=false
+keep-alive-when-locked=false
 
 [gnome/shell/extensions/gsconnect/messaging]
 window-maximized=false
@@ -411,7 +429,6 @@ show-temperature=true
 show-voltage=false
 update-time=1
 use-higher-precision=false
-
 
 [gnome/shell/keybindings]
 focus-active-notification=@as []

@@ -172,7 +172,7 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3"
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme"
   fi
   # shellcheck disable=SC2086
   yay -Syu --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
