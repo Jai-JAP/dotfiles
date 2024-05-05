@@ -19,7 +19,7 @@ highlight-current-line=true
 restore-session=false
 show-line-numbers=true
 style-scheme='Adwaita-dark'
-use-system-font=false
+use-system-font=true
 
 [gnome/baobab/ui]
 active-chart='rings'
@@ -27,20 +27,13 @@ is-maximized=false
 window-size=(960, 600)
 
 [gnome/control-center]
-last-panel='wifi'
 window-state=(980, 640, false)
 
 [gnome/desktop/app-folders]
-folder-children=['accessories', 'games', 'office', 'system-tools', '8e238230-ea9e-4d76-a471-b991191ba687']
-
-[gnome/desktop/app-folders/folders/8e238230-ea9e-4d76-a471-b991191ba687]
-apps=['designer.desktop', 'assistant.desktop', 'linguist.desktop', 'qdbusviewer.desktop']
-name='Programming'
+folder-children=['accessories', 'games', 'office', 'system-tools']
 
 [gnome/desktop/app-folders/folders/accessories]
-apps=['yad-icon-browser.desktop', 'de.haeckerfelix.Fragments.desktop']
 categories=['Utility']
-excluded-apps=['gnome-layouts.desktop', 'manjaro-documentation.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Maps.desktop', 'org.gnome.TextEditor.desktop']
 name='Accessories'
 translate=true
 
@@ -55,9 +48,7 @@ name='Office'
 translate=true
 
 [gnome/desktop/app-folders/folders/system-tools]
-apps=['qvidcap.desktop', 'qv4l2.desktop', 'bssh.desktop', 'bvnc.desktop', 'kvantummanager.desktop', 'lstopo.desktop', 'gnome-printers-panel.desktop', 'org.gnome.Logs.desktop', 'org.gnome.Settings.desktop', 'msm_notifier_settings.desktop', 'qt5ct.desktop', 'qt6ct.desktop', 'htop.desktop', 'gufw.desktop', 'gnome-system-monitor.desktop', 'avahi-discover.desktop', 'manjaro-settings-manager.desktop', 'appimagelaunchersettings.desktop', 'gtk-lshw.desktop', 'org.gnome.baobab.desktop', 'yad-settings.desktop', 'ca.desrt.dconf-editor.desktop', 'manjaro-hello.desktop', 'toolbox.desktop', 'manjaro-log-helper.desktop', 'ranger.desktop']
 categories=['System', 'Settings']
-excluded-apps=['org.manjaro.pamac.manager.desktop']
 name='System Tools'
 translate=true
 
@@ -80,7 +71,7 @@ font-hinting='medium'
 font-name='Noto Sans 14'
 gtk-theme='Adwaita-dark'
 icon-theme='Papirus-Dark'
-monospace-font-name='Fira Code weight=450 14'
+monospace-font-name='FiraCode Nerd Font weight=450 14'
 show-battery-percentage=true
 text-scaling-factor=1
 toolkit-accessibility=false
@@ -94,7 +85,7 @@ speed=0.20000000000000001
 
 [gnome/desktop/peripherals/touchpad]
 click-method='fingers'
-speed=0.38461538461538458
+speed=0.4
 tap-to-click=true
 two-finger-scrolling-enabled=true
 
@@ -104,17 +95,15 @@ remove-old-trash-files=true
 
 [gnome/desktop/remote-desktop/rdp]
 enable=false
-tls-cert='/home/jaiap/.local/share/gnome-remote-desktop/rdp-tls.crt'
-tls-key='/home/jaiap/.local/share/gnome-remote-desktop/rdp-tls.key'
 view-only=true
 
 [gnome/desktop/screensaver]
-picture-uri='file:///home/jaiap/.local/share/backgrounds/2024-01-08-10-33-58-Galaxy_upscaled.png'
+picture-uri='file:///home/jaiap/.config/background'
 primary-color='#000000000000'
 secondary-color='#000000000000'
 
 [gnome/desktop/search-providers]
-disabled=['firefox.desktop', 'org.gnome.Terminal.desktop', 'org.manjaro.pamac.manager.desktop', 'org.gnome.Lollypop.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop']
+disabled=['firefox.desktop', 'org.gnome.Lollypop.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop']
 
 [gnome/desktop/wm/keybindings]
 close=['<Alt>F4']
@@ -324,7 +313,7 @@ logout=@as []
 [gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Control><Alt>t'
 command='kgx --'
-name='Launch Terminal '
+name='Launch Terminal'
 
 [gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Super>F4'
