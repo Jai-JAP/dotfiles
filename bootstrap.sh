@@ -175,7 +175,7 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3"
   fi
   # shellcheck disable=SC2086
-  yay -S --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
+  yay -Syu --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
     vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
     blesh-git visual-studio-code-bin firefox chromium refind gnome-extensions-cli python-tqdm \
     $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
