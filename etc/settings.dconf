@@ -1,9 +1,9 @@
 [gnome/Console]
-custom-font='FiraCode Nerd Font 14'
+custom-font='FiraCode Nerd Font Mono weight=450 14'
 font-scale=1.0
 last-window-size=(902, 630)
 theme='auto'
-use-system-font=false
+use-system-font=true
 
 [gnome/Geary]
 ask-open-attachment=true
@@ -14,7 +14,7 @@ move-messages-on-tag=true
 optional-plugins=['sent-sound']
 
 [gnome/TextEditor]
-custom-font='Fira Code weight=450 14'
+custom-font='FiraCode Nerd Font Mono weight=450 14'
 highlight-current-line=true
 restore-session=false
 show-line-numbers=true
@@ -71,7 +71,7 @@ font-hinting='medium'
 font-name='Noto Sans 14'
 gtk-theme='Adwaita-dark'
 icon-theme='Papirus-Dark'
-monospace-font-name='FiraCode Nerd Font weight=450 14'
+monospace-font-name='FiraCode Nerd Font Mono weight=450 14'
 show-battery-percentage=true
 text-scaling-factor=1
 toolkit-accessibility=false
@@ -387,7 +387,7 @@ sync-primary=false
 window-height=300
 
 [gnome/shell/extensions/pano/code-item]
-body-font-family='Fira Code'
+body-font-family='FiraCode Nerd Font Mono'
 body-font-size=14
 
 [gnome/shell/extensions/pano/emoji-item]
