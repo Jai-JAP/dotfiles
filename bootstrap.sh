@@ -223,7 +223,7 @@ else
     echo
   fi
 
-  echo -e "\033[33;1mCustomizing User logo\033[0m]"
+  echo -e "\033[33;1mCustomizing User logo\033[0m"
   if sudo test -f "/var/lib/AccountsService/icons/$USER" && [[ $(hash "/var/lib/AccountsService/icons/$USER") == $(hash "$LOC"/icon.*) ]] ; then
     echo -e "User logo already setup\n"
   else
