@@ -233,7 +233,7 @@ else
   fi
   
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
-  if sudo test -f "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
+  if sudo test -d "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
