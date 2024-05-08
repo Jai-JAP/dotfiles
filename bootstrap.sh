@@ -175,10 +175,10 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme"
   fi
   # shellcheck disable=SC2086
-  yay -Syu --needed --noconfirm jq discord-electron rizin intel-media-driver libvdpau-va-gl libva-utils \
-    vdpauinfo intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
+  yay -Syu --needed --noconfirm jq intel-media-driver libvdpau-va-gl libva-utils vdpauinfo \
+    intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
     blesh-git visual-studio-code-bin firefox chromium refind gnome-extensions-cli python-tqdm \
-    $GNOME_PKGS $MKINITCPIO_PKGS 2>/dev/null
+    $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
