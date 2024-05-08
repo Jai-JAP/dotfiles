@@ -175,8 +175,8 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme"
   fi
   # shellcheck disable=SC2086
-  yay -Syu --needed --noconfirm jq intel-media-driver libvdpau-va-gl libva-utils vdpauinfo \
-    intel-media-sdk thermald tlp tlp-rdw micro wl-clipboard ttf-firacode-nerd ttf-fira-code \
+  yay -Syu --needed --noconfirm jq micro intel-media-driver intel-media-sdk libva-intel-driver \
+    libva-utils vdpauinfo thermald tlp tlp-rdw wl-clipboard ttf-firacode-nerd ttf-fira-code \
     blesh-git visual-studio-code-bin firefox chromium refind gnome-extensions-cli python-tqdm \
     $GNOME_PKGS $MKINITCPIO_PKGS
   echo
