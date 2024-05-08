@@ -223,6 +223,15 @@ else
     echo
   fi
 
+  echo -e "\033[33;1mCustomizing User logo\033[0m]"
+  if sudo test -f "/var/lib/AccountsService/icons/$USER" && [[ $(hash "/var/lib/AccountsService/icons/$USER") == $(hash "$LOC"/icon.*) ]] ; then
+    echo -e "User logo already setup\n"
+  else
+    sudo cp -v "$LOC"/icon.* "/var/lib/AccountsService/icons/$USER"
+    echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/$USER\nSystemAccount=false" | sudo tee "/var/lib/AccountsService/users/$USER"
+    echo -e "\033[32;1mUser logo set successfully\033[0m\n"
+  fi
+  
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
   if sudo test -f "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
     echo "Bootscreen customisations already applied."
