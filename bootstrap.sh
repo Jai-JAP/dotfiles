@@ -73,7 +73,7 @@ if [[ "$PREFIX" =~ com.termux ]]; then
     echo -e "\033[33;1m -> \033[0m Installing ble.sh"
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "$PREFIX/tmp/ble.sh"
     make -C "$PREFIX/tmp/ble.sh" install PREFIX="$HOME/.local"
-    rm -rvf "$PREFIX/tmp/ble.sh"
+    rm -rf "$PREFIX/tmp/ble.sh"
   else
     echo -e "\033[33;1m -> \033[0m ble.sh already installed"
   fi
@@ -120,6 +120,9 @@ else
   for dir in modprobe.d profile.d xdg; do
     process_root_cfgs {"$LOC",}/"etc/$dir"
   done
+  if ! lspci | awk '/VGA/ && /Intel/ {found=1} END {exit !found}'; then
+    sudo rm -fv "/etc"/{"profile.d/hwaccel.sh","modprobe.d/i915.conf"}
+  fi
   for file in tlp.conf makepkg.conf; do
     link {"$LOC",}/"etc/$file"
   done
