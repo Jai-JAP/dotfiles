@@ -324,10 +324,11 @@ height-fraction=1.0
 hot-keys=true
 hotkeys-overlay=false
 intellihide-mode='ALL_WINDOWS'
-preferred-monitor=-2
+multi-monitor=true
 shortcut-timeout=1.0
-transparency-mode='FIXED'
+show-mounts=false
 show-trash=false
+transparency-mode='FIXED'
 
 [gnome/shell/extensions/gnome-ui-tune]
 overview-firefox-pip=false
