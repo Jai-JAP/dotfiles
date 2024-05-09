@@ -117,11 +117,8 @@ else
   process_root_cfgs {"$LOC","/root"}/".config/micro"
   echo
 
-  for dir in modprobe.d profile.d skel xdg; do
-    # shellcheck disable=SC2045
-    for file in $(ls -A "$LOC/etc/$dir"); do
-      link {"$LOC",}/"etc/$dir/$file"
-    done
+  for dir in modprobe.d profile.d xdg; do
+    process_root_cfgs {"$LOC",}/"etc/$dir"
   done
   for file in tlp.conf makepkg.conf; do
     link {"$LOC",}/"etc/$file"
