@@ -221,9 +221,6 @@ power-saver-profile-on-low-battery=true
 sleep-inactive-ac-type='nothing'
 sleep-inactive-battery-type='suspend'
 
-[gnome/settings-daemon/plugins/sharing/gnome-user-share-webdav]
-enabled-connections=@as []
-
 [gnome/shell]
 disable-user-extensions=false
 disabled-extensions=@as []
