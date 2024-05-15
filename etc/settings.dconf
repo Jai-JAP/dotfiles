@@ -1,5 +1,5 @@
 [gnome/Console]
-custom-font='FiraCode Nerd Font Mono weight=450 14'
+custom-font='FiraCode Nerd Font Mono 14'
 font-scale=1.0
 last-window-size=(902, 630)
 theme='auto'
@@ -224,7 +224,7 @@ sleep-inactive-battery-type='suspend'
 [gnome/shell]
 disable-user-extensions=false
 disabled-extensions=@as []
-enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', 'just-perfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
+enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', ',erfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Console.desktop']
 welcome-dialog-last-shown-version='99.9'
 
@@ -367,9 +367,12 @@ notification-banner-position=1
 osd-position=0
 overlay-key=true
 panel=true
+panel-button-padding-size=11
+panel-icon-size=18
 panel-in-overview=true
+panel-indicator-padding-size=5
 panel-notification-icon=true
-panel-size=0
+panel-size=32
 power-icon=true
 quick-settings=true
 ripple-box=true
@@ -380,7 +383,7 @@ startup-status=0
 switcher-popup-delay=true
 theme=false
 weather=false
-window-demands-attention-focus=false
+window-demands-attention-focus=true
 window-menu-take-screenshot-button=true
 window-picker-icon=true
 workspace=true
