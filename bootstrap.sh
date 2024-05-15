@@ -136,12 +136,18 @@ else
     -e '/ParallelDownloads = /s/= ./= 8/' /etc/pacman.conf
   echo
 
-  if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") ]]; then
+  if [[ -f "/etc/skel/.bash_profile" ]]; then
+    echo "'/etc/skel/.bash_profile' exists"
+  else
+    echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" | sudo tee "/etc/skel/.bash_profile" >/dev/null
+  fi
+
+  if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") || ! -f "/etc/skel/.bashrc" ]]; then
     sudo rm /etc/skel/.bashrc
     sudo cp -v {"$LOC",}/etc/skel/.bashrc
     cp -v {"$LOC/etc/skel","$HOME"}/.bashrc
   else
-    echo -e "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
+    echo "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
   fi
   echo
 
@@ -253,7 +259,7 @@ else
     if ! git diff --quiet HEAD -- . ':PKGBUILD'; then
       git commit -am "Fix refind_home path"
     fi
-    yay -S refind-theme-regular-git --noredownload --noconfirm 2>/dev/null
+    yay -S refind-theme-regular-git --noredownload --noconfirm
     # shellcheck disable=SC2164
     popd >/dev/null
     # shellcheck disable=SC2164
