@@ -23,7 +23,7 @@
     echo "Dependencies already installed"
   else
     echo -e "\n\033[33;1mInstalling dependencies\033[0m"
-    yay -S --needed --noconfirm $PACKAGES 2>/dev/null
+    yay -S --needed --noconfirm $PACKAGES 
     sudo chown root:users /opt/android-sdk
     sudo chmod g+w /opt/android-sdk
     echo
