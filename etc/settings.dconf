@@ -66,17 +66,17 @@ clock-format='12h'
 clock-show-weekday=true
 color-scheme='prefer-dark'
 cursor-theme='Bibata-Modern-Classic'
-document-font-name='Sans 14'
+document-font-name='Sans 12'
 enable-animations=true
 enable-hot-corners=true
 font-antialiasing='rgba'
 font-hinting='medium'
-font-name='Noto Sans 14'
+font-name='Noto Sans 12'
 gtk-theme='adw-gtk3-dark'
 icon-theme='Papirus-Dark'
 monospace-font-name='FiraCode Nerd Font Mono weight=450 14'
 show-battery-percentage=true
-text-scaling-factor=1
+text-scaling-factor=1.0
 toolkit-accessibility=false
 
 [gnome/desktop/peripherals/keyboard]

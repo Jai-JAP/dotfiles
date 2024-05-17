@@ -117,7 +117,7 @@ else
   process_root_cfgs {"$LOC","/root"}/".config/micro"
   echo
 
-  for dir in modprobe.d profile.d xdg; do
+  for dir in dconf modprobe.d profile.d xdg; do
     process_root_cfgs {"$LOC",}/"etc/$dir"
   done
   if ! lspci | awk '/VGA/ && /Intel/ {found=1} END {exit !found}'; then
@@ -161,6 +161,12 @@ else
     fi
     MKINITCPIO_PKGS="mkinitcpio-firmware"
     echo
+  elif command -v dracut &>/dev/null; then
+    if [[ -f "/etc/dracut.conf.d/custom.conf" ]]; then
+      echo "'/etc/dracut.conf.d/custom.conf' exists"
+    else
+      command sudo -S bash -c 'echo -e "omit_dracutmodules+=\" btrfs btrfs-snapshot-overlay qemu qemu-net \"\nadd_drivers+=\" i915 \"" > "/etc/dracut.conf.d/custom.conf"' <<<"$PASSWORD"
+    fi
   fi
 
   for file in .bashrc .blerc; do
@@ -178,7 +184,7 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme"
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme valent-git"
   fi
   # shellcheck disable=SC2086
   yay -Syu --needed --noconfirm jq micro intel-media-driver intel-media-sdk libva-intel-driver \
@@ -220,7 +226,6 @@ else
       appindicatorsupport@rgcjonas.gmail.com \
       dash-to-dock@micxgx.gmail.com \
       gnome-ui-tune@itstime.tech \
-      gsconnect@andyholmes.github.io \
       legacyschemeautoswitcher@joshimukul29.gmail.com 
     
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
@@ -234,7 +239,7 @@ else
     echo -e "User logo already setup\n"
   else
     sudo cp -v "$LOC"/icon.* "/var/lib/AccountsService/icons/$USER"
-    echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/$USER\nSystemAccount=false" | sudo tee "/var/lib/AccountsService/users/$USER"
+    command sudo -S bash -c 'echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/${SUDO_USER}\nSystemAccount=false" > "/var/lib/AccountsService/users/${SUDO_USER}"' <<<"$PASSWROD"
     echo -e "\033[32;1mUser logo set successfully\033[0m\n"
   fi
   
