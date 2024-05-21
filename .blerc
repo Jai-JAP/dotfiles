@@ -3,6 +3,7 @@ if [[ "$TERM_PROGRAM" != "vscode" ]]; then
     ble-import contrib/prompt-git
     bleopt prompt_rps1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})}' \
       prompt_rps1_transient=1
+    # RPS1='${_ble_contrib_prompt_git_base:+ \g{bold}| \g{reset}\q{contrib/git-branch} (\q{contrib/git-hash})}'
   fi
 
   ble-bind -f 'C-h' delete-backward-cword
@@ -11,6 +12,9 @@ else
   ble-bind -f 'C-h' ''
   ble-bind -m emacs -f 'C-w' delete-backward-cword
 fi
+
+# bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET == 0 ]]; then echo \"\\g{bold,fg=green}\$RET\\g{reset}\"; else echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
+#   prompt_rps1_transient=1
 
 bleopt edit_vbell= \
   decode_error_char_vbell= \
