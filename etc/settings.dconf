@@ -224,7 +224,7 @@ sleep-inactive-battery-type='suspend'
 [gnome/shell]
 disable-user-extensions=false
 disabled-extensions=@as []
-enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', ',erfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
+enabled-extensions=['legacyschemeautoswitcher@joshimukul29.gmail.com', 'unblank@sun.wxg@gmail.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', 'just-perfection-desktop@just-perfection', 'pano@elhan.io', 'Vitals@CoreCoding.com', 'dash-to-dock@micxgx.gmail.com', 'appindicatorsupport@rgcjonas.gmail.com', 'gnome-ui-tune@itstime.tech']
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Console.desktop']
 welcome-dialog-last-shown-version='99.9'
 
@@ -413,6 +413,10 @@ body-font-size=14
 
 [gnome/shell/extensions/pano/emoji-item]
 emoji-size=64
+
+[gnome/shell/extensions/unblank]
+power=false
+time=0
 
 [gnome/shell/extensions/vitals]
 alphabetize=true

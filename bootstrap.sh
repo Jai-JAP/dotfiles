@@ -117,7 +117,7 @@ else
   process_root_cfgs {"$LOC","/root"}/".config/micro"
   echo
 
-  for dir in dconf modprobe.d profile.d xdg; do
+  for dir in modprobe.d profile.d xdg; do
     process_root_cfgs {"$LOC",}/"etc/$dir"
   done
   if ! lspci | awk '/VGA/ && /Intel/ {found=1} END {exit !found}'; then
