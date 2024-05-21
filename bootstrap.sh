@@ -231,6 +231,7 @@ else
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
     dconf load /org/ <<< "$(sed 's|/home/jaiap|'"$HOME"'|g' "$LOC/etc/settings.dconf")"
+    sudo dconf-update
     echo
   fi
 
