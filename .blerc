@@ -30,7 +30,12 @@ ble-face auto_complete='fg=240' \
   syntax_delimiter='fg=88,bold' \
   syntax_function_name='fg=108,bold'
 
-bleopt prompt_ps1_final="\g{bold,fg=70}󰜴 \g{reset} "
+if [[ "$EUID" == 0 ]]; then
+  FG_COLOR=160
+else
+  FG_COLOR=70
+fi
+bleopt prompt_ps1_final="\g{bold,fg=$FG_COLOR}󰜴 \g{reset} "
 
 bleopt indent_offset=2 indent_tabs=0
 blehook CHPWD="echo -ne '\Uf024b ➞ \033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -ne '\033[0m'"
