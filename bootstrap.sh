@@ -189,10 +189,10 @@ else
       kvantum kvantum-qt5 kvantum-theme-libadwaita-git qt5ct qt6ct"
   fi
   # shellcheck disable=SC2086
-  yay -Syu --needed --noconfirm jq micro intel-media-driver intel-media-sdk libva-intel-driver \
-    libva-utils vdpauinfo thermald tlp tlp-rdw wl-clipboard ttf-firacode-nerd ttf-fira-code \
-    blesh-git visual-studio-code-bin firefox chromium refind gnome-extensions-cli python-tqdm \
-    $GNOME_PKGS $MKINITCPIO_PKGS
+  yay -Syu --needed --noconfirm jq micro wl-clipboard intel-media-driver intel-media-sdk \
+    libva-intel-driver libva-utils vdpauinfo vulkan-intel vulkan-mesa-layers vulkan-tools \
+    thermald tlp tlp-rdw ttf-firacode-nerd ttf-fira-code blesh-git visual-studio-code-bin \
+    firefox chromium refind gnome-extensions-cli python-tqdm $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
