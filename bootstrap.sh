@@ -123,7 +123,7 @@ else
   if ! lspci | awk '/VGA/ && /Intel/ {found=1} END {exit !found}'; then
     sudo rm -fv "/etc"/{"profile.d/hwaccel.sh","modprobe.d/i915.conf"}
   fi
-  for file in tlp.conf makepkg.conf; do
+  for file in tlp.conf makepkg.conf paru.conf; do
     link {"$LOC",}/"etc/$file"
   done
   echo
