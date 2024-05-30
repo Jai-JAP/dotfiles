@@ -241,7 +241,7 @@ else
     echo -e "User logo already setup\n"
   else
     sudo cp -v "$LOC"/icon.* "/var/lib/AccountsService/icons/$USER"
-    command sudo -S bash -c 'echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/${SUDO_USER}\nSystemAccount=false" > "/var/lib/AccountsService/users/${SUDO_USER}"' <<<"$PASSWROD"
+    command sudo -S bash -c 'echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/${SUDO_USER}\nSystemAccount=false" > "/var/lib/AccountsService/users/${SUDO_USER}"' <<<"$PASSWORD"
     echo -e "\033[32;1mUser logo set successfully\033[0m\n"
   fi
   
@@ -275,8 +275,12 @@ else
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
-  while IFS= read -r -d '' FIREFOX_PROFILE; do
+  while IFS= read -r FIREFOX_PROFILE; do
     cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
+user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"sponsorblocker_ajay_app-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"idcac-pub_guus_ninja-browser-action\",\"addon_darkreader_org-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"stop-reload-button\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"firefox-view-button\",\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"save-to-pocket-button\",\"developer-button\",\"idcac-pub_guus_ninja-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"sponsorblocker_ajay_app-browser-action\",\"addon_darkreader_org-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"PersonalToolbar\",\"unified-extensions-area\",\"toolbar-menubar\",\"TabsToolbar\"],\"currentVersion\":20,\"newElementCount\":4}");
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 user_pref("widget.use-xdg-desktop-portal.location", 1);
@@ -295,7 +299,7 @@ EOF
           echo "@import \"firefox-gnome-theme/$file\";" >"$FIREFOX_CHROME_DIR/$file"
         fi
       done
-      link {"$FIREFOX_CHROME_DIR/configuration","$FIREFOX_PROFILE"}/"user.js"
+      link {"$FIREFOX_CHROME_DIR/firefox-gnome-theme/configuration","$FIREFOX_PROFILE"}/"user.js"
 
       cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("gnomeTheme.activeTabContrast", true);
@@ -306,7 +310,7 @@ EOF
     fi
 
     echo -e " - Customizations applied to ${FIREFOX_PROFILE##*/}\n"
-  done < <(find "$HOME/.mozilla/firefox/" -maxdepth 1 -type d -name "*.default*" -print0)
+  done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"$HOME"'/.mozilla/firefox/"$2 }' "$HOME/.mozilla/firefox/profiles.ini")
 
   sudo mkdir -pv "/etc/firefox/policies"
   link {"$LOC",}/"etc/firefox/policies/policies.json"
