@@ -5,6 +5,10 @@ hash() {
   sha256sum "$1" | cut -d' ' -f1
 }
 
+hash_equal() {
+  [[ -f "$2" && $(hash "$1") == $(hash "$2") ]]
+}
+
 create_cfg_dirs() {
   find . -mindepth 1 -type d \( \
     \( -exec test -d "$1/{}" \; \
@@ -43,7 +47,7 @@ process_cfgs() {
 }
 
 process_root_cfgs() {
-  command sudo -S bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files); process_cfgs $1 $2" <<<"$PASSWORD"
+  sudo bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files); process_cfgs $1 $2"
 }
 
 LOC=$(realpath "$(dirname "$0")")
@@ -143,12 +147,12 @@ else
     echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" | sudo tee "/etc/skel/.bash_profile" >/dev/null
   fi
 
-  if [[ $(hash "/etc/skel/.bashrc") != $(hash "$LOC/etc/skel/.bashrc") || ! -f "/etc/skel/.bashrc" ]]; then
+  if hash_equal "$LOC/etc/skel/.bashrc" "/etc/skel/.bashrc"; then
+    echo "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
+  else
     sudo rm /etc/skel/.bashrc
     sudo cp -v {"$LOC",}/etc/skel/.bashrc
     cp -v {"$LOC/etc/skel","$HOME"}/.bashrc
-  else
-    echo "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
   fi
   echo
 
@@ -237,7 +241,7 @@ else
   fi
 
   echo -e "\033[33;1mCustomizing User logo\033[0m"
-  if sudo test -f "/var/lib/AccountsService/icons/$USER" && [[ $(hash "/var/lib/AccountsService/icons/$USER") == $(hash "$LOC"/icon.*) ]] ; then
+  if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC\"/icon.* \"/var/lib/AccountsService/icons/$USER\""; then
     echo -e "User logo already setup\n"
   else
     sudo cp -v "$LOC"/icon.* "/var/lib/AccountsService/icons/$USER"
@@ -246,7 +250,7 @@ else
   fi
   
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
-  if sudo test -d "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
+  if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC/refind/refind.conf\" \"/boot/efi/EFI/refind/refind.conf\""; then
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
