@@ -118,6 +118,10 @@ if [[ $- == *i* ]]; then
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \n \[\033[01;32m\]\$_\[\033[00m\] '
   fi
 
+  if ! shopt -q login_shell && [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
+    alias logout="gnome-session-quit --no-prompt"
+  fi 
+
   if [[ "$PREFIX" =~ com.termux ]]; then
     # shellcheck disable=SC1091
     . "$HOME/.local/share/blesh/ble.sh"
