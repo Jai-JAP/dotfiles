@@ -275,6 +275,12 @@ else
   echo
 
   echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
+  if pgrep firefox >/dev/null; then
+    echo -ne " - \033[33;1mFirefox currently running. Save your work and press ENTER to continue.\033[0m"
+    read -r
+    killall firefox
+  fi
+
   while IFS= read -r FIREFOX_PROFILE; do
     cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
 user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);

@@ -44,6 +44,10 @@ application/x-httpd-php4=micro.desktop;
 application/x-httpd-php5=micro.desktop;
 application/x-php=micro.desktop;
 application/xml=micro.desktop;
+image/gif=chromium.desktop;
+image/jpeg=chromium.desktop;
+image/png=chromium.desktop;
+image/webp=chromium.desktop;
 
 [Default Applications]
 text/css=code.desktop;
