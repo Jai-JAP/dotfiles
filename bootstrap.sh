@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 hash() {
   sha256sum "$1" | cut -d' ' -f1
 }
@@ -282,7 +281,7 @@ else
   if pgrep firefox >/dev/null; then
     echo -ne " - \033[33;1mFirefox currently running. Save your work and press ENTER to continue.\033[0m"
     read -r
-    killall firefox
+    killall firefox 2>/dev/null
   fi
 
   while IFS= read -r FIREFOX_PROFILE; do
