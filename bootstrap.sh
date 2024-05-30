@@ -186,7 +186,7 @@ else
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if yay -Qq | grep -c gnome-desktop &>/dev/null; then
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme valent-git \
-      kvantum kvantum-qt5 kvantum-theme-libadwaita-git qt5ct qt6ct"
+      gnome-shell-extension-valent-git kvantum kvantum-qt5 kvantum-theme-libadwaita-git qt5ct qt6ct"
   fi
   # shellcheck disable=SC2086
   yay -Syu --needed --noconfirm jq micro wl-clipboard intel-media-driver intel-media-sdk \
