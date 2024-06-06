@@ -16,14 +16,16 @@ fi
 # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET == 0 ]]; then echo \"\\g{bold,fg=green}\$RET\\g{reset}\"; else echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
 #   prompt_rps1_transient=1
 
+ble-bind -f up 'history-search-backward immediate-accept'
+ble-bind -f down 'history-search-forward immediate-accept'
+
 bleopt edit_vbell= \
   decode_error_char_vbell= \
   decode_error_cseq_vbell= \
   decode_error_kseq_vbell= \
   prompt_ruler=empty-line \
   tab_width=2 \
-  edit_magic_accept=autocd \
-  edit_magic_expand=autocd
+  edit_magic_accept=autocd 
 
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
@@ -32,7 +34,8 @@ ble-face auto_complete='fg=240' \
   syntax_quotation='fg=124,bold' \
   syntax_quoted='fg=136,bold' \
   syntax_delimiter='fg=88,bold' \
-  syntax_function_name='fg=108,bold'
+  syntax_function_name='fg=108,bold' \
+  region_match='fg=white,bg=160'
 
 if [[ "$EUID" == 0 ]]; then
   FG_COLOR=160
