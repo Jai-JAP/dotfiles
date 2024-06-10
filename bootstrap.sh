@@ -140,6 +140,10 @@ else
     -e '/ParallelDownloads = /s/= ./= 8/' /etc/pacman.conf
   echo
 
+  if ! sudo grep "Defaults pwfeedback" "/etc/sudoers" 1>/dev/null; then
+    sudo sed -i ':a;N;$!ba;s/##\n## Runas alias specification\n##\n/Defaults pwfeedback\n\n&/g' /etc/sudoers
+  fi
+
   if [[ -f "/etc/skel/.bash_profile" ]]; then
     echo "'/etc/skel/.bash_profile' exists"
   else

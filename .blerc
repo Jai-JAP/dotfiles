@@ -16,8 +16,8 @@ fi
 # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET == 0 ]]; then echo \"\\g{bold,fg=green}\$RET\\g{reset}\"; else echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
 #   prompt_rps1_transient=1
 
-ble-bind -f up 'history-search-backward immediate-accept'
-ble-bind -f down 'history-search-forward immediate-accept'
+# ble-bind -f up 'history-search-backward immediate-accept'
+# ble-bind -f down 'history-search-forward immediate-accept'
 
 bleopt edit_vbell= \
   decode_error_char_vbell= \
