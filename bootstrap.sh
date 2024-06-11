@@ -175,7 +175,7 @@ else
     if [[ -f "/etc/dracut.conf.d/custom.conf" ]]; then
       echo "'/etc/dracut.conf.d/custom.conf' exists"
     else
-      command sudo -S bash -c 'echo -e "omit_dracutmodules+=\" btrfs btrfs-snapshot-overlay qemu qemu-net \"\nadd_drivers+=\" i915 \"" > "/etc/dracut.conf.d/custom.conf"' <<<"$PASSWORD"
+      command sudo -S bash -c 'echo -e "omit_dracutmodules+=\" qemu qemu-net \"\nadd_drivers+=\" i915 \"" > "/etc/dracut.conf.d/custom.conf"' <<<"$PASSWORD"
     fi
   fi
 
@@ -188,23 +188,31 @@ else
   done
   echo
 
-  echo -e "\033[33;1mInstalling \033[32;1myay\033[33;1m package manager...\033[0m"
-  sudo pacman -S --needed --noconfirm yay 2>/dev/null
+  echo -e "\033[33;1mInstalling \033[32;1mparu\033[33;1m package manager...\033[0m"
+  if ! sudo pacman -S --needed --noconfirm paru 2>/dev/null; then
+    sudo git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
+    # shellcheck disable=SC2164
+    pushd "/tmp/paru-bin" >/dev/null
+    makepkg -si --needed --noconfirm
+    # shellcheck disable=SC2164
+    popd >/dev/null
+    sudo rm -rf "/tmp/paru-bin"
+  fi
   echo
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
-  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme valent-git \
-      gnome-shell-extension-valent-git kvantum kvantum-qt5 kvantum-theme-libadwaita-git qt5ct qt6ct"
+  if paru -Qq | grep -c gnome-desktop &>/dev/null; then
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git"
   fi
   # shellcheck disable=SC2086
-  yay -Syu --needed --noconfirm jq micro wl-clipboard intel-media-driver intel-media-sdk \
-    libva-intel-driver libva-utils vdpauinfo vulkan-intel vulkan-mesa-layers vulkan-tools \
-    thermald tlp tlp-rdw ttf-firacode-nerd ttf-fira-code blesh-git visual-studio-code-bin \
-    firefox chromium refind gnome-extensions-cli python-tqdm $GNOME_PKGS $MKINITCPIO_PKGS
+  paru -Syu --needed --noconfirm jq micro wl-clipboard intel-media-{driver,sdk} \
+    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
+    thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
+    firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
+    $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
-  if yay -Qq | grep -c gnome-desktop &>/dev/null; then
+  if paru -Qq | grep -c gnome-desktop &>/dev/null; then
     echo -e "\033[33;1mCustomizing \033[32;1mGnome\033[33;1m installation...\033[0m"
 # apps-menu@gnome-shell-extensions.gcampax.github.com
 # arcmenu@arcmenu.com
@@ -213,7 +221,6 @@ else
 # dash-to-panel@jderose9.github.com
 # drive-menu@gnome-shell-extensions.gcampax.github.com
 # forge@jmmaranan.com
-# gsconnect@andyholmes.github.io
 # gtk4-ding@smedius.gitlab.com
 # launch-new-instance@gnome-shell-extensions.gcampax.github.com
 # native-window-placement@gnome-shell-extensions.gcampax.github.com
@@ -229,15 +236,16 @@ else
 # light-style@gnome-shell-extensions.gcampax.github.com
 
     gext install \
-      just-perfection-desktop@just-perfection \
-      Vitals@CoreCoding.com \
-      unblank@sun.wxg@gmail.com \
-      pano@elhan.io \
-      blur-my-shell@aunetx \
       appindicatorsupport@rgcjonas.gmail.com \
+      blur-my-shell@aunetx \
       dash-to-dock@micxgx.gmail.com \
       gnome-ui-tune@itstime.tech \
-      legacyschemeautoswitcher@joshimukul29.gmail.com 
+      gsconnect@andyholmes.github.io \
+      just-perfection-desktop@just-perfection \
+      legacyschemeautoswitcher@joshimukul29.gmail.com \
+      pano@elhan.io \
+      unblank@sun.wxg@gmail.com \
+      Vitals@CoreCoding.com
     
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
@@ -255,7 +263,7 @@ else
   fi
   
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
-  if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC/refind/refind.conf\" \"/boot/efi/EFI/refind/refind.conf\""; then
+  if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC/refind/refind.conf\" \"/boot/efi/EFI/refind/refind.conf\"" && sudo test -d "/boot/efi/EFI/refind/themes/refind-theme-regular"; then
     echo "Bootscreen customisations already applied."
   else 
     sudo refind-install
@@ -268,14 +276,15 @@ else
     echo
     
     # shellcheck disable=SC2164
-    pushd "$HOME/.cache/yay" >/dev/null
-    yay -G refind-theme-regular-git && sed -i 's|/boot/EFI|/boot/efi/EFI/|' ./refind-theme-regular-git/PKGBUILD
+    pushd "$HOME/.cache/paru/clone" >/dev/null
+    paru -G refind-theme-regular-git
     # shellcheck disable=SC2164
     pushd "refind-theme-regular-git" >/dev/null
+    sed -i 's|/boot/EFI|/boot/efi/EFI/|' ./PKGBUILD
     if ! git diff --quiet HEAD -- . ':PKGBUILD'; then
       git commit -am "Fix refind_home path"
     fi
-    yay -S refind-theme-regular-git --noredownload --noconfirm
+    paru -S refind-theme-regular-git --noredownload --noconfirm
     # shellcheck disable=SC2164
     popd >/dev/null
     # shellcheck disable=SC2164
@@ -303,7 +312,7 @@ user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
 user_pref("widget.use-xdg-desktop-portal.settings", 1);
 EOF
 
-    if yay -Qq | grep -c gnome-desktop &>/dev/null; then
+    if paru -Qq | grep -c gnome-desktop &>/dev/null; then
       FIREFOX_CHROME_DIR="$FIREFOX_PROFILE/chrome"
       mkdir -p "$FIREFOX_CHROME_DIR"
       link {"/usr/lib","$FIREFOX_CHROME_DIR"}/"firefox-gnome-theme"
