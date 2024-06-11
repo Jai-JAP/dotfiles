@@ -134,14 +134,16 @@ else
   sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
   process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
   sudo sed -i -e '/Color/s/^#[[:space:]]//' \
-    -e '/ILoveCandy/s/^/#/' \
+    -e '/ILoveCandy/s/^/# /' \
     -e '/CheckSpace/s/^#[[:space:]]//' \
     -e '/ParallelDownloads/s/^#[[:space:]]//' \
     -e '/ParallelDownloads = /s/= ./= 8/' /etc/pacman.conf
   echo
 
-  if ! sudo grep "Defaults pwfeedback" "/etc/sudoers" 1>/dev/null; then
-    sudo sed -i ':a;N;$!ba;s/##\n## Runas alias specification\n##\n/Defaults pwfeedback\n\n&/g' /etc/sudoers
+  if ! sudo grep "^Defaults pwfeedback" "/etc/sudoers" 1>/dev/null; then
+    sudo sed -i ':a;N;$!ba;s/##\n## Runas alias specification\n##\n/Defaults pwfeedback\n\n&/g' "/etc/sudoers"
+  elif sudo grep "^#[[:space:]]Defaults pwfeedback" "/etc/sudoers" 1>/dev/null; then
+    suod sed -i '/Defaults pwfeedback/s/^#[[:space:]]//' "/etc/sudoers"
   fi
 
   if [[ -f "/etc/skel/.bash_profile" ]]; then
