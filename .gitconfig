@@ -17,6 +17,9 @@
 [core]
   pager = delta
 
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+    
 [diff]
     colorMoved = default
 
@@ -24,13 +27,18 @@
   conflictstyle = diff3
 
 [delta]
+  features = decorations
   file-added-label = "added:"
   file-modified-label = "modified:"
   file-removed-label = 'removed:'
   file-renamed-label = 'renamed:'
+  hunk-header-style =
   hyperlinks = true
   hyperlinks-file-link-format = "vscode://file/{path}:{line}"
   line-numbers = true
   navigate = true
-  pager = less -+X -cR~ --mouse
-  hunk-header-style =
+  pager = less -+X -R~ --mouse
+  true-color = always
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
