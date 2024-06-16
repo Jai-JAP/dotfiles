@@ -17,6 +17,9 @@
 [core]
   pager = delta
 
+[diff]
+    colorMoved = default
+
 [merge]
   conflictstyle = diff3
 
