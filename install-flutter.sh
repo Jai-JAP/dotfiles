@@ -19,24 +19,23 @@
 
   PACKAGES="glu libglvnd clang ninja pkgconf gtk3 android-sdk-platform-tools android-sdk-cmdline-tools-latest"
   #shellcheck disable=2086
-  if yay -Qq $PACKAGES &>/dev/null; then
+  if paru -Qq $PACKAGES &>/dev/null; then
     echo "Dependencies already installed"
   else
     echo -e "\n\033[33;1mInstalling dependencies\033[0m"
-    yay -S --needed --noconfirm $PACKAGES 
-    sudo chown root:users /opt/android-sdk
-    sudo chmod g+w /opt/android-sdk
+    paru -S --needed --noconfirm $PACKAGES 
     echo
   fi
 
   if [[ "$(sdkmanager --list_installed | grep -e 'build-tools' -e 'platforms' -e 'sources' -c)" -ge 3 ]]; then
     echo "Required android-sdk components already installed."
   else
+    sudo chmod +s /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager
     echo -e "\n\033[33;1mInstalling required \033[32;1mandroid-sdk\033[33;1m components\033[0m"
     BUILD_TOOLS="$(sdkmanager --list | awk '/build-tools/ && !/rc/ {print $1}' | sort -uV | tail -n1)"
     PLATFORM="$(sdkmanager --list | awk '/platforms;android-[0-9]+/ && !/ext/ {print $1}' | sort -uV | tail -n1)"
     SOURCES="${PLATFORM/platforms/sources}"
-    sdkmanager "$BUILD_TOOLS" "$PLATFORM" "$SOURCES"
+    sudo sdkmanager "$BUILD_TOOLS" "$PLATFORM" "$SOURCES"
     echo
   fi
 

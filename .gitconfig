@@ -1,11 +1,33 @@
 [user]
-name = Jai-JAP
-email = jai.jap.318@gmail.com
+  name = Jai-JAP
+  email = jai.jap.318@gmail.com
+
 [credential "https://github.com"]
-helper = !/usr/bin/gh auth git-credential
+  helper = !/usr/bin/gh auth git-credential
+
 [credential "https://gist.github.com"]
-helper = !/usr/bin/gh auth git-credential
+  helper = !/usr/bin/gh auth git-credential
+
 [alias]
-history = log --all --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  history = log --all --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
 [safe]
 	directory = /opt/flutter
+
+[core]
+  pager = delta
+
+[merge]
+  conflictstyle = diff3
+
+[delta]
+  file-added-label = "added:"
+  file-modified-label = "modified:"
+  file-removed-label = 'removed:'
+  file-renamed-label = 'renamed:'
+  hyperlinks = true
+  hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+  line-numbers = true
+  navigate = true
+  pager = less -+X -cRF~ --mouse
+  hunk-header-style =

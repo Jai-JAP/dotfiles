@@ -206,7 +206,7 @@ else
   fi
   # shellcheck disable=SC2086
   paru -Syu --needed --noconfirm jq micro wl-clipboard intel-media-{driver,sdk} \
-    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
+    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
     $GNOME_PKGS $MKINITCPIO_PKGS
