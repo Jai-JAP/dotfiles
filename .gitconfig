@@ -29,5 +29,5 @@
   hyperlinks-file-link-format = "vscode://file/{path}:{line}"
   line-numbers = true
   navigate = true
-  pager = less -+X -cRF~ --mouse
+  pager = less -+X -cR~ --mouse
   hunk-header-style =

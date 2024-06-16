@@ -11,6 +11,9 @@ if [[ $- == *i* ]]; then
   shopt -s expand_aliases
   set -C
 
+  alias ls="eza -ghoM --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
+  alias tree="eza -ghoMT --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
+
   HISTCONTROL=ignoreboth
 
   256colors() {    
