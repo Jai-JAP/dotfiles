@@ -18,7 +18,7 @@ if [[ $- == *i* ]]; then
   alias cat="bat -p"
 
   help() {
-    (help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
+    (command help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
   }
 
   256colors() {    
