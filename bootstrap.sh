@@ -337,7 +337,7 @@ EOF
     fi
 
     echo -e " - Customizations applied to ${FIREFOX_PROFILE##*/}\n"
-  done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"$HOME"'/.mozilla/firefox/"$2 }' "$HOME/.mozilla/firefox/profiles.ini")
+  done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"$HOME"'/.mozilla/firefox/"$2 }' "$HOME"/.mozilla/firefox/profiles.ini)
 
   sudo mkdir -pv /etc/firefox/policies
   link {"$LOC",}/etc/firefox/policies/policies.json
