@@ -1,1 +1,3 @@
-export PATH=$PATH:/opt/JetBrains/bin
+#!/bin/sh
+
+export PATH="$PATH":/opt/JetBrains/bin

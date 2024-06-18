@@ -13,7 +13,7 @@ if [[ $- == *i* ]]; then
 
   alias ls="eza -ghoM --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
   alias tree="eza -ghoMT --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
-  alias cat="bat --decorations never --paging never"
+  alias cat="bat -p"
 
   HISTCONTROL=ignoreboth
 
