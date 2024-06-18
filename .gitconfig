@@ -18,10 +18,10 @@
   pager = delta
 
 [interactive]
-    diffFilter = delta --color-only --features=interactive
+  diffFilter = delta --color-only --features=interactive
     
-[diff]
-    colorMoved = default
+# [diff]
+#   colorMoved = default
 
 [merge]
   conflictstyle = diff3

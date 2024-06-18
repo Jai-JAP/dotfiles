@@ -11,11 +11,15 @@ if [[ $- == *i* ]]; then
   shopt -s expand_aliases
   set -C
 
+  HISTCONTROL=ignoreboth
+
   alias ls="eza -ghoM --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
   alias tree="eza -ghoMT --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
   alias cat="bat -p"
 
-  HISTCONTROL=ignoreboth
+  help() {
+    (help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
+  }
 
   256colors() {    
     # Tom Hale, 2016. MIT Licence.
