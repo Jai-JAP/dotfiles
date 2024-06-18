@@ -37,7 +37,7 @@
   hyperlinks-file-link-format = "vscode://file/{path}:{line}"
   line-numbers = true
   navigate = true
-  pager = less -+X -R~ --mouse
+  pager = less -+X -FR~ --mouse
   true-color = always
 
 [delta "interactive"]
