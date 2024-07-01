@@ -120,7 +120,7 @@ else
   process_root_cfgs {"$LOC",/root}/.config/micro
   echo
 
-  for dir in modprobe.d profile.d xdg; do
+  for dir in bluetooth modprobe.d pacman.d/hooks profile.d xdg; do
     process_root_cfgs {"$LOC",}/etc/"$dir"
   done
   for file in tlp.conf makepkg.conf paru.conf; do
@@ -129,7 +129,6 @@ else
   echo
 
   sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
-  process_root_cfgs {"$LOC",}/"etc/pacman.d/hooks"
   sudo sed -i -e '/Color/s/^#[[:space:]]//' \
     -e '/ILoveCandy/s/^/# /' \
     -e '/CheckSpace/s/^#[[:space:]]//' \
