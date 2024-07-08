@@ -2,6 +2,9 @@
 PARTUUID=8e4ada38-beb3-43fc-a544-a9dd272eac38    /run/media/jaiap/PCData    ntfs3    users,exec,nohidden,nofail,umask=002,x-gvfs-show    0    0
 PARTUUID=b0bbcdb8-f32e-4a07-902d-a9b292ac28e2    /run/media/jaiap/Installers    ntfs3    users,nohidden,nofail,noauto,umask=113,x-gvfx-show    0    0
 
+PARTUUID=8e4ada38-beb3-43fc-a544-a9dd272eac38    /run/media/jaiap/PCData        ntfs3    acl,exec,prealloc,windows_names,uid=0,gid=984,nohidden,hide_dot_files,nofail,umask=002,x-gvfs-show    0    0
+PARTUUID=b0bbcdb8-f32e-4a07-902d-a9b292ac28e2    /run/media/jaiap/Installers    ntfs3    acl,prealloc,windows_names,uid=0,gid=984,nohidden,hide_dot_files,nofail,noauto,umask=113,x-gvfx-show    0    0
+
 /dev/mapper/encrypted_PCData		/run/media/jaiap/PCData		ntfs3		users,exec,nohidden,nofail,umask=002,x-gvfs-show	0    0
 
 
