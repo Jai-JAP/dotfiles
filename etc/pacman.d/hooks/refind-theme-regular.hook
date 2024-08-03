@@ -1,9 +1,9 @@
 [Trigger]
-Operation=Upgrade
-Type=Package
-Target=refind-theme-regular-git
+Operation = Upgrade
+Type = Package
+Target = refind-theme-regular-git
 
 [Action]
-Description = Updating rEFInd regular theme on ESP
-When=PostTransaction
-Exec=/usr/bin/sed -i -e '/^[[:alpha:]]/s//#&/g' -e '/icons.*256-96$/s/^#//' -e '/big.*256$/s/^#//' -e '/small.*96$/s/^#//' -e '/banner.*256-96.*dark.*/s/^#//' -e '/selection_big.*256-96.*dark/s/^#//' -e '/selection_small.*256-96.*dark/s/^#//' -e '/font/s/^#//' /boot/efi/EFI/refind/themes/refind-theme-regular/theme.conf
+Description = Customizing rEFInd regular theme on ESP
+When = PostTransaction
+Exec = /usr/bin/sed -i -e '/^[[:alpha:]]/s//#&/g' -e '/icons.*256-96$/s/^#//' -e '/big.*256$/s/^#//' -e '/small.*96$/s/^#//' -e '/banner.*256-96.*dark.*/s/^#//' -e '/selection_big.*256-96.*dark/s/^#//' -e '/selection_small.*256-96.*dark/s/^#//' -e '/font/s/^#//' /boot/efi/EFI/refind/themes/refind-theme-regular/theme.conf

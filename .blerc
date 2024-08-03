@@ -1,9 +1,22 @@
+#!/bin/bash
+
 if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-  if [[ ! "$PREFIX" =~ "com.termux" ]]; then
+  if [[ ! "$PREFIX" =~ com.termux ]]; then
     ble-import contrib/prompt-git
+    #shellcheck disable=SC2016
     bleopt prompt_rps1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})}' \
       prompt_rps1_transient=1
     # RPS1='${_ble_contrib_prompt_git_base:+ \g{bold}| \g{reset}\q{contrib/git-branch} (\q{contrib/git-hash})}'
+
+    if paru -Qq fzf &>/dev/null; then
+      ble-import integration/fzf-completion
+      ble-import integration/fzf-key-bindings
+
+      _fzf_setup_completion path micro
+
+      _ble_contrib_fzf_git_config=key-binding
+      ble-import -d integration/fzf-git
+    fi
   fi
 
   ble-bind -f 'C-h' delete-backward-cword
@@ -47,10 +60,12 @@ bleopt prompt_ps1_final="\g{bold,fg=$FG_COLOR}󰜴 \g{reset} "
 bleopt indent_offset=2 indent_tabs=0
 blehook CHPWD="echo -ne '\Uf024b ➞ \033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -ne '\033[0m'"
 
+#shellcheck disable=SC2016
 ble/function#advice around ble/widget/default/accept-line '
   ble-edit/content/clear-arg
   [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
 
+#shellcheck disable=SC2016
 ble/function#advice around ble/widget/discard-line '
   ble-edit/content/clear-arg
   [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'

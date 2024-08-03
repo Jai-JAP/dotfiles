@@ -207,7 +207,7 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git"
   fi
   # shellcheck disable=SC2086
-  paru -Syu --needed --noconfirm jq eza micro wl-clipboard intel-media-{driver,sdk} \
+  paru -Syu --needed --noconfirm jq fzf eza micro wl-clipboard intel-media-{driver,sdk} \
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
