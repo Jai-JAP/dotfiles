@@ -120,7 +120,7 @@ else
   process_root_cfgs {"$LOC",/root}/.config/micro
   echo
 
-  for dir in bluetooth modprobe.d pacman.d/hooks profile.d xdg; do
+  for dir in bluetooth modprobe.d modules-load.d udev pacman.d/hooks profile.d xdg; do
     process_root_cfgs {"$LOC",}/etc/"$dir"
   done
   for file in tlp.conf makepkg.conf paru.conf; do
@@ -211,7 +211,23 @@ else
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
-    $GNOME_PKGS $MKINITCPIO_PKGS
+    kanata-bin $GNOME_PKGS $MKINITCPIO_PKGS
+  echo
+
+  echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
+  sudo groupadd uinput
+  sudo usermod -aG input "$USER"
+  sudo usermod -aG uinput "$USER"
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger
+  systemctl --user daemon-reload
+  systemctl --user enable kanata
+  systemctl --user start kanata
+  if systemctl --user is-active kanata &>/dev/null; then
+    echo -e "- \033[32mKanata service started succesfully.\033[0m"
+  else
+    echo -e "- \033[31mUnable to start kanata service.\033[0m"
+  fi
   echo
 
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
