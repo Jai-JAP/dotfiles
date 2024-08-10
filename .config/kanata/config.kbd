@@ -5,7 +5,7 @@
 (defalias           ;; Modification actions
   ldblcaps (tap-dance-eager 200 (lsft caps))
   rdblcaps (tap-dance-eager 200 (rsft caps))
-  escctrl (tap-hold-press 150 150 esc lctrl)
+  escctrl (tap-hold-press 150 130 esc lctrl)
 )
 
 (deflayer base      ;; Bind action to keys
