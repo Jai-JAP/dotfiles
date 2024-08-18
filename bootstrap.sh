@@ -204,7 +204,7 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk3 papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git"
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git"
   fi
   # shellcheck disable=SC2086
   paru -Syu --needed --noconfirm jq fzf eza micro wl-clipboard intel-media-{driver,sdk} \
