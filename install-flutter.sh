@@ -23,7 +23,7 @@
     echo "Dependencies already installed"
   else
     echo -e "\n\033[33;1mInstalling dependencies\033[0m"
-    paru -S --needed --noconfirm $PACKAGES 
+    paru -S --needed --noconfirm $PACKAGES
     echo
   fi
 

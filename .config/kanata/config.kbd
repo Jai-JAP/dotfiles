@@ -1,4 +1,4 @@
-(defsrc             ;; Keys to be modified 
+(defsrc             ;; Keys to be modified
   lsft rsft caps
 )
 

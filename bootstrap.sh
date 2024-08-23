@@ -211,7 +211,7 @@ else
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
-    kanata-bin $GNOME_PKGS $MKINITCPIO_PKGS
+    kanata-bin pipewire-libcamera $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
@@ -263,8 +263,9 @@ else
       legacyschemeautoswitcher@joshimukul29.gmail.com \
       pano@elhan.io \
       unblank@sun.wxg@gmail.com \
-      Vitals@CoreCoding.com
-    
+      Vitals@CoreCoding.com # \
+      # rounded-window-corners@fxgn
+
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
     dconf load /org/ <<< "$(sed 's|/home/jaiap|'"$HOME"'|g' "$LOC"/etc/dconf-settings.ini)"
@@ -279,11 +280,11 @@ else
     echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/${USER}\nSystemAccount=false" | sudo tee /var/lib/AccountsService/users/"$USER"
     echo -e "\033[32;1mUser logo set successfully\033[0m\n"
   fi
-  
+
   echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
   if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
     echo "Bootscreen customisations already applied."
-  else 
+  else
     sudo refind-install
     sudo cp -v {"$LOC",/boot/efi/EFI}/refind/refind.conf
     sudo cp -v {"$LOC"/refind,/boot}/refind_linux.conf
@@ -292,7 +293,7 @@ else
     sudo sed -i 's|root=UUID=|&'"$ROOT_UUID"'|g' /boot/refind_linux.conf
     sudo sed -i 's|ro root=|&'"$ROOT_DEV"'|g' /boot/refind_linux.conf
     echo
-    
+
     # shellcheck disable=SC2164
     pushd "$HOME"/.cache/paru/clone >/dev/null
     paru -G refind-theme-regular-git
@@ -318,18 +319,6 @@ else
   fi
 
   while IFS= read -r FIREFOX_PROFILE; do
-    cat <<EOF >>"$FIREFOX_PROFILE"/prefs.js
-user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
-user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
-user_pref("browser.toolbars.bookmarks.visibility", "never");
-user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"sponsorblocker_ajay_app-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"idcac-pub_guus_ninja-browser-action\",\"addon_darkreader_org-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"stop-reload-button\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"firefox-view-button\",\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"save-to-pocket-button\",\"developer-button\",\"idcac-pub_guus_ninja-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"sponsorblocker_ajay_app-browser-action\",\"addon_darkreader_org-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"PersonalToolbar\",\"unified-extensions-area\",\"toolbar-menubar\",\"TabsToolbar\"],\"currentVersion\":20,\"newElementCount\":4}");
-user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
-user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-user_pref("widget.use-xdg-desktop-portal.location", 1);
-user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
-user_pref("widget.use-xdg-desktop-portal.settings", 1);
-EOF
-
     if paru -Qq | grep -c gnome-desktop &>/dev/null; then
       FIREFOX_CHROME_DIR="$FIREFOX_PROFILE"/chrome
       mkdir -p "$FIREFOX_CHROME_DIR"
@@ -341,15 +330,30 @@ EOF
           echo "@import \"firefox-gnome-theme/$file\";" >"$FIREFOX_CHROME_DIR/$file"
         fi
       done
-      link {"$FIREFOX_CHROME_DIR"/firefox-gnome-theme/configuration,"$FIREFOX_PROFILE"}/user.js
+      cp {"$FIREFOX_CHROME_DIR"/firefox-gnome-theme/configuration,"$FIREFOX_PROFILE"}/user.js
 
-      cat <<EOF >>"$FIREFOX_PROFILE/prefs.js"
+      cat <<EOF >>"$FIREFOX_PROFILE"/user.js
+
 user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
 user_pref("gnomeTheme.hideWebrtcIndicator", true)
 EOF
     fi
+
+    cat <<EOF >>"$FIREFOX_PROFILE"/user.js
+
+user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"sponsorblocker_ajay_app-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"idcac-pub_guus_ninja-browser-action\",\"addon_darkreader_org-browser-action\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"stop-reload-button\",\"urlbar-container\",\"downloads-button\",\"unified-extensions-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"firefox-view-button\",\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"import-button\",\"personal-bookmarks\"]},\"seen\":[\"save-to-pocket-button\",\"developer-button\",\"idcac-pub_guus_ninja-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"sponsorblocker_ajay_app-browser-action\",\"addon_darkreader_org-browser-action\"],\"dirtyAreaCache\":[\"nav-bar\",\"PersonalToolbar\",\"unified-extensions-area\",\"toolbar-menubar\",\"TabsToolbar\"],\"currentVersion\":20,\"newElementCount\":4}");
+user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+user_pref("widget.use-xdg-desktop-portal.location", 1);
+user_pref("widget.use-xdg-desktop-portal.open-uri", 1);
+user_pref("widget.use-xdg-desktop-portal.settings", 1);
+user_pref("media.webrtc.camera.allow-pipewire", true);
+EOF
 
     echo -e " - Customizations applied to ${FIREFOX_PROFILE##*/}\n"
   done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"$HOME"'/.mozilla/firefox/"$2 }' "$HOME"/.mozilla/firefox/profiles.ini)

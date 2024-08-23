@@ -21,36 +21,36 @@ if [[ $- == *i* ]]; then
     (command help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
   }
 
-  256colors() {    
+  256colors() {
     # Tom Hale, 2016. MIT Licence.
     # Print out 256 colours, with each number printed in its corresponding colour
     # See http://askubuntu.com/questions/821157/print-a-256-color-test-pattern-in-the-terminal/821163#821163
-    
+
     set -eu # Fail on errors or undeclared variables
-    
+
     printable_colours=256
-    
+
     # Return a colour that contrasts with the given colour
     # Bash only does integer division, so keep it integral
     function contrast_colour {
         local r g b luminance res
         colour="$1"
-    
+
         if (( colour < 16 )); then # Initial 16 ANSI colours
             (( colour == 0 )) && printf "15" || printf "0"
             return
         fi
-    
+
         # Greyscale # rgb_R = rgb_G = rgb_B = (number - 232) * 10 + 8
         if (( colour > 231 )); then # Greyscale ramp
             (( colour < 244 )) && printf "15" || printf "0"
             return
         fi
-    
+
         # All other colours:
         # 6x6x6 colour cube = 16 + 36*R + 6*G + B  # Where RGB are [0..5]
         # See http://stackoverflow.com/a/27165165/5353461
-    
+
         r=$(( (colour-16) / 36 ))
         g=$(( ((colour-16) % 36) / 6 ))
         b=$(( (colour-16) % 6 ))
@@ -58,9 +58,9 @@ if [[ $- == *i* ]]; then
         # If luminance is bright, print number in black, white otherwise.
         # Green contributes 587/1000 to human perceived luminance - ITU R-REC-BT.601
         (( g > 2)) && res="0" || res="15"
-    
+
         # Uncomment the below for more precise luminance calculations
-    
+
         # # Calculate percieved brightness
         # # See https://www.w3.org/TR/AERT#color-contrast
         # # and http://www.itu.int/rec/R-REC-BT.601
@@ -70,7 +70,7 @@ if [[ $- == *i* ]]; then
 
         printf "%s" $res
     }
-    
+
     # Print a coloured block with the number of that colour
     function print_colour {
         local colour="$1" contrast
@@ -79,7 +79,7 @@ if [[ $- == *i* ]]; then
         printf "\e[38;5;%sm%3d" "$contrast" "$colour" # In contrast, print number
         printf "\e[0m "                               # Reset colour
     }
-    
+
     # Starting at $1, print a run of $2 colours
     function print_run {
         local i
@@ -88,7 +88,7 @@ if [[ $- == *i* ]]; then
         done
         printf "  "
     }
-    
+
     # Print blocks of colours
     function print_blocks {
         local start="$1" i
@@ -97,7 +97,7 @@ if [[ $- == *i* ]]; then
         local block_rows="$4"
         local blocks_per_line="$5"
         local block_length=$((block_cols * block_rows))
-    
+
         # Print sets of blocks
         for (( i = start; i <= end; i += (blocks_per_line-1) * block_length )) do
             printf "\n" # Space before each set of blocks
@@ -112,7 +112,7 @@ if [[ $- == *i* ]]; then
             done
         done
     }
-    
+
     print_run 0 16 # The first 16 colours are spread over the whole spectrum
     printf "\n"
     print_blocks 16 231 6 6 3 # 6x6x6 colour cube between 16 and 231 inclusive
@@ -128,7 +128,7 @@ if [[ $- == *i* ]]; then
 
   if ! shopt -q login_shell && [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"
-  fi 
+  fi
 
   if [[ "$PREFIX" =~ com.termux ]]; then
     # shellcheck disable=SC1091

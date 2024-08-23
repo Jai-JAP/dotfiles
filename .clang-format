@@ -1,12 +1,12 @@
-{ 
-  BasedOnStyle: Google, 
+{
+  BasedOnStyle: Google,
   ConstructorInitializerIndentWidth: 2,
   ContinuationIndentWidth: 2,
-  IndentWidth: 2, 
-  TabWidth: 2, 
-  UseTab: Never, 
+  IndentWidth: 2,
+  TabWidth: 2,
+  UseTab: Never,
   AccessModifierOffset: -2,
-  AlignArrayOfStructures: Right, 
+  AlignArrayOfStructures: Right,
   AllowShortBlocksOnASingleLine: Always,
   AllowShortCaseLabelsOnASingleLine: false,
   AllowShortEnumsOnASingleLine: false,
