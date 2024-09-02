@@ -68,7 +68,7 @@ config_common() {
 if [[ "$PREFIX" =~ com.termux ]]; then
   if ! command -v gmake || ! command -v gawk || ! command -v micro; then
     echo -e "\033[33;1m -> \033[0m Installing packages."
-    pkg install make gawk micro
+    pkg install make gawk micro eza bat
   fi
   echo
 
