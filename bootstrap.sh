@@ -204,14 +204,14 @@ else
 
   echo -e "\033[33;1mInstalling necessary packages...\033[0m"
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git"
+    GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git gnome-extensions-cli webp-pixbuf-loader"
   fi
   # shellcheck disable=SC2086
   paru -Syu --needed --noconfirm jq fzf eza micro wl-clipboard intel-media-{driver,sdk} \
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
-    firefox chromium refind gnome-extensions-cli python-tqdm kvantum{,-qt5} qt{5,6}ct \
-    kanata-bin pipewire-libcamera $GNOME_PKGS $MKINITCPIO_PKGS
+    firefox chromium refind python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
+    $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
