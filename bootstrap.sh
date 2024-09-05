@@ -367,9 +367,9 @@ EOF
   link {"$LOC",}/etc/chromium/policies/managed
   echo
 
-  systemctl --user stop wireplumber
-  systemctl --user stop pipewire
-  systemctl --user start wireplumber
+  systemctl --user stop wireplumber -q
+  systemctl --user stop pipewire -q
+  systemctl --user start wireplumber -q
 
   sudo systemctl enable --now thermald tlp 2>/dev/null
 
