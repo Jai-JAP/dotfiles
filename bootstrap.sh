@@ -120,7 +120,7 @@ else
   process_root_cfgs {"$LOC",/root}/.config/micro
   echo
 
-  for dir in bluetooth modprobe.d modules-load.d udev pacman.d/hooks profile.d xdg; do
+  for dir in bluetooth modprobe.d modules-load.d pacman.d/hooks profile.d udev wireplumber xdg; do
     process_root_cfgs {"$LOC",}/etc/"$dir"
   done
   for file in tlp.conf makepkg.conf paru.conf; do
@@ -207,11 +207,11 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git gnome-extensions-cli webp-pixbuf-loader"
   fi
   # shellcheck disable=SC2086
-  paru -Syu --needed --noconfirm jq fzf eza micro wl-clipboard intel-media-{driver,sdk} \
-    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta \
+  paru -Syu --needed --noconfirm fzf eza micro wl-clipboard intel-media-{driver,sdk} \
+    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta jq \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
-    firefox chromium refind python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
-    $GNOME_PKGS $MKINITCPIO_PKGS
+    firefox chromium python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
+    gst-plugin-libcamera refind $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
@@ -263,8 +263,8 @@ else
       legacyschemeautoswitcher@joshimukul29.gmail.com \
       pano@elhan.io \
       unblank@sun.wxg@gmail.com \
-      Vitals@CoreCoding.com # \
-      # rounded-window-corners@fxgn
+      Vitals@CoreCoding.com \
+      rounded-window-corners@fxgn
 
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /
@@ -366,6 +366,10 @@ EOF
   sudo mkdir -pv /etc/chromium/policies
   link {"$LOC",}/etc/chromium/policies/managed
   echo
+
+  systemctl --user stop wireplumber
+  systemctl --user stop pipewire
+  systemctl --user start wireplumber
 
   sudo systemctl enable --now thermald tlp 2>/dev/null
 
