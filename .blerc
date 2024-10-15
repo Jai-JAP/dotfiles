@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$TERM_PROGRAM" != "vscode" ]]; then
+if [[ "$TERM_PROGRAM" != "vscode" && "$TERM" != "linux" ]]; then
   if [[ ! "$PREFIX" =~ com.termux ]]; then
     ble-import contrib/prompt-git
     #shellcheck disable=SC2016
@@ -19,11 +19,17 @@ if [[ "$TERM_PROGRAM" != "vscode" ]]; then
     fi
   fi
 
-  ble-bind -f 'C-h' delete-backward-cword
+  ble-bind -m emacs -f 'C-h' delete-backward-cword
   ble-bind -m emacs -f 'C-w' ''
-else
-  ble-bind -f 'C-h' ''
+elif [[ "$TERM" != "linux" ]]; then
   ble-bind -m emacs -f 'C-w' delete-backward-cword
+  ble-bind -m emacs -f 'C-h' ''
+else
+  ble-bind -m emacs -f 'C-h' ''
+  ble-bind -m emacs -f 'C-w' ''
+  ble-bind -m emacs -f 'C-M-?' delete-backward-cword
+
+  bleopt complete_auto_complete=
 fi
 
 # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET == 0 ]]; then echo \"\\g{bold,fg=green}\$RET\\g{reset}\"; else echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
@@ -38,7 +44,9 @@ bleopt edit_vbell= \
   decode_error_kseq_vbell= \
   prompt_ruler=empty-line \
   tab_width=2 \
-  edit_magic_accept=autocd
+  edit_magic_accept=autocd \
+  indent_offset=2 \
+  indent_tabs=0
 
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
@@ -55,10 +63,18 @@ if [[ "$EUID" == 0 ]]; then
 else
   FG_COLOR=70
 fi
-bleopt prompt_ps1_final="\g{bold,fg=$FG_COLOR}󰜴 \g{reset} "
 
-bleopt indent_offset=2 indent_tabs=0
-blehook CHPWD="echo -ne '\Uf024b ➞ \033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -ne '\033[0m'"
+if [[ "$TERM" != "linux" ]]; then
+  _arrow="󰜴"
+  _arrow_thin="➞ "
+  _dir="󰉋"
+else 
+  _arrow="=>"
+  _arrow_thin="->"
+  _dir="\033[33;1mDIR changed\033[0m"
+fi
+bleopt prompt_ps1_final="\g{bold,fg=$FG_COLOR}${_arrow} \g{reset} "
+blehook CHPWD="echo -ne '${_dir} ${_arrow_thin}\033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -ne '\033[0m'"
 
 #shellcheck disable=SC2016
 ble/function#advice around ble/widget/default/accept-line '

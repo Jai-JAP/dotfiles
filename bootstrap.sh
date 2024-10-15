@@ -207,8 +207,8 @@ else
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git gnome-extensions-cli webp-pixbuf-loader"
   fi
   # shellcheck disable=SC2086
-  paru -Syu --needed --noconfirm fzf eza micro wl-clipboard intel-media-{driver,sdk} \
-    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta jq \
+  paru -Syu --needed --noconfirm fzf eza jq micro wl-clipboard intel-media-{driver,sdk} \
+    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta yazi \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
     gst-plugin-libcamera refind $GNOME_PKGS $MKINITCPIO_PKGS
@@ -264,7 +264,8 @@ else
       pano@elhan.io \
       unblank@sun.wxg@gmail.com \
       Vitals@CoreCoding.com \
-      rounded-window-corners@fxgn
+      rounded-window-corners@fxgn \
+      quick-settings-tweaks@qwreey
 
     echo -e "\033[33;1mRestoring dconf settings\033[0m"
     # dconf reset -f /

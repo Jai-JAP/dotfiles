@@ -13,8 +13,14 @@ if [[ $- == *i* ]]; then
 
   HISTCONTROL=ignoreboth
 
-  alias ls="eza -ghoM --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
-  alias tree="eza -ghoMT --smart-group --git --icons --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git"
+  if [[ "$TERM" != "linux" ]]; then
+    _ls_icons="--icons"
+  fi
+
+  # shellcheck disable=SC2139
+  alias ls="eza -ghoM --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
+  # shellcheck disable=SC2139
+  alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   alias cat="bat -p"
 
   help() {
