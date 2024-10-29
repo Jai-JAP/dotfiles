@@ -120,7 +120,7 @@ else
   process_root_cfgs {"$LOC",/root}/.config/micro
   echo
 
-  for dir in bluetooth modprobe.d modules-load.d pacman.d/hooks profile.d udev wireplumber xdg; do
+  for dir in bluetooth makepkg.conf.d modprobe.d modules-load.d pacman.d/hooks profile.d udev wireplumber xdg; do
     process_root_cfgs {"$LOC",}/etc/"$dir"
   done
   for file in tlp.conf makepkg.conf paru.conf; do
