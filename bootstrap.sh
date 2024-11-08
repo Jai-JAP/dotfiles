@@ -130,6 +130,7 @@ else
 
   sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
   sudo sed -i -e '/Color/s/^#[[:space:]]//' \
+    -e '/VerbosePkgLists/s/^#[[:space:]]//' \
     -e '/ILoveCandy/s/^/# /' \
     -e '/CheckSpace/s/^#[[:space:]]//' \
     -e '/ParallelDownloads/s/^#[[:space:]]//' \
