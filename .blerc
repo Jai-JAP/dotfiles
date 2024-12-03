@@ -32,11 +32,11 @@ else
   bleopt complete_auto_complete=
 fi
 
-# bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET == 0 ]]; then echo \"\\g{bold,fg=green}\$RET\\g{reset}\"; else echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
-#   prompt_rps1_transient=1
+  # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET != 0 ]]; then echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
+  #   prompt_rps1_transient=1
 
-# ble-bind -f up 'history-search-backward immediate-accept'
-# ble-bind -f down 'history-search-forward immediate-accept'
+ble-bind -f up 'history-search-backward immediate-accept:hide-status:action=load:empty=history-move'
+ble-bind -f down 'history-search-forward immediate-accept:hide-status:action=load:empty=history-move'
 
 bleopt edit_vbell= \
   decode_error_char_vbell= \
@@ -56,7 +56,7 @@ ble-face auto_complete='fg=240' \
   syntax_quoted='fg=136,bold' \
   syntax_delimiter='fg=88,bold' \
   syntax_function_name='fg=108,bold' \
-  region_match='fg=white,bg=160'
+  region_match='fg=white,bg=124'
 
 if [[ "$EUID" == 0 ]]; then
   FG_COLOR=160
