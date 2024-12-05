@@ -35,8 +35,8 @@ fi
   # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET != 0 ]]; then echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
   #   prompt_rps1_transient=1
 
-ble-bind -f up 'history-search-backward immediate-accept:hide-status:action=load:empty=history-move'
-ble-bind -f down 'history-search-forward immediate-accept:hide-status:action=load:empty=history-move'
+ble-bind -m emacs -f up 'history-search-backward immediate-accept:hide-status:action=load:empty=history-move'
+ble-bind -m emacs -f down 'history-search-forward immediate-accept:hide-status:action=load:empty=history-move'
 
 bleopt edit_vbell= \
   decode_error_char_vbell= \

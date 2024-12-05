@@ -212,7 +212,7 @@ else
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta yazi \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
-    gst-plugin-libcamera refind $GNOME_PKGS $MKINITCPIO_PKGS
+    gst-plugin-libcamera refind bash-complete-alias $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"

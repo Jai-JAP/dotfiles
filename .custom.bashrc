@@ -17,11 +17,14 @@ if [[ $- == *i* ]]; then
     _ls_icons="--icons"
   fi
 
+  alias sudo="sudo "
+
   # shellcheck disable=SC2139
   alias ls="eza -ghoM --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   # shellcheck disable=SC2139
   alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   alias cat="bat -p"
+  alias ctl="systemctl"
 
   help() {
     (command help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
@@ -135,6 +138,10 @@ if [[ $- == *i* ]]; then
   if ! shopt -q login_shell && [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"
   fi
+
+  # shellcheck disable=SC1091
+  . "/usr/share/bash-complete-alias/complete_alias"
+  complete -F _complete_alias "${!BASH_ALIASES[@]}"
 
   if [[ "$PREFIX" =~ com.termux ]]; then
     # shellcheck disable=SC1091
