@@ -156,6 +156,8 @@ if [[ $- == *i* ]]; then
     . "/usr/share/blesh/ble.sh"
     # shellcheck disable=SC1091
     . "/usr/share/bash-complete-alias/complete_alias"
+    # shellcheck disable=SC1091
+    . "/usr/share/doc/find-the-command/ftc.bash" askfirst noupdate quiet
   fi
 
   complete -F _complete_alias "${!BASH_ALIASES[@]}"

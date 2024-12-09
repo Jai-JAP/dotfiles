@@ -66,10 +66,9 @@ config_common() {
 }
 
 if [[ "$PREFIX" =~ com.termux ]]; then
-  if ! command -v gmake || ! command -v gawk || ! command -v micro; then
-    echo -e "\033[33;1m -> \033[0m Installing packages."
-    pkg install make gawk micro eza bat
-  fi
+  echo -e "\033[33;1m -> \033[0m Installing packages."
+  pkg update
+  pkg install -y make gawk micro eza bat bash-completion command-not-found
   echo
 
   if [[ ! -d "$HOME"/.local/share/blesh ]]; then
@@ -220,7 +219,7 @@ else
     libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} git-delta yazi \
     thermald tlp{,-rdw} ttf-{firacode-nerd,fira-code} blesh-git visual-studio-code-bin \
     firefox chromium python-tqdm kvantum{,-qt5} qt{5,6}ct kanata-bin pipewire-libcamera \
-    gst-plugin-libcamera refind bash-complete-alias $GNOME_PKGS $MKINITCPIO_PKGS
+    gst-plugin-libcamera refind bash-complete-alias find-the-command $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
   echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
