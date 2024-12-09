@@ -24,7 +24,10 @@ if [[ $- == *i* ]]; then
   # shellcheck disable=SC2139
   alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   alias cat="bat -p"
-  alias ctl="systemctl"
+
+  if [[ ! "$PREFIX" =~ com.termux ]]; then
+    alias ctl="systemctl"
+  fi
 
   help() {
     (command help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
