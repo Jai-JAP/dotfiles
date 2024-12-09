@@ -139,15 +139,19 @@ if [[ $- == *i* ]]; then
     alias logout="gnome-session-quit --no-prompt"
   fi
 
-  # shellcheck disable=SC1091
-  . "/usr/share/bash-complete-alias/complete_alias"
-  complete -F _complete_alias "${!BASH_ALIASES[@]}"
+  export COMPAL_AUTO_UNMASK=1
 
   if [[ "$PREFIX" =~ com.termux ]]; then
     # shellcheck disable=SC1091
     . "$HOME/.local/share/blesh/ble.sh"
+    # shellcheck disable=SC1091
+    . "$HOME/.local/share/bash-complete-alias/complete_alias"
   else # [[ "$TERM_PROGRAM" != "vscode" ]]; then
     # shellcheck disable=SC1091
     . "/usr/share/blesh/ble.sh"
+    # shellcheck disable=SC1091
+    . "/usr/share/bash-complete-alias/complete_alias"
   fi
+
+  complete -F _complete_alias "${!BASH_ALIASES[@]}"
 fi

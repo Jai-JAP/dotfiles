@@ -82,6 +82,14 @@ if [[ "$PREFIX" =~ com.termux ]]; then
   fi
   echo
 
+  if [[ ! -d "$HOME"/.local/share/bash-complete-alias ]]; then
+    echo -e "\033[33;1m -> \033[0m Installing bash-complete-alias"
+    git clone --depth 1 https://github.com/cykerway/complete-alias "$HOME"/.local/share/bash-complete-alias
+  else
+    echo -e "\033[33;1m -> \033[0m bash-complete-alias already installed"
+  fi
+  echo
+
   config_common
 
   # shellcheck disable=SC2045
