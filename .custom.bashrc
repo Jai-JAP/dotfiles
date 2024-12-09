@@ -17,13 +17,15 @@ if [[ $- == *i* ]]; then
     _ls_icons="--icons"
   fi
 
-  alias sudo="sudo "
-
   # shellcheck disable=SC2139
   alias ls="eza -ghoM --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   # shellcheck disable=SC2139
   alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   alias cat="bat -p"
+
+  if command -v sudo &>/dev/null; then
+    alias sudo="sudo "
+  fi
 
   if [[ ! "$PREFIX" =~ com.termux ]]; then
     alias ctl="systemctl"
