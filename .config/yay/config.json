@@ -1,8 +1,7 @@
 {
 	"aururl": "https://aur.archlinux.org",
 	"aurrpcurl": "https://aur.archlinux.org/rpc?",
-	"buildDir": "/home/jaiap/.cache/yay",
-	"editor": "",
+	"editor": "micro",
 	"editorflags": "",
 	"makepkgbin": "makepkg",
 	"makepkgconf": "",
