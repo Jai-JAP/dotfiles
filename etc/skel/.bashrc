@@ -7,11 +7,11 @@ PS1='[\u@\h \W]\$ '
 
 case ${TERM} in
   Eterm*|alacritty*|aterm*|foot*|gnome*|konsole*|kterm*|putty*|rxvt*|tmux*|xterm*)
-    PROMPT_COMMAND+=('printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
+    PROMPT_COMMAND+=('printf "\e]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
 
     ;;
   screen*)
-    PROMPT_COMMAND+=('printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
+    PROMPT_COMMAND+=('printf "\e_%s@%s:%s\e\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
     ;;
 esac
 
@@ -49,9 +49,9 @@ if ${use_color} ; then
 	fi
 
 	if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
+		PS1='\[\e[01;31m\][\h\[\e[01;36m\] \W\[\e[01;31m\]]\$\[\e[00m\] '
 	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
+		PS1='\[\e[01;32m\][\u@\h\[\e[01;37m\] \W\[\e[01;32m\]]\$\[\e[00m\] '
 	fi
 	alias ls='ls --color=auto'
 

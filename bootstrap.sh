@@ -66,26 +66,26 @@ config_common() {
 }
 
 if [[ "$PREFIX" =~ com.termux ]]; then
-  echo -e "\033[33;1m -> \033[0m Installing packages."
+  echo -e "\e[33;1m -> \e[0m Installing packages."
   pkg update
   pkg install -y make gawk micro eza bat bash-completion command-not-found
   echo
 
   if [[ ! -d "$HOME"/.local/share/blesh ]]; then
-    echo -e "\033[33;1m -> \033[0m Installing ble.sh"
+    echo -e "\e[33;1m -> \e[0m Installing ble.sh"
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "$PREFIX"/tmp/ble.sh
     make -C "$PREFIX"/tmp/ble.sh install PREFIX="$HOME/.local"
     rm -rf "$PREFIX"/tmp/ble.sh
   else
-    echo -e "\033[33;1m -> \033[0m ble.sh already installed"
+    echo -e "\e[33;1m -> \e[0m ble.sh already installed"
   fi
   echo
 
   if [[ ! -d "$HOME"/.local/share/bash-complete-alias ]]; then
-    echo -e "\033[33;1m -> \033[0m Installing bash-complete-alias"
+    echo -e "\e[33;1m -> \e[0m Installing bash-complete-alias"
     git clone --depth 1 https://github.com/cykerway/complete-alias "$HOME"/.local/share/bash-complete-alias
   else
-    echo -e "\033[33;1m -> \033[0m bash-complete-alias already installed"
+    echo -e "\e[33;1m -> \e[0m bash-complete-alias already installed"
   fi
   echo
 
@@ -93,7 +93,7 @@ if [[ "$PREFIX" =~ com.termux ]]; then
 
   # shellcheck disable=SC2045
   for file in $(ls "$LOC"/termux --ignore "etc"); do
-    echo -ne "\033[33;1m ->\033[0m "
+    echo -ne "\e[33;1m ->\e[0m "
     link {"$LOC/","$HOME/."}termux/"$file"
   done
   termux-reload-settings
@@ -198,7 +198,7 @@ else
   done
   echo
 
-  echo -e "\033[33;1mInstalling \033[32;1mparu\033[33;1m package manager...\033[0m"
+  echo -e "\e[33;1mInstalling \e[32;1mparu\e[33;1m package manager...\e[0m"
   if ! sudo pacman -S --needed --noconfirm paru 2>/dev/null; then
     sudo git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
     # shellcheck disable=SC2164
@@ -210,7 +210,7 @@ else
   fi
   echo
 
-  echo -e "\033[33;1mInstalling necessary packages...\033[0m"
+  echo -e "\e[33;1mInstalling necessary packages...\e[0m"
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
     GNOME_PKGS="firefox-gnome-theme libgda6 adw-gtk-theme papirus-icon-theme bibata-cursor-theme kvantum-theme-libadwaita-git gnome-extensions-cli webp-pixbuf-loader"
   fi
@@ -222,7 +222,7 @@ else
     gst-plugin-libcamera refind bash-complete-alias find-the-command $GNOME_PKGS $MKINITCPIO_PKGS
   echo
 
-  echo -e "\033[33;1mSetting MOD-TAP on CAPS_LOCK...\033[0m"
+  echo -e "\e[33;1mSetting MOD-TAP on CAPS_LOCK...\e[0m"
   sudo groupadd uinput
   sudo usermod -aG input "$USER"
   sudo usermod -aG uinput "$USER"
@@ -232,14 +232,14 @@ else
   systemctl --user enable kanata
   systemctl --user start kanata
   if systemctl --user is-active kanata &>/dev/null; then
-    echo -e "- \033[32mKanata service started succesfully.\033[0m"
+    echo -e "- \e[32mKanata service started succesfully.\e[0m"
   else
-    echo -e "- \033[31mUnable to start kanata service.\033[0m"
+    echo -e "- \e[31mUnable to start kanata service.\e[0m"
   fi
   echo
 
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
-    echo -e "\033[33;1mCustomizing \033[32;1mGnome\033[33;1m installation...\033[0m"
+    echo -e "\e[33;1mCustomizing \e[32;1mGnome\e[33;1m installation...\e[0m"
 # apps-menu@gnome-shell-extensions.gcampax.github.com
 # arcmenu@arcmenu.com
 # auto-move-windows@gnome-shell-extensions.gcampax.github.com
@@ -275,22 +275,22 @@ else
       rounded-window-corners@fxgn \
       quick-settings-tweaks@qwreey
 
-    echo -e "\033[33;1mRestoring dconf settings\033[0m"
+    echo -e "\e[33;1mRestoring dconf settings\e[0m"
     # dconf reset -f /
     dconf load /org/ <<< "$(sed 's|%HOME%|'"$HOME"'|g' "$LOC"/etc/dconf-settings.ini)"
     echo
   fi
 
-  echo -e "\033[33;1mCustomizing User logo\033[0m"
+  echo -e "\e[33;1mCustomizing User logo\e[0m"
   if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC\"/icon.* /var/lib/AccountsService/icons/\"$USER\""; then
     echo -e "User logo already setup\n"
   else
     sudo cp -v "$LOC"/icon.* /var/lib/AccountsService/icons/"$USER"
     echo -e "[User]\nLanguages=$LANG;\nSession=\nIcon=/var/lib/AccountsService/icons/${USER}\nSystemAccount=false" | sudo tee /var/lib/AccountsService/users/"$USER"
-    echo -e "\033[32;1mUser logo set successfully\033[0m\n"
+    echo -e "\e[32;1mUser logo set successfully\e[0m\n"
   fi
 
-  echo -e "\033[33;1mCustomizing Bootscreen\033[0m"
+  echo -e "\e[33;1mCustomizing Bootscreen\e[0m"
   if sudo bash -c "$(declare -f hash_equal); hash_equal \"$LOC\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
     echo "Bootscreen customisations already applied."
   else
@@ -320,9 +320,9 @@ else
   fi
   echo
 
-  echo -e "\033[33;1mCustomizing \033[32;1mFirefox\033[33;1m installation...\033[0m"
+  echo -e "\e[33;1mCustomizing \e[32;1mFirefox\e[33;1m installation...\e[0m"
   if pgrep firefox >/dev/null; then
-    echo -ne " - \033[33;1mFirefox currently running. Save your work and press ENTER to continue.\033[0m"
+    echo -ne " - \e[33;1mFirefox currently running. Save your work and press ENTER to continue.\e[0m"
     read -r
     killall firefox 2>/dev/null
   fi
@@ -371,7 +371,7 @@ EOF
   link {"$LOC",}/etc/firefox/policies/policies.json
   echo
 
-  echo -e "\033[33;1mCustomizing \033[32;1mChromium\033[33;1m installation...\033[0m"
+  echo -e "\e[33;1mCustomizing \e[32;1mChromium\e[33;1m installation...\e[0m"
   sudo mkdir -pv /etc/chromium/policies
   link {"$LOC",}/etc/chromium/policies/managed
   echo
@@ -385,13 +385,13 @@ EOF
   sudo update-desktop-database
 
   if [[ ! -f "$LOC"/.firstRunSuccess ]]; then
-    echo -e "\n\033[33;1mManual intervention required.\033[0;1m [OPTIONAL]\033[0m"
+    echo -e "\n\e[33;1mManual intervention required.\e[0;1m [OPTIONAL]\e[0m"
 
-    echo -e " \033[31;1m-\033[0m Edit \"\033[34;1m/etc/{fstab,crypttab}\033[0m\" using the previous config files as reference"
-    echo -e " \033[31;1m-\033[0m Save your bitlocker key in \"\033[34;1m/etc/cryptsetup-keys.d/*.key\033[0m\" using the previous key file as reference"
-    echo -e " \033[31;1m-\033[0m Previous confg files are in \033[34;1metc\033[0m subdir in current dir."
+    echo -e " \e[31;1m-\e[0m Edit \"\e[34;1m/etc/{fstab,crypttab}\e[0m\" using the previous config files as reference"
+    echo -e " \e[31;1m-\e[0m Save your bitlocker key in \"\e[34;1m/etc/cryptsetup-keys.d/*.key\e[0m\" using the previous key file as reference"
+    echo -e " \e[31;1m-\e[0m Previous confg files are in \e[34;1metc\e[0m subdir in current dir."
 
-    echo -e "\033[32;1mAutomatic dotfiles sync successful.\033[0m\n"
+    echo -e "\e[32;1mAutomatic dotfiles sync successful.\e[0m\n"
     touch "$LOC"/.firstRunSuccess
   fi
 

@@ -32,11 +32,14 @@ else
   bleopt complete_auto_complete=
 fi
 
-  # bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET != 0 ]]; then echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
-  #   prompt_rps1_transient=1
+# bleopt prompt_rps1="\$(RET=\$?; if [[ \$RET != 0 ]]; then echo \"\\g{bold,fg=red}\$RET\\g{reset}\"; fi)$RPS1" \
+#   prompt_rps1_transient=1
 
 ble-bind -m emacs -f M-up 'history-search-backward immediate-accept:hide-status:action=load:empty=history-move'
 ble-bind -m emacs -f M-down 'history-search-forward immediate-accept:hide-status:action=load:empty=history-move'
+
+ble-bind -m emacs -f C-up 'history-prev'
+ble-bind -m emacs -f C-down 'history-next'
 
 bleopt edit_vbell= \
   decode_error_char_vbell= \
@@ -71,17 +74,27 @@ if [[ "$TERM" != "linux" ]]; then
 else 
   _arrow="=>"
   _arrow_thin="->"
-  _dir="\033[33;1mDIR changed\033[0m"
+  _dir="\e[33;1mDIR changed\e[0m"
 fi
-bleopt prompt_ps1_final="\g{bold,fg=$FG_COLOR}${_arrow} \g{reset} "
-blehook CHPWD="echo -ne '${_dir} ${_arrow_thin}\033[33;1m'; pwd | sed 's|'$HOME'|~|'; echo -ne '\033[0m'"
+
+PS1_FINAL="\g{bold,fg=${FG_COLOR}}${_arrow} \g{reset}"
+blehook CHPWD="echo -ne '${_dir} ${_arrow_thin}\e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
+
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+  PS1_FINAL="\e]633;A\a\e[0m${PS1_FINAL}\e]633;B\a\e[0m"
+  blehook PREEXEC+="echo -ne '\e]633;C\a\e]633;E'\${1}'\a\e[0m'; " \
+    POSTEXEC+="echo -ne '\e]633;D;'\${?}'\a\e[0m'; " \
+    CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
+fi
+
+bleopt prompt_ps1_final="$PS1_FINAL"
 
 #shellcheck disable=SC2016
 ble/function#advice around ble/widget/default/accept-line '
   ble-edit/content/clear-arg
-  [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
+  [[ ${_ble_edit_str//["${_ble_term_IFS}"]} ]] && ble/function#advice/do'
 
 #shellcheck disable=SC2016
 ble/function#advice around ble/widget/discard-line '
   ble-edit/content/clear-arg
-  [[ ${_ble_edit_str//["$_ble_term_IFS"]} ]] && ble/function#advice/do'
+  [[ ${_ble_edit_str//["${_ble_term_IFS}"]} ]] && ble/function#advice/do'
