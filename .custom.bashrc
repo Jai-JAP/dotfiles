@@ -32,7 +32,7 @@ if [[ $- == *i* ]]; then
   fi
 
   help() {
-    (command help "$@" 2>/dev/null || "$@" --help 2>/dev/null) | bat -pl help
+    command help "$@" || "$@" --help | bat -pl help
   }
 
   256colors() {
@@ -140,10 +140,6 @@ if [[ $- == *i* ]]; then
     PS1='\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\w\[\e[00m\] \n \[\e[01;32m\]\$_\[\e[00m\] '
   fi
 
-  if ! shopt -q login_shell && [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
-    alias logout="gnome-session-quit --no-prompt"
-  fi
-
   export COMPAL_AUTO_UNMASK=1
 
   if [[ "$PREFIX" =~ com.termux ]]; then
@@ -156,8 +152,6 @@ if [[ $- == *i* ]]; then
     . "/usr/share/blesh/ble.sh"
     # shellcheck disable=SC1091
     . "/usr/share/bash-complete-alias/complete_alias"
-    # shellcheck disable=SC1091
-    . "/usr/share/doc/find-the-command/ftc.bash" askfirst noupdate quiet
 
     if [[ "$TERM_PROGRAM" == "vscode" ]]; then
       # shellcheck disable=SC1090
@@ -166,4 +160,8 @@ if [[ $- == *i* ]]; then
   fi
 
   complete -F _complete_alias "${!BASH_ALIASES[@]}"
+
+  if ! shopt -q login_shell && [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
+    alias logout="gnome-session-quit --no-prompt"
+  fi
 fi
