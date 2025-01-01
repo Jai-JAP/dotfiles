@@ -68,8 +68,8 @@ else
 fi
 
 if [[ "$TERM" != "linux" ]]; then
-  _arrow="󰜴"
-  _arrow_thin="➞ "
+  _arrow="󱦰 "
+  _arrow_thin="   "
   _dir="󰉋"
 else 
   _arrow="=>"
