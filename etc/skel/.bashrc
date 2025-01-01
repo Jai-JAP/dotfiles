@@ -1,21 +1,27 @@
+#!/bin/bash
+# shellcheck enable=require-variable-braces
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-[[ $DISPLAY ]] && shopt -s checkwinsize
+[[ ${DISPLAY} ]] && shopt -s checkwinsize
 
 PS1='[\u@\h \W]\$ '
 
 case ${TERM} in
   Eterm*|alacritty*|aterm*|foot*|gnome*|konsole*|kterm*|putty*|rxvt*|tmux*|xterm*)
+    # shellcheck disable=SC2016
     PROMPT_COMMAND+=('printf "\e]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
 
     ;;
   screen*)
+    # shellcheck disable=SC2016
     PROMPT_COMMAND+=('printf "\e_%s@%s:%s\e\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"')
     ;;
 esac
 
 if [[ -r /usr/share/bash-completion/bash_completion ]]; then
+  # shellcheck disable=SC1091
   . /usr/share/bash-completion/bash_completion
 fi
 
@@ -42,9 +48,9 @@ if ${use_color} ; then
 	# Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
 	if type -P dircolors >/dev/null ; then
 		if [[ -f ~/.dir_colors ]] ; then
-			eval $(dircolors -b ~/.dir_colors)
+			eval "$(dircolors -b ~/.dir_colors)"
 		elif [[ -f /etc/DIR_COLORS ]] ; then
-			eval $(dircolors -b /etc/DIR_COLORS)
+			eval "$(dircolors -b /etc/DIR_COLORS)"
 		fi
 	fi
 
@@ -109,4 +115,3 @@ ex () {
     echo "'$1' is not a valid file"
   fi
 }
-

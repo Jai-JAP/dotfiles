@@ -1,0 +1,10 @@
+keybind = ctrl+shift+down=jump_to_prompt:+1
+keybind = ctrl+shift+up=jump_to_prompt:-1
+keybind = super+enter=toggle_tab_overview
+keybind = f11=toggle_fullscreen
+keybind = f12=toggle_window_decorations
+
+keybind = ctrl+shift+left=ignore
+keybind = ctrl+shift+right=ignore
+keybind = ctrl+page_up=ignore
+keybind = ctrl+page_down=ignore

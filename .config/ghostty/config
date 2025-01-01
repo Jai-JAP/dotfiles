@@ -1,0 +1,64 @@
+config-file = palette
+config-file = keybindings
+
+# theme = Apple System Colors
+
+background = #1f1f1f
+foreground = #eeeeee
+
+font-family = "Fira Code"
+font-style = Retina
+font-size = 14
+font-feature = calt
+font-feature = clig
+font-feature = liga
+font-feature = dlig
+font-feature = cv01
+font-feature = cv02
+font-feature = cv06
+font-feature = cv14
+font-feature = ss01
+font-feature = ss03
+font-feature = ss04
+font-feature = ss05
+font-feature = ss07
+font-feature = zero
+
+font-family = "Symbols Nerd Font Mono"
+
+cursor-opacity = 0.8
+cursor-style = bar
+cursor-style-blink = true
+
+background-opacity = 0.9
+
+mouse-hide-while-typing = true
+
+unfocused-split-opacity = 0.5
+
+# wait-after-command = true
+
+link-url = true
+
+window-padding-x = 4
+window-padding-y = 3,1
+window-padding-balance = true
+window-padding-color = background
+
+window-decoration = true
+window-height = 24
+window-width = 80
+window-step-resize = true
+
+resize-overlay = always
+resize-overlay-position = bottom-right
+
+clipboard-paste-protection = true
+copy-on-select = false
+
+linux-cgroup = always
+
+shell-integration-features = cursor,title
+
+adw-toolbar-style = raised
+gtk-adwaita = true

@@ -77,17 +77,16 @@ else
   _dir="\e[33;1mDIR changed\e[0m"
 fi
 
-PS1_FINAL="\g{bold,fg=${FG_COLOR}}${_arrow} \g{reset}"
-blehook CHPWD="echo -ne '${_dir} ${_arrow_thin}\e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
+bleopt prompt_ps1_final="\e]133;A\a\e[0m\g{bold,fg=${FG_COLOR}}${_arrow} \g{reset}\e]133;B\a\e[0m"
+blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
+  POSTEXEC+="echo -ne '\e]133;D;'\${?}'\a\e[0m'; " \
+  CHPWD="echo -ne '${_dir} ${_arrow_thin}\e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
 
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  PS1_FINAL="\e]633;A\a\e[0m${PS1_FINAL}\e]633;B\a\e[0m"
-  blehook PREEXEC+="echo -ne '\e]633;C\a\e]633;E'\${1}'\a\e[0m'; " \
-    POSTEXEC+="echo -ne '\e]633;D;'\${?}'\a\e[0m'; " \
+  blehook PREEXEC+="echo -ne '\e]633;E'\${1}'\a\e[0m'; " \
     CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
 fi
 
-bleopt prompt_ps1_final="$PS1_FINAL"
 
 #shellcheck disable=SC2016
 ble/function#advice around ble/widget/default/accept-line '
