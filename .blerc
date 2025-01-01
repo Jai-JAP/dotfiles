@@ -45,11 +45,13 @@ bleopt edit_vbell= \
   decode_error_char_vbell= \
   decode_error_cseq_vbell= \
   decode_error_kseq_vbell= \
-  prompt_ruler=empty-line \
-  tab_width=2 \
   edit_magic_accept=autocd \
+  history_default_point=end-of-logical-line \
   indent_offset=2 \
-  indent_tabs=0
+  indent_tabs=0 \
+  prompt_ruler=empty-line \
+  prompt_eol_mark=$'\n\e[94m[ble: EOF]\e[m' \
+  tab_width=2
 
 ble-face auto_complete='fg=240' \
   command_builtin='fg=86' \
