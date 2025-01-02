@@ -20,9 +20,12 @@ return {
   cursor_blink_ease_out = "EaseOut",
   cursor_blink_rate = 600,
 
-  font = wezterm.font {
-    family = 'FiraCode Nerd Font Mono',
-    harfbuzz_features = {'true', 'cv01', 'cv02', 'cv06', 'cv14', 'ss01', 'ss03', 'ss04', 'ss05', 'ss07', 'zero'},
+  font = wezterm.font_with_fallback{
+    {
+      family = 'Fira Code Retina',
+      harfbuzz_features = {'calt', 'cv01', 'cv02', 'cv06', 'cv14', 'ss01', 'ss03', 'ss04', 'ss05', 'ss07', 'zero'},
+    },
+    'Symbols Nerd Font Mono',
   },
   font_size = 14,
 
