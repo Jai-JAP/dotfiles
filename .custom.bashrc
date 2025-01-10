@@ -9,11 +9,13 @@ if [[ $- == *i* ]]; then
   . "$(dirname "${BASH_SOURCE[0]}")"/extras/palette.sh
 
   bind 'set completion-ignore-case on'
+  bind 'set match-hidden-files off'
   bind -x '"\C-l":clear'
   shopt -s autocd
   shopt -s cdspell
   shopt -s dirspell
   shopt -s expand_aliases
+  shopt -s no_empty_cmd_completion
   set -C
 
   HISTCONTROL=ignoreboth

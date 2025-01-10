@@ -8,3 +8,4 @@ keybind = ctrl+shift+left=ignore
 keybind = ctrl+shift+right=ignore
 keybind = ctrl+page_up=ignore
 keybind = ctrl+page_down=ignore
+keybind = ctrl+enter=ignore
