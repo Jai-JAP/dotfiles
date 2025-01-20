@@ -247,9 +247,9 @@ else
   fi
   mapfile -t PKGS < <( pkgs_to_install ghostty fzf yazi eza micro wl-clipboard bat git-delta \
       jq blesh-git bash-complete-alias visual-studio-code-bin refind intel-media-{driver,sdk} \
-      libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} firefox chromium \
-      thermald tlp{,-rdw} kvantum{,-qt5} qt{5,6}ct ttf-{fira-code,nerd-fonts-symbols{,-mono}} \
-      pipewire-libcamera gst-plugin-libcamera kanata-bin "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}" )
+      libva-{intel-driver,utils} libvdpau-va-gl vdpauinfo vulkan-{intel,mesa-layers,tools} \
+      firefox chromium ttf-{fira-code,nerd-fonts-symbols{,-mono}} {pipewire,gst-plugin}-libcamera \
+      thermald tlp{,-rdw} kvantum{,-qt5} qt{5,6}ct kanata-bin "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}" )
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 

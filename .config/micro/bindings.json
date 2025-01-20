@@ -10,7 +10,7 @@
   "Alt-]": "IndentSelection|IndentLine",
   "Alt-.": "None",
   "Alt-,": "None",
-  "Alt-/": "None",
+  "Alt-/": "lua:comment.comment",
   "Alt-z": "Redo",
   "Ctrl-PageUp": "None",
   "Ctrl-PageDown": "None",
