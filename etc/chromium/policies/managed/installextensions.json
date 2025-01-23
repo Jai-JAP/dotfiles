@@ -1,12 +1,10 @@
 {
   "ExtensionInstallForcelist": [
+    "cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx",
+    "cjpalhdlnbpafiamejdnhcphjbkeiagm",
     "eimadpbcbfnmbkopoojfekhnkhdbieeh;https://clients2.google.com/service/update2/crx",
     "eimadpbcbfnmbkopoojfekhnkhdbieeh",
     "edibdbjcniadpccecjdfdjjppcpchdlm;https://clients2.google.com/service/update2/crx",
-    "edibdbjcniadpccecjdfdjjppcpchdlm",
-    "mnjggcdmjocbbbhaepdhchncahnbgone;https://clients2.google.com/service/update2/crx",
-    "mnjggcdmjocbbbhaepdhchncahnbgone",
-    "cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx",
-    "cjpalhdlnbpafiamejdnhcphjbkeiagm"
+    "edibdbjcniadpccecjdfdjjppcpchdlm"
   ]
 }
