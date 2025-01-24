@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = bruno-bin
+
+[Action]
+Description = Patch Bruno desktop shortcut to use wayland
+Depends = sed
+When = PostTransaction
+Exec = /usr/bin/sed -i -e '/^Exec=/ s/$/ --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto/' /usr/share/applications/bruno.desktop

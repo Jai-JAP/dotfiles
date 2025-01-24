@@ -242,14 +242,15 @@ else
 
   echo -e "\e[33;1mInstalling necessary packages...\e[0m"
   if paru -Qq | grep -c gnome-desktop &>/dev/null; then
-    GNOME_PKGS=( adw-gtk-theme papirus-icon-theme bibata-cursor-theme firefox-gnome-theme \
-        kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader gnome-extensions-cli )
+    GNOME_PKGS=( gnome-extensions-cli {adw-gtk,papirus-icon,bibata-cursor,firefox-gnome}-theme \
+        kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader )
   fi
   mapfile -t PKGS < <( pkgs_to_install ghostty fzf yazi eza micro wl-clipboard bat git-delta \
-      jq blesh-git bash-complete-alias visual-studio-code-bin refind intel-media-{driver,sdk} \
-      libva-{intel-driver,utils} libvdpau-va-gl vdpauinfo vulkan-{intel,mesa-layers,tools} \
-      firefox chromium ttf-{fira-code,nerd-fonts-symbols{,-mono}} {pipewire,gst-plugin}-libcamera \
-      thermald tlp{,-rdw} kvantum{,-qt5} qt{5,6}ct kanata-bin "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}" )
+      jq blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin firefox \
+      brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} kanata-bin kvantum{,-qt5} qt{5,6}ct \
+      tlp{,-rdw} intel-media-{driver,sdk} libva-{intel-driver,utils} libvdpau-va-gl vdpauinfo \
+      vulkan-{intel,mesa-layers,tools} thermald {pipewire,gst-plugin}-libcamera \
+      "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}" )
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 
@@ -398,7 +399,7 @@ user_pref("datareporting.healthreport.uploadEnabled", false);
 user_pref("permissions.manager.defaultsUrl", "");
 user_pref("privacy.firstparty.isolate", false);
 user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
-user_pref("privacy.sanitize.sanitizeOnShutdown", true); 
+user_pref("privacy.sanitize.sanitizeOnShutdown", true);
 user_pref("privacy.clearOnShutdown.cache", true);
 user_pref("privacy.clearOnShutdown_v2.cache", true);
 user_pref("privacy.clearOnShutdown.downloads", false);
@@ -443,9 +444,16 @@ EOF
   link {"${LOC}",}/etc/firefox/policies/policies.json
   echo
 
-  echo -e "\e[33;1mCustomizing \e[32;1mChromium\e[33;1m installation...\e[0m"
-  sudo mkdir -pv /etc/chromium/policies
-  link {"${LOC}",}/etc/chromium/policies/managed
+  for browser in brave chromium; do
+    echo -e "\e[33;1mCustomizing \e[32;1m${browser^}\e[33;1m installation...\e[0m"
+    sudo mkdir -pv /etc/"${browser}"/policies
+    for type in managed recommended; do
+      if [[ -d "${LOC}"/etc/"${browser}"/policies/"${type}" ]]; then
+        link {"${LOC}",}/etc/"${browser}"/policies/"${type}"
+      fi
+    done
+    echo
+  done
 
   systemctl --user stop wireplumber -q
   systemctl --user stop pipewire -q
@@ -456,7 +464,6 @@ EOF
   sudo update-desktop-database
 
   if [[ ! -f "${LOC}"/.firstRunSuccess ]]; then
-    echo
     echo -e "\n\e[33;1mManual intervention required.\e[0;1m [OPTIONAL]\e[0m"
 
     echo -e " \e[31;1m-\e[0m Edit \"\e[34;1m/etc/{fstab,crypttab}\e[0m\" using the previous config files as reference"
@@ -465,6 +472,8 @@ EOF
 
     echo -e "\e[32;1mAutomatic dotfiles sync successful.\e[0m\n"
     touch "${LOC}"/.firstRunSuccess
+  else
+    echo -en "\e[A"
   fi
 
 fi
