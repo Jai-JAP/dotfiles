@@ -88,7 +88,7 @@ config_common() {
   fi
   echo
 
-  if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc; then
+  if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc && hash_equal {"${LOC}"/etc/skel,"${HOME}"}/.bashrc; then
     echo "'/etc/skel/.bashrc' & '~/.bashrc' already upto date"
   else
     sudo rm /etc/skel/.bashrc

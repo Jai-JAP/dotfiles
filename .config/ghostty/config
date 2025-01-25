@@ -54,6 +54,8 @@ window-step-resize = true
 resize-overlay = always
 resize-overlay-position = bottom-right
 
+clipboard-read = allow
+clipboard-write = allow
 clipboard-paste-protection = true
 copy-on-select = false
 

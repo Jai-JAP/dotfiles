@@ -29,6 +29,7 @@ if [[ $- == *i* ]]; then
   # shellcheck disable=SC2139
   alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
   alias cat="bat -p"
+  alias rm="rm -I"
 
   alias venv="virtualenv"
 
