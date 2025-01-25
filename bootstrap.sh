@@ -381,60 +381,16 @@ else
       cp {"${FIREFOX_CHROME_DIR}"/firefox-gnome-theme/configuration,"${FIREFOX_PROFILE}"}/user.js
 
       cat <<EOF >>"${FIREFOX_PROFILE}"/user.js
+// Gnome theme customizations
 
-user_pref("gnomeTheme.activeTabContrast", true);
 user_pref("gnomeTheme.hideSingleTab", false);
 user_pref("gnomeTheme.tabsAsHeaderbar", true);
 user_pref("gnomeTheme.hideWebrtcIndicator", true);
+
 EOF
     fi
 
-    cat <<EOF >>"${FIREFOX_PROFILE}"/user.js
-
-user_pref("app.shield.optoutstudies.enabled", false);
-user_pref("app.normandy.enabled", false);
-user_pref("app.normandy.api_url", "");
-user_pref("captivedetect.canonicalURL", "");
-user_pref("datareporting.healthreport.uploadEnabled", false);
-user_pref("permissions.manager.defaultsUrl", "");
-user_pref("privacy.firstparty.isolate", false);
-user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
-user_pref("privacy.sanitize.sanitizeOnShutdown", true);
-user_pref("privacy.clearOnShutdown.cache", true);
-user_pref("privacy.clearOnShutdown_v2.cache", true);
-user_pref("privacy.clearOnShutdown.downloads", false);
-user_pref("privacy.clearOnShutdown.formdata", false);
-user_pref("privacy.clearOnShutdown.history", false);
-user_pref("privacy.clearOnShutdown_v2.historyFormDataAndDownloads", false);
-user_pref("privacy.clearOnShutdown.siteSettings", false);
-user_pref("privacy.clearOnShutdown_v2.siteSettings", false);
-user_pref("privacy.clearOnShutdown.cookies", false);
-user_pref("privacy.clearOnShutdown.offlineApps", false);
-user_pref("privacy.clearOnShutdown.sessions", false);
-user_pref("privacy.clearOnShutdown_v2.cookiesAndStorage", false);
-user_pref("privacy.clearSiteData.cache", true);
-user_pref("privacy.clearSiteData.cookiesAndStorage", false);
-user_pref("privacy.clearSiteData.historyFormDataAndDownloads", false);
-user_pref("privacy.clearSiteData.siteSettings", false);
-user_pref("security.dialog_enable_delay", 1000);
-user_pref("security.ssl.require_safe_negotiation", true);
-user_pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
-user_pref("security.tls.enable_0rtt_data", false);
-user_pref("security.tls.version.enable-deprecated", false);
-user_pref("toolkit.telemetry.archive.enabled", false);
-user_pref("toolkit.telemetry.bhrPing.enabled", false);
-user_pref("toolkit.telemetry.coverage.opt-out", true);
-user_pref("toolkit.coverage.endpoint.base", "");
-user_pref("toolkit.telemetry.enabled", false);
-user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);
-user_pref("toolkit.telemetry.newProfilePing.enabled", false);
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
-user_pref("toolkit.telemetry.server", "data:,");
-user_pref("toolkit.telemetry.shutdownPingSender.enabled", false);
-user_pref("toolkit.telemetry.unified", false);
-user_pref("toolkit.telemetry.updatePing.enabled", false);
-
-EOF
+    cat "${LOC}/firefox/user.js" >>"${FIREFOX_PROFILE}"/user.js
 
     echo -e " - Customizations applied to ${FIREFOX_PROFILE##*/}\n"
   done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"${HOME}"'/.mozilla/firefox/"$2 }' \
