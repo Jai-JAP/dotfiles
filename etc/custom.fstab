@@ -1,3 +1,4 @@
+# Identifier        MountPoint        Type        Flags       Backup(0=disable 1=dump)      fsck Order(0=disabled 1=root 2=enabled)
 
 # PARTUUID=8e4ada38-beb3-43fc-a544-a9dd272eac38    /mnt/PCData        ntfs-3g    users,exec,uid=1000,gid=984,nohidden,nofail,umask=0002,x-gvfs-show      0    0
 # PARTUUID=b0bbcdb8-f32e-4a07-902d-a9b292ac28e2    /mnt/Installers    ntfs-3g    users,uid=1000,gid=984,nohidden,nofail,noauto,umask=0002,x-gvfs-show    0    0
@@ -5,9 +6,10 @@
 PARTUUID=8e4ada38-beb3-43fc-a544-a9dd272eac38    /mnt/PCData        ntfs3    acl,exec,prealloc,windows_names,gid=984,nohidden,nofail,umask=0002,x-gvfs-show      0    0
 PARTUUID=b0bbcdb8-f32e-4a07-902d-a9b292ac28e2    /mnt/Installers    ntfs3    acl,prealloc,windows_names,gid=984,nohidden,noauto,umask=0113,x-gvfs-show           0    0
 
-PARTUUID=ba5e1b50-31f3-417d-acd6-6d45c5069835    /mnt/Dev           ext4     defaults,users,exec,acl,noatime,x-gvfs-show 0 0
 
 /dev/mapper/encrypted_PCData		/mnt/PCData		ntfs3		users,exec,nohidden,nofail,umask=002,x-gvfs-show	0    0
 
 /dev/mapper/encrypted_PCData		/mnt/PCData		ntfs-3g		users,uid=1000,gid=1000,nohidden,nofail,umask=0002,x-gvfs-show	0    0
 
+
+PARTUUID=ba5e1b50-31f3-417d-acd6-6d45c5069835    /mnt/Dev           ext4     defaults,users,exec,acl,noatime,x-gvfs-show 0 0

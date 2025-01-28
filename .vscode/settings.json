@@ -1,5 +1,15 @@
 {
   "files.associations": {
-    "*.clang-format": "yaml"
+    "**/.config/ghostty/*": "properties",
+    "*.toml": "properties",
+    "*.service": "ini",
+    "**/.config/*.conf": "plaintext",
+    "**/bluetooth/main.conf": "ini",
+    "**/etc/*.hook": "ini",
+    "**/wireplumber/**/*.conf": "lua",
+    "**/etc/*tab": "plaintext",
+    "paru.conf": "ini",
+    "makepkg.conf": "shellscript",
+    "*.clang-format": "yaml",
   }
 }

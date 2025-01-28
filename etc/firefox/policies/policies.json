@@ -163,6 +163,11 @@
         "Status": "default",
         "Type": "boolean"
       },
+      "extensions.pocket.enabled": {
+        "Value": false,
+        "Status": "default",
+        "Type": "boolean"
+      },
       "extensions.quarantinedDomains.enabled": {
         "Value": true,
         "Status": "default",

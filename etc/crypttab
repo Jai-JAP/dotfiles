@@ -1,1 +1,3 @@
-encrypted_PCData		PARTUUID="8e4ada38-beb3-43fc-a544-a9dd272eac38"		/etc/cryptsetup-keys.d/PCData.key		 bitlk
+# Mapped Device       Device Identifier       Absolute Path to Key File       Type
+
+encrypted_PCData PARTUUID="8e4ada38-beb3-43fc-a544-a9dd272eac38" /etc/cryptsetup-keys.d/PCData.key bitlk

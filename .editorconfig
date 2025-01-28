@@ -1,0 +1,3 @@
+[{*.sh,.bashrc}]
+# --case-indent
+switch_case_indent = true
