@@ -9,6 +9,9 @@
       "request": "launch",
       "name": "Bash-Debug (simplest configuration)",
       "program": "${file}",
+      "args": [
+        "-q"
+      ],
       "terminalKind": "integrated"
     }
   ]

@@ -17,7 +17,7 @@ create_cfg_dirs() {
 		\( -exec test -d "${target_dir}/{}" \; \
 		-exec sh -c 'echo " - '\''$1'\'' exists" >&2' _ "${target_dir}"/{} \; \) \
 		-o \
-		-exec mkdir -pv "${target_dir}/{}" \; \
+		-exec sh -c 'echo -n ' - ' && mkdir -pv '\''$1'\''' _ "${target_dir}"/{} \; \
 		\)
 }
 
@@ -30,7 +30,7 @@ link_cfg_files() {
 		-exec test -e "${target_dir}/{}" \; \
 		-exec sh -c 'echo " - '\''$1'\'' exists" >&2' _ "${target_dir}"/{} \; \) \
 		-o \
-		-exec ln -svf "${PWD}/{}" "${target_dir}/{}" \; \
+		-exec sh -c 'echo -n " - " && ln -svf '\''$1'\'' '\''$2'\''' _ "${PWD}"/{} "${target_dir}"/{} \; \
 		\)
 }
 
@@ -57,6 +57,7 @@ process_cfgs() {
 	# shellcheck disable=SC2164
 	pushd "$1" >/dev/null
 	create_cfg_dirs "$2"
+	echo >&2
 	link_cfg_files "$2"
 	# shellcheck disable=SC2164
 	popd >/dev/null
@@ -87,14 +88,17 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
 		read -r -p "[sudo] Incorrect Password, Try again: " -s PASSWORD
 		echo
 	done
-	echo
+	echo -ne "\e[A\e[2K"
 
 	sudo() {
 		command sudo -S "$@" <<<"${PASSWORD}"
 	}
 fi
 
-if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
+if [[ "$*" =~ -q ]]; then
+	exec 3<>/tmp/bootstrap.stderr
+	exec 2>&3
+fi
 
 config_common() {
 	if ! type sudo &>/dev/null; then
@@ -104,19 +108,21 @@ config_common() {
 	echo -e "\e[33;1m-> Linking all config files.\e[0m"
 
 	if [[ -f "${PREFIX}"/etc/skel/.bash_profile ]]; then
-		echo " - '/etc/skel/.bash_profile' exists" >&2
+		echo -e " - '/etc/skel/.bash_profile' exists\n" >&2
 	else
 		echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" | sudo tee "${PREFIX}"/etc/skel/.bash_profile >/dev/null
-		echo " - '/etc/skel/.bash_profile' created."
+		echo -e " - '/etc/skel/.bash_profile' created.\n"
 	fi
-	echo
+
+	local custom_bashrc
+	custom_bashrc="\n# customisations\n\n# shellcheck disable=SC1091\n. \"${LOC}/.custom.bashrc\""
 
 	local tmp_bashrc
 	tmp_bashrc=$(mktemp)
 	cp "${LOC}"/etc/skel/.bashrc "${tmp_bashrc}"
 	echo -e "${custom_bashrc}" | tee -a "${tmp_bashrc}" &>/dev/null
 
-	if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc && hash_equal "${LOC}"/etc/skel/.bashrc "${tmp_bashrc}"; then
+	if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc && hash_equal "${HOME}"/.bashrc "${tmp_bashrc}"; then
 		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' already upto date\n" >&2
 		rm "${tmp_bashrc}"
 	else
@@ -126,16 +132,12 @@ config_common() {
 		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' updated successfully\n"
 	fi
 
-	local custom_bashrc
-	custom_bashrc="\n# customisations\n\n# shellcheck disable=SC1091\n. \"${LOC}/.custom.bashrc\""
-
 	if grep -q "${LOC}/.custom.bashrc" "${HOME}"/.bashrc; then
-		echo " - '~/.bashrc' already has customizations applied." >&2
+		echo -e " - '~/.bashrc' already has customizations applied.\n" >&2
 	else
 		echo -e "${custom_bashrc}" >>~/.bashrc
-		echo " - '~/.bashrc' updated to add customizations"
+		echo -e " - '~/.bashrc' updated to add customizations\n"
 	fi
-	echo
 
 	for file in .blerc .gitconfig; do
 		link {"${LOC}","${HOME}"}/"${file}"
@@ -164,24 +166,22 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	echo
 
 	if [[ -d "${HOME}"/.local/share/blesh ]]; then
-		echo -e "\e[31;1m-> ble.sh already installed.\e[0m" >&2
+		echo -e "\e[31;1m-> ble.sh already installed.\e[0m\n" >&2
 	else
 		echo -e "\e[33;1m-> Installing ble.sh\e[0m"
 		git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}"/tmp/ble.sh
 		make -C "${PREFIX}"/tmp/ble.sh install PREFIX="${HOME}/.local"
 		rm -rf "${PREFIX}"/tmp/ble.sh
-		echo -e " - \e[32;1mble.sh installed succesfully.\e[0m"
+		echo -e " - \e[32;1mble.sh installed succesfully.\e[0m\n"
 	fi
-	echo
 
 	if [[ -d "${HOME}"/.local/share/bash-complete-alias ]]; then
-		echo -e "\e[31;1m-> bash-complete-alias already installed\e[0m" >&2
+		echo -e "\e[31;1m-> bash-complete-alias already installed\e[0m\n" >&2
 	else
 		echo -e "\e[33;1m-> Installing bash-complete-alias\e[0m"
 		git clone --depth 1 https://github.com/cykerway/complete-alias "${HOME}"/.local/share/bash-complete-alias
-		echo -e " - \e[32;1mbash-complete-alias installed succesfully.\e[0m"
+		echo -e " - \e[32;1mbash-complete-alias installed succesfully.\e[0m\n"
 	fi
-	echo
 
 	for file in {colors,termux}.properties font.ttf; do
 		echo -ne "\e[33;1m-> Customising Termux installation\e[0m"
@@ -202,14 +202,15 @@ else
 	config_common
 
 	process_cfgs {"${LOC}","${HOME}"}/.config
-	echo
+	echo >&2
 
 	process_root_cfgs {"${LOC}",/root}/.config/micro
-	echo
+	echo >&2
 
 	for dir in bluetooth modprobe.d pacman.d/hooks profile.d udev wireplumber xdg; do
 		if [[ -d "${LOC}"/etc/"${dir}" ]]; then
 			process_root_cfgs {"${LOC}",}/etc/"${dir}"
+			echo >&2
 		else
 			echo -e " - \e[31;1mError directory '${LOC}/etc/${dir}' does not exist.\e[0m"
 		fi
@@ -242,16 +243,15 @@ else
 			echo " - '/etc/mkinitcpio.conf' updated"
 			sudo mkinitcpio -P
 		else
-			echo " - '/etc/mkinitcpio.conf' already upto date" >&2
+			echo -e " - '/etc/mkinitcpio.conf' already upto date\n" >&2
 		fi
 		MKINITCPIO_PKGS=(mkinitcpio-firmware)
-		echo
 	elif command -v dracut &>/dev/null; then
 		if [[ -f /etc/dracut.conf.d/custom.conf ]]; then
-			echo " - '/etc/dracut.conf.d/custom.conf' exists" >&2
+			echo -e " - '/etc/dracut.conf.d/custom.conf' exists\n" >&2
 		else
 			echo -e "omit_dracutmodules+=\" qemu qemu-net \"\nforce_drivers+=\" i915 \"\n" | sudo tee /etc/dracut.conf.d/custom.conf >/dev/null
-			echo " - '/etc/dracut.conf.d/custom.conf' created"
+			echo -e " - '/etc/dracut.conf.d/custom.conf' created\n"
 		fi
 	fi
 
@@ -259,28 +259,29 @@ else
 		sudo rm -fv /etc/{profile.d/hwaccel.sh,modprobe.d/i915.conf}
 		sudo sed -i -e "/MODULES=(/s/ i915//g" -e '/MODULES=([[:space:]])/d' /etc/mkinitcpio.conf
 		sudo sed -i -e '/force_drivers+=/s/ i915//g' -e '/force_drivers+="[[:space:]]"/d' /etc/dracut.conf.d/custom.conf
+		echo
 	fi
-	echo
 
 	for file in .bashrc .blerc; do
 		if sudo test -L /root/"${file}" && sudo test -e /root/"${file}"; then
-			echo " - '/root/${file}' exists" >&2
+			echo -e " - '/root/${file}' exists" >&2
 		else
 			sudo ln -svf {"${HOME}",/root}/"${file}"
 		fi
 	done
-	echo
+	echo >&2
 
-if [[ "$1" == "-q" ]]; then exec 3>&1 4>&2; fi
+	if [[ "$*" =~ -q ]]; then exec 3>&2; fi
+
 	if command -v paru &>/dev/null; then
-		echo -e " - \e[32;1mparu\e[0m package manager already installed" >&2
+		echo -e "\e[33;1m-> \e[32;1mparu\e[33;1m package manager already installed.\n" >&2
 	else
 		echo -e "\e[33;1m-> Installing \e[32;1mparu\e[33;1m package manager...\e[0m"
 		sudo pacman -Sy
 		if pacman -Ssq paru &>/dev/null; then
 			echo " - Installing paru from repos"
 			sudo pacman -Su --needed paru
-		else 
+		else
 			echo " - paru not found in repos. Installing from AUR" >&2
 			sudo git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
 			# shellcheck disable=SC2164
@@ -290,9 +291,10 @@ if [[ "$1" == "-q" ]]; then exec 3>&1 4>&2; fi
 			popd >/dev/null
 			sudo rm -rf /tmp/paru-bin
 		fi
+		echo
 	fi
-	echo
-if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
+
+	if [[ "$*" =~ -q ]]; then exec 2>&3; fi
 
 	echo -e "\e[33;1m-> Installing necessary packages...\e[0m"
 	if paru -Qq gnome-desktop &>/dev/null; then
@@ -305,7 +307,7 @@ if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
 		tlp{,-rdw} intel-media-{driver,sdk} libva-{intel-driver,utils} libvdpau-va-gl vdpauinfo \
 		vulkan-{intel,mesa-layers,tools} thermald {pipewire,gst-plugin}-libcamera dex \
 		"${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
-	paru -Syu --needed --noconfirm "${PKGS[@]}" | indent
+	paru -Syu --needed --noconfirm "${PKGS[@]}"
 	echo
 
 	for program in keymapper kanata; do
@@ -314,25 +316,25 @@ if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
 			if systemctl is-active "${daemon}" &>/dev/null; then
 				echo -e "\e[33;1m-> MOD-TAP is already setup on CAPS_LOCK using ${program^}.\e[0m" >&2
 			else
-				echo -e " - \e[33;1mStarting MOD-TAP on CAPS_LOCK using ${program^}.\e[0m"
+				echo -e "\e[33;1m-> Starting MOD-TAP on CAPS_LOCK using ${program^}.\e[0m"
 
 				if [[ "${program}" == "kanata" ]]; then
 					link {"${LOC}",}/etc/systemd/user/kanata.service
 					sudo systemctl daemon-reload
 				fi
 
-				sudo systemctl enable --now "${daemon}"
+				sudo systemctl enable --now "${daemon}" &>/dev/null
 
 				if systemctl is-active "${daemon}" &>/dev/null; then
-					echo -e " - \e[32m${daemon^} service started.\n\e[0m"
+					echo -e " - \e[32m${daemon^} service started.\e[0m"
 					if [[ "${program}" == "kanata" ]] || pidof keymapper || dex /etc/xdg/autostart/keymapper.desktop; then
 						echo -e " - \e[32;1mMOD-TAP on CAPS_LOCK setup succesfully.\e[0m"
 					fi
 				else
 					echo -e "- \e[31;1mUnable to start ${daemon^} service.\e[0m"
 				fi
+				echo
 			fi
-			echo
 			break
 		fi
 	done
@@ -395,7 +397,7 @@ if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
 	fi
 
 	if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
-		echo -e "\e[33;1m-> Bootscreen customisations already applied.\e[0m" >&2
+		echo -e "\e[33;1m-> Bootscreen customisations already applied.\e[0m\n" >&2
 	else
 		echo -e "\e[33;1m-> Customizing Bootscreen\e[0m"
 		sudo refind-install
@@ -406,8 +408,7 @@ if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
 		ROOT_UUID="$(sudo -S blkid "${ROOT_DEV}" -s UUID -o value <<<"${PASSWORD}")"
 		sudo sed -i 's|root=UUID=|&'"${ROOT_UUID}"'|g' /boot/refind_linux.conf
 		sudo sed -i 's|ro root=|&'"${ROOT_DEV}"'|g' /boot/refind_linux.conf
-		echo -e " - \e[32;1mrefind_linux.conf configured successfully\e[0m"
-		echo
+		echo -e " - \e[32;1mrefind_linux.conf configured successfully\e[0m\n"
 
 		# shellcheck disable=SC2164
 		pushd "${HOME}"/.cache/paru/clone >/dev/null
@@ -423,8 +424,8 @@ if [[ "$1" == "-q" ]]; then exec >&3 2>&4; fi
 		popd >/dev/null
 		# shellcheck disable=SC2164
 		popd >/dev/null
+		echo
 	fi
-	echo
 
 	echo -e "\e[33;1m-> Customizing \e[32;1mFirefox\e[33;1m installation...\e[0m"
 	if pgrep firefox >/dev/null; then
@@ -468,7 +469,7 @@ EOF
 
 	sudo mkdir -pv /etc/firefox/policies
 	link {"${LOC}",}/etc/firefox/policies/policies.json
-	echo
+	echo >&2
 
 	for browser in brave chromium; do
 		echo -e "\e[33;1m-> Customizing \e[32;1m${browser^}\e[33;1m policies...\e[0m"
@@ -478,7 +479,7 @@ EOF
 				link {"${LOC}",}/etc/"${browser}"/policies/"${type}"
 			fi
 		done
-		echo -e " - \e[32;1mCustom policies applied for ${browser^}."
+		echo -e " - \e[32;1mCustom policies applied for ${browser^}.\e[0m\n"
 	done
 
 	systemctl --user stop wireplumber -q
