@@ -3,7 +3,8 @@ Description=Kanata keyboard remapper
 Documentation=https://github.com/jtroo/kanata
 
 [Service]
-ExecStart=/usr/bin/kanata --cfg ${HOME}/.config/kanata/config.kbd
+User=root
+ExecStart=/usr/bin/kanata --cfg /etc/kanata/config.kbd
 
 [Install]
 WantedBy=default.target

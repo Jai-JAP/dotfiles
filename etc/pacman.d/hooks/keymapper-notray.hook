@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = keymapper
+Target = keymapper-bin
+Target = keymapper-git
+
+[Action]
+Description = Customizing Keymapper to disable tray icon
+When = PostTransaction
+Exec = /usr/bin/sed -i -e '/Exec=/s/$/ --no-tray/' /etc/xdg/autostart/keymapper.desktop
