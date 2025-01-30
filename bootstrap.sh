@@ -105,7 +105,7 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
 fi
 
 if [[ "$*" =~ -q ]]; then
-	exec 3<> "${PREFIX}"/tmp/bootstrap.stderr
+	exec 3<>"${PREFIX}"/tmp/bootstrap.stderr
 	exec 2>&3
 fi
 
@@ -198,15 +198,11 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 		link {"${LOC}/","${HOME}/."}termux/"${file}"
 	done
 	termux-reload-settings
-	echo
 
 	config_common
 
 	process_cfgs {"${LOC}"/termux,"${PREFIX}"}/etc
-	echo
-
 	process_cfgs {"${LOC}","${HOME}"}/.config/micro
-	echo
 
 else
 	config_common
