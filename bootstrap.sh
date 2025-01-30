@@ -197,12 +197,15 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	for file in {colors,termux}.properties font.ttf; do
 		link {"${LOC}/","${HOME}/."}termux/"${file}"
 	done
-	termux-reload-settings
 
 	config_common
+	echo >&2
 
 	process_cfgs {"${LOC}"/termux,"${PREFIX}"}/etc
 	process_cfgs {"${LOC}","${HOME}"}/.config/micro
+
+	echo -e "\e[33;1m-> Reloading Termux.\e[0m"
+	termux-reload-settings
 
 else
 	config_common
