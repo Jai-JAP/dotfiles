@@ -119,10 +119,10 @@ config_common() {
 	makedir "${PREFIX}"/etc/skel
 
 	if [[ -f "${PREFIX}"/etc/skel/.bash_profile ]]; then
-		echo -e " - '/etc/skel/.bash_profile' exists\n" >&2
+		echo -e " - '${PREFIX}/etc/skel/.bash_profile' exists\n" >&2
 	else
 		echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" | sudo tee "${PREFIX}"/etc/skel/.bash_profile >/dev/null
-		echo -e " - '/etc/skel/.bash_profile' created.\n"
+		echo -e " - '${PREFIX}/etc/skel/.bash_profile' created.\n"
 	fi
 
 	local custom_bashrc
@@ -134,13 +134,13 @@ config_common() {
 	echo -e "${custom_bashrc}" | tee -a "${tmp_bashrc}" &>/dev/null
 
 	if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc && hash_equal "${HOME}"/.bashrc "${tmp_bashrc}"; then
-		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' already upto date\n" >&2
+		echo -e " - '${PREFIX}/etc/skel/.bashrc' & '~/.bashrc' already upto date\n" >&2
 		rm "${tmp_bashrc}"
 	else
 		sudo rm "${PREFIX}"/etc/skel/.bashrc "${tmp_bashrc}"
-		copy {"${LOC}",}/etc/skel/.bashrc
+		copy {"${LOC}","${PREFIX}"}/etc/skel/.bashrc
 		copy {"${LOC}"/etc/skel,"${HOME}"}/.bashrc
-		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' updated successfully\n"
+		echo -e " - '${PREFIX}/etc/skel/.bashrc' & '~/.bashrc' updated successfully\n"
 	fi
 
 	if grep -q "${LOC}/.custom.bashrc" "${HOME}"/.bashrc; then
