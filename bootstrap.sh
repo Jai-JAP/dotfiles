@@ -52,19 +52,28 @@ copy() {
 	fi
 }
 
+makedir() {
+	if [[ -d "$1" ]]; then
+		echo " - '$1' exists" >&2
+	else
+		echo -n " - "
+		mkdir -pv "$1" 2>/dev/null || sudo mkdir -pv "$1"
+	fi
+}
+
 process_cfgs() {
-	mkdir -pv "$2"
+	makedir "$2"
 	# shellcheck disable=SC2164
 	pushd "$1" >/dev/null
 	create_cfg_dirs "$2"
-	echo >&2
 	link_cfg_files "$2"
+	echo >&2
 	# shellcheck disable=SC2164
 	popd >/dev/null
 }
 
 process_root_cfgs() {
-	sudo bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files); process_cfgs $1 $2"
+	sudo bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files makedir); process_cfgs $1 $2"
 }
 
 LOC=$(realpath "$(dirname "$0")")
@@ -107,6 +116,8 @@ config_common() {
 
 	echo -e "\e[33;1m-> Linking all config files.\e[0m"
 
+	makedir "${PREFIX}"/etc/skel
+
 	if [[ -f "${PREFIX}"/etc/skel/.bash_profile ]]; then
 		echo -e " - '/etc/skel/.bash_profile' exists\n" >&2
 	else
@@ -142,7 +153,6 @@ config_common() {
 	for file in .blerc .gitconfig; do
 		link {"${LOC}","${HOME}"}/"${file}"
 	done
-	echo
 }
 
 filter_installed_pkgs() {
@@ -166,7 +176,7 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	echo
 
 	if [[ -d "${HOME}"/.local/share/blesh ]]; then
-		echo -e "\e[31;1m-> ble.sh already installed.\e[0m\n" >&2
+		echo -e "\e[33;1m-> ble.sh already installed.\e[0m\n" >&2
 	else
 		echo -e "\e[33;1m-> Installing ble.sh\e[0m"
 		git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}"/tmp/ble.sh
@@ -176,15 +186,15 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	fi
 
 	if [[ -d "${HOME}"/.local/share/bash-complete-alias ]]; then
-		echo -e "\e[31;1m-> bash-complete-alias already installed\e[0m\n" >&2
+		echo -e "\e[33;1m-> bash-complete-alias already installed\e[0m\n" >&2
 	else
 		echo -e "\e[33;1m-> Installing bash-complete-alias\e[0m"
 		git clone --depth 1 https://github.com/cykerway/complete-alias "${HOME}"/.local/share/bash-complete-alias
 		echo -e " - \e[32;1mbash-complete-alias installed succesfully.\e[0m\n"
 	fi
 
+	echo -e "\e[33;1m-> Customizing Termux installation\e[0m"
 	for file in {colors,termux}.properties font.ttf; do
-		echo -ne "\e[33;1m-> Customising Termux installation\e[0m"
 		link {"${LOC}/","${HOME}/."}termux/"${file}"
 	done
 	termux-reload-settings
@@ -202,15 +212,12 @@ else
 	config_common
 
 	process_cfgs {"${LOC}","${HOME}"}/.config
-	echo >&2
 
 	process_root_cfgs {"${LOC}",/root}/.config/micro
-	echo >&2
 
 	for dir in bluetooth modprobe.d pacman.d/hooks profile.d udev wireplumber xdg; do
 		if [[ -d "${LOC}"/etc/"${dir}" ]]; then
 			process_root_cfgs {"${LOC}",}/etc/"${dir}"
-			echo >&2
 		else
 			echo -e " - \e[31;1mError directory '${LOC}/etc/${dir}' does not exist.\e[0m"
 		fi
@@ -269,7 +276,7 @@ else
 			sudo ln -svf {"${HOME}",/root}/"${file}"
 		fi
 	done
-	echo >&2
+	echo
 
 	if [[ "$*" =~ -q ]]; then exec 3>&2; fi
 
@@ -314,9 +321,9 @@ else
 		daemon="${program/keymapper/keymapperd}"
 		if paru -Qq "${program}" &>/dev/null; then
 			if systemctl is-active "${daemon}" &>/dev/null; then
-				echo -e "\e[33;1m-> MOD-TAP is already setup on CAPS_LOCK using ${program^}.\e[0m" >&2
+				echo -e "\e[33;1m-> MOD-TAP is already setup on CAPS_LOCK using \e[32;1m${program^}\e[33;1m.\e[0m\n" >&2
 			else
-				echo -e "\e[33;1m-> Starting MOD-TAP on CAPS_LOCK using ${program^}.\e[0m"
+				echo -e "\e[33;1m-> Starting MOD-TAP on CAPS_LOCK using \e[32;1m${program^}\e[33;1m.\e[0m"
 
 				if [[ "${program}" == "kanata" ]]; then
 					link {"${LOC}",}/etc/systemd/user/kanata.service
@@ -435,11 +442,16 @@ else
 		killall firefox 2>/dev/null
 	fi
 
+	echo -e " - Customizing \e[32mFirefox\e[0m policies..."
+	makedir /etc/firefox/policies
+	link {"${LOC}",}/etc/firefox/policies/policies.json
+	echo
+
 	while IFS= read -r FIREFOX_PROFILE; do
 		if paru -Qq gnome-desktop &>/dev/null; then
 			echo -e " - Setting up \e[32mfirefox-gnome-theme\e[0m for ${FIREFOX_PROFILE}"
 			FIREFOX_CHROME_DIR="${FIREFOX_PROFILE}"/chrome
-			mkdir -p "${FIREFOX_CHROME_DIR}"
+			makedir "${FIREFOX_CHROME_DIR}"
 			link {/usr/lib,"${FIREFOX_CHROME_DIR}"}/firefox-gnome-theme
 			for file in userChrome.css userContent.css; do
 				if [[ -f "${FIREFOX_CHROME_DIR}/${file}" ]]; then
@@ -460,20 +472,16 @@ user_pref("gnomeTheme.hideWebrtcIndicator", true);
 EOF
 		fi
 
-		echo " - Hardening user.js & applying custom settings for ${FIREFOX_PROFILE}"
+		echo " - Hardening user.js & applying custom settings for ${FIREFOX_PROFILE##*/}"
 		cat "${LOC}/firefox/user.js" >>"${FIREFOX_PROFILE}"/user.js
 
 		echo -e " - \e[32;1mCustomizations applied to ${FIREFOX_PROFILE##*/}\e[0m\n"
 	done < <(awk -F'=' -e '$0 ~ /\[Profile[[:digit:]]+\]/ { f=1; next } /\[/{ f=0; next } f && $1=="Path"{ print "'"${HOME}"'/.mozilla/firefox/"$2 }' \
 		"${HOME}"/.mozilla/firefox/profiles.ini)
 
-	sudo mkdir -pv /etc/firefox/policies
-	link {"${LOC}",}/etc/firefox/policies/policies.json
-	echo >&2
-
 	for browser in brave chromium; do
 		echo -e "\e[33;1m-> Customizing \e[32;1m${browser^}\e[33;1m policies...\e[0m"
-		sudo mkdir -pv /etc/"${browser}"/policies
+		makedir /etc/"${browser}"/policies
 		for type in managed recommended; do
 			if [[ -d "${LOC}"/etc/"${browser}"/policies/"${type}" ]]; then
 				link {"${LOC}",}/etc/"${browser}"/policies/"${type}"
