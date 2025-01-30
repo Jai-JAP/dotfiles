@@ -197,6 +197,7 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	for file in {colors,termux}.properties font.ttf; do
 		link {"${LOC}/","${HOME}/."}termux/"${file}"
 	done
+	echo
 
 	config_common
 	echo >&2
