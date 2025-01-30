@@ -137,7 +137,7 @@ config_common() {
 		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' already upto date\n" >&2
 		rm "${tmp_bashrc}"
 	else
-		sudo rm /etc/skel/.bashrc "${tmp_bashrc}"
+		sudo rm "${PREFIX}"/etc/skel/.bashrc "${tmp_bashrc}"
 		copy {"${LOC}",}/etc/skel/.bashrc
 		copy {"${LOC}"/etc/skel,"${HOME}"}/.bashrc
 		echo -e " - '/etc/skel/.bashrc' & '~/.bashrc' updated successfully\n"
