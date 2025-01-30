@@ -200,7 +200,7 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
 	echo
 
 	config_common
-	echo >&2
+	echo
 
 	process_cfgs {"${LOC}"/termux,"${PREFIX}"}/etc
 	process_cfgs {"${LOC}","${HOME}"}/.config/micro
