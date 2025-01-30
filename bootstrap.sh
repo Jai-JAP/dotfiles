@@ -105,7 +105,7 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
 fi
 
 if [[ "$*" =~ -q ]]; then
-	exec 3<>/tmp/bootstrap.stderr
+	exec 3<> "${PREFIX}"/tmp/bootstrap.stderr
 	exec 2>&3
 fi
 
