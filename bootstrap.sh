@@ -323,7 +323,7 @@ else
 			if systemctl is-active "${daemon}" &>/dev/null; then
 				echo -e "\e[33;1m-> MOD-TAP is already setup on CAPS_LOCK using \e[32;1m${program^}\e[33;1m.\e[0m\n" >&2
 			else
-				echo -e "\e[33;1m-> Starting MOD-TAP on CAPS_LOCK using \e[32;1m${program^}\e[33;1m.\e[0m"
+				echo -e "\e[33;1m-> Setting up MOD-TAP on CAPS_LOCK using \e[32;1m${program^}\e[33;1m...\e[0m"
 
 				if [[ "${program}" == "kanata" ]]; then
 					link {"${LOC}",}/etc/systemd/user/kanata.service
@@ -388,8 +388,19 @@ else
 		else
 			echo -e " - \e[33;1mInstalling Extensions...\e[0m"
 			gext install "${EXTENSIONS[@]}"
+			echo
 		fi
-		echo -e " - \e[33;1mRestoring dconf settings\e[0m"
+
+		if systemctl is-enabled gcr-ssh-agent &>/dev/null; then
+		  echo -e " - \e[33;1mSSH login agent already setup\e[0m\n" >&2
+		else
+		  echo -e " - \e[32;1mSetting up SSH login...\e[0m\n"
+		  sudo systemctl --global enable gcr-ssh-agent &>/dev/null
+      systemctl --user start gcr-ssh-agent.socket
+      systemctl --user start gcr-ssh-agent
+    fi
+
+		echo -e " - \e[33;1mRestoring dconf settings...\e[0m"
 		# dconf reset -f /
 		dconf load /org/ <<<"$(sed 's|%HOME%|'"${HOME}"'|g' "${LOC}"/etc/dconf-settings.ini)"
 		echo
@@ -491,8 +502,7 @@ EOF
 		echo -e " - \e[32;1mCustom policies applied for ${browser^}.\e[0m\n"
 	done
 
-	systemctl --user stop wireplumber -q
-	systemctl --user stop pipewire -q
+	systemctl --user stop wireplumber pipewire -q
 	systemctl --user start wireplumber -q
 
 	sudo systemctl enable --now thermald tlp 2>/dev/null
