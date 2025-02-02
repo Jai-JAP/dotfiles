@@ -381,7 +381,8 @@ else
 			unblank@sun.wxg@gmail.com \
 			Vitals@CoreCoding.com \
 			rounded-window-corners@fxgn \
-			quick-settings-tweaks@qwreey)
+			quick-settings-tweaks@qwreey \
+			lockkeys@vaina.lt)
 		if (("${#EXTENSIONS[@]}" == 0)); then
 			echo -e " - \e[33;1mExtensions already installed.\e[0m" >&2
 		else
