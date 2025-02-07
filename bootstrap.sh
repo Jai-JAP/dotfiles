@@ -17,7 +17,7 @@ create_cfg_dirs() {
 		\( -exec test -d "${target_dir}/{}" \; \
 		-exec sh -c 'echo " - '\''$1'\'' exists" >&2' _ "${target_dir}"/{} \; \) \
 		-o \
-		-exec sh -c 'echo -n ' - ' && mkdir -pv '\''$1'\''' _ "${target_dir}"/{} \; \
+		-exec sh -c 'echo -n ' - ' && mkdir -pv "$1"' _ "${target_dir}"/{} \; \
 		\)
 }
 
@@ -30,7 +30,7 @@ link_cfg_files() {
 		-exec test -e "${target_dir}/{}" \; \
 		-exec sh -c 'echo " - '\''$1'\'' exists" >&2' _ "${target_dir}"/{} \; \) \
 		-o \
-		-exec sh -c 'echo -n " - " && ln -svf '\''$1'\'' '\''$2'\''' _ "${PWD}"/{} "${target_dir}"/{} \; \
+		-exec sh -c 'echo -n " - " && ln -svf "$1" "$2"' _ "${PWD}"/{} "${target_dir}"/{} \; \
 		\)
 }
 
