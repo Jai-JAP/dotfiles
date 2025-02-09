@@ -305,14 +305,14 @@ else
 
 	echo -e "\e[33;1m-> Installing necessary packages...\e[0m"
 	if paru -Qq gnome-desktop &>/dev/null; then
-		GNOME_PKGS=(gnome-extensions-cli {adw-gtk,papirus-icon,bibata-cursor,firefox-gnome}-theme
+		GNOME_PKGS=(gnome-extensions-cli {adw-gtk,papirus-icon,bibata-cursor,firefox-gnome}-theme \
 			kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader)
 	fi
-	mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf yazi eza micro wl-clipboard bat git-delta \
-		jq blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin firefox \
-		brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} kanata-bin kvantum{,-qt5} qt{5,6}ct \
-		tlp{,-rdw} intel-media-{driver,sdk} libva-{intel-driver,utils} libvdpau-va-gl vdpauinfo \
-		vulkan-{intel,mesa-layers,tools} thermald {pipewire,gst-plugin}-libcamera dex \
+	mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf fd yazi eza micro wl-clipboard bat \
+	  git-delta jq blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin \
+	  firefox brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} keymapper-bin kvantum{,-qt5} \
+	  qt{5,6}ct tlp{,-rdw} intel-media-{driver,sdk} libva-{intel-driver,utils} libvdpau-va-gl \
+	  vdpauinfo vulkan-{intel,mesa-layers,tools} thermald {pipewire,gst-plugin}-libcamera dex \
 		"${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
 	paru -Syu --needed --noconfirm "${PKGS[@]}"
 	echo
