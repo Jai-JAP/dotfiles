@@ -308,12 +308,12 @@ else
 		GNOME_PKGS=(gnome-extensions-cli {adw-gtk,papirus-icon,bibata-cursor,firefox-gnome}-theme \
 			kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader)
 	fi
-	mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf fd yazi eza micro wl-clipboard bat \
-	  git-delta jq blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin \
-	  firefox brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} keymapper-bin kvantum{,-qt5} \
-	  qt{5,6}ct tlp{,-rdw} intel-media-{driver,sdk} libva-{intel-driver,utils} libvdpau-va-gl \
-	  vdpauinfo vulkan-{intel,mesa-layers,tools} thermald {pipewire,gst-plugin}-libcamera dex \
-		"${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
+	mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
+	  bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin \
+	  hoppscotch-bin onlyoffice-bin firefox brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} \
+	  keymapper-bin kvantum{,-qt5} qt{5,6}ct tlp{,-rdw} intel-media-{driver,sdk} libvdpau-va-gl \
+	  libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} thermald dex jq \
+	  {pipewire,gst-plugin}-libcamera easyeffects calf "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
 	paru -Syu --needed --noconfirm "${PKGS[@]}"
 	echo
 
