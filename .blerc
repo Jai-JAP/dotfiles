@@ -53,7 +53,7 @@ bleopt edit_vbell= \
 	indent_offset=2 \
 	indent_tabs=0 \
 	prompt_ruler=empty-line \
-	prompt_eol_mark='\n' \
+	prompt_eol_mark=$'\n' \
 	tab_width=2
 
 ble-face auto_complete='fg=240' \
