@@ -391,6 +391,7 @@ else
       rounded-window-corners@fxgn \
       quick-settings-tweaks@qwreey \
       lockkeys@vaina.lt)
+
     if (("${#EXTENSIONS[@]}" == 0)); then
       echo -e " - \e[33;1mExtensions already installed.\e[0m" >&2
     else
@@ -410,7 +411,7 @@ else
 
     echo -e " - \e[33;1mRestoring dconf settings...\e[0m"
     # dconf reset -f /
-    dconf load /org/ <<<"$(sed 's|%HOME%|'"${HOME}"'|g' "${LOC}"/etc/dconf-settings.ini)"
+    dconf load / <<<"$(sed 's|%HOME%|'"${HOME}"'|g' "${LOC}"/etc/dconf-settings.ini)"
     echo
   fi
 
