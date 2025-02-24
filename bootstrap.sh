@@ -378,6 +378,7 @@ else
     # light-style@gnome-shell-extensions.gcampax.github.com
 
     mapfile -t EXTENSIONS < <(filter_installed_exts \
+      Bluetooth-Battery-Meter@maniacx.github.com \
       appindicatorsupport@rgcjonas.gmail.com \
       blur-my-shell@aunetx \
       dash-to-dock@micxgx.gmail.com \
