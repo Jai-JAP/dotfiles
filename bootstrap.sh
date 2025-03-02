@@ -320,7 +320,7 @@ else
     bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin \
     hoppscotch-bin onlyoffice-bin firefox brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} \
     keymapper-bin kvantum{,-qt5} qt{5,6}ct tlp{,-rdw} intel-media-{driver,sdk} libvdpau-va-gl \
-    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} thermald dex jq \
+    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} thermald dex jq uv \
     {pipewire,gst-plugin}-libcamera easyeffects calf "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
