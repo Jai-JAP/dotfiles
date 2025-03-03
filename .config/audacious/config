@@ -20,7 +20,8 @@ icon_theme=audacious-flat-dark
 
 [crossfade]
 length=1
-no_fade_in=TRUE
+manual_length=1
+sigmoid_steepness=2
 use_sigmoid=TRUE
 
 [crystalizer]
@@ -42,9 +43,6 @@ statusbar_visible=FALSE
 
 [search-tool]
 path=/home/jaiap/Music
-
-[sort]
-sort-order=-1
 
 [statusicon]
 close_to_tray=TRUE
