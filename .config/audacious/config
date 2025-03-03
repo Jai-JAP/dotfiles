@@ -7,6 +7,7 @@ advance_on_delete=TRUE
 equalizer_active=TRUE
 equalizer_bands=7,7,6,4,3,0,2,4,7,7
 equalizer_preamp=-6
+recurse_folders=FALSE
 show_interface=FALSE
 
 [audgui]
@@ -35,14 +36,15 @@ remote-source=chartlyrics.com
 [qtui]
 column_widths=25,25,275,175,50,180,175,25,100,25,75,275,275,275,75,275,175,75
 menu_visible=FALSE
-player_height=432
-player_width=588
 playlist_columns=playing title artist album length
 playlist_headers_bold=TRUE
 statusbar_visible=FALSE
 
 [search-tool]
 path=/home/jaiap/Music
+
+[sort]
+sort-order=-1
 
 [statusicon]
 close_to_tray=TRUE
