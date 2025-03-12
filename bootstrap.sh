@@ -317,11 +317,12 @@ else
       kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader)
   fi
   mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
-    bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind visual-studio-code-bin \
-    hoppscotch-bin onlyoffice-bin firefox brave-bin ttf-{fira-code,nerd-fonts-symbols{,-mono}} \
-    keymapper-bin kvantum{,-qt5} qt{5,6}ct tlp{,-rdw} intel-media-{driver,sdk} libvdpau-va-gl \
-    libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} thermald dex jq uv \
-    {pipewire,gst-plugin}-libcamera easyeffects calf "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
+    bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind firefox thermald dex jq \
+    {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct uv \
+    ttf-{fira-code,nerd-fonts-symbols{,-mono}} tlp{,-rdw} thermald dex intel-media-{driver,sdk} \
+    libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
+    {pipewire,gst-plugin}-libcamera easyeffects calf tealdeer linux-keep-modules \
+    "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 
@@ -515,7 +516,7 @@ EOF
   systemctl --user stop wireplumber pipewire -q
   systemctl --user start wireplumber -q
 
-  sudo systemctl enable --now thermald tlp 2>/dev/null
+  sudo systemctl enable --now thermald tlp cleanup-linux-modules 2>/dev/null
 
   sudo update-desktop-database
 

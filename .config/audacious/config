@@ -21,7 +21,7 @@ icon_theme=audacious-flat-dark
 [crossfade]
 length=1
 manual_length=1
-sigmoid_steepness=2
+sigmoid_steepness=3
 use_sigmoid=TRUE
 
 [crystalizer]

@@ -8,4 +8,4 @@ Target = hoppscotch-bin
 Description = Patch Hoppscotch desktop shortcut to fix UI size
 Depends = sed
 When = PostTransaction
-Exec = /usr/bin/sed -i -e 's|^Exec=|&env GDK_DPI_SCALE=1.25 |' /usr/share/applications/hoppscotch.desktop
+Exec = /usr/bin/sed -i -e 's|^Exec=|&env GDK_DPI_SCALE=1.25 |' /usr/share/applications/Hoppscotch.desktop
