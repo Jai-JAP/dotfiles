@@ -1,0 +1,48 @@
+[display]
+default_width = "medium"
+dataframes = "rich"
+theme = "system"
+code_editor_font_size = 14
+cell_output = "below"
+
+[save]
+format_on_save = false
+autosave_delay = 1000
+autosave = "after_delay"
+
+[snippets]
+custom_paths = []
+include_default_snippets = true
+
+[formatting]
+line_length = 100
+
+[runtime]
+watcher_on_save = "lazy"
+auto_reload = "off"
+on_cell_change = "autorun"
+auto_instantiate = false
+pythonpath = []
+
+[keymap]
+preset = "default"
+
+[language_servers.pylsp]
+enabled = true
+enable_flake8 = false
+enable_pyflakes = false
+enable_mypy = true
+enable_pylint = false
+enable_ruff = true
+enable_pydocstyle = false
+
+[completion]
+activate_on_typing = true
+copilot = false
+
+[server]
+browser = "default"
+follow_symlink = false
+
+[package_management]
+manager = "uv"
