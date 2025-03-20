@@ -319,9 +319,9 @@ else
   mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
     bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind firefox thermald dex jq \
     {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct uv \
-    ttf-{fira-code,nerd-fonts-symbols{,-mono}} tlp{,-rdw} thermald dex intel-media-{driver,sdk} \
+    ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} \
     libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
-    {pipewire,gst-plugin}-libcamera easyeffects calf tealdeer linux-keep-modules \
+    tlp{,-rdw} {pipewire,gst-plugin}-libcamera easyeffects calf tealdeer linux-keep-modules \
     "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
@@ -512,6 +512,8 @@ EOF
     done
     echo -e " - \e[32;1mCustom policies applied for ${browser^}.\e[0m\n"
   done
+
+  tldr -uq
 
   systemctl --user stop wireplumber pipewire -q
   systemctl --user start wireplumber -q
