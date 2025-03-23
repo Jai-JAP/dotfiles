@@ -1,5 +1,5 @@
-# shellcheck enable=require-variable-braces
 #!/bin/bash
+# shellcheck enable=require-variable-braces
 
 if [ "${0}" != "${BASH_SOURCE[0]}" ] ; then
   echo -e "\e[31;1mThis script should not be sourced\e[0m" >&2
@@ -552,14 +552,11 @@ EOF
 
   tldr -uq
 
-  for kver in /usr/lib/modules/*; do
-    if [[ "${kver}" == $(uname -r) ]]; then
-      if command -v mkinitcpio &>/dev/null; then
-        sudo mkinitcpio -p linux
-      # elif command -v dracut &>/dev/null; then
-      fi
-    fi
-  done
+  if command -v mkinitcpio &>/dev/null; then
+    sudo mkinitcpio -p linux
+  elif command -v dracut-rebuild &>/dev/null; then
+    sudo dracut-rebuild
+  fi
 
   systemctl --user stop wireplumber pipewire -q
   systemctl --user start wireplumber -q
@@ -580,5 +577,4 @@ EOF
   else
     echo -en "\e[A"
   fi
-
 fi
