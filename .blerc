@@ -75,21 +75,25 @@ fi
 
 if [[ "${TERM}" != "linux" ]]; then
 	_arrow="󱦰 "
-	_arrow_thin="   "
-	_dir="󰉋"
+	_arrow_thin=" "
+	_dir="󰉋 "
+	_rps_l=""
+	_rps_r="█"
 else
 	_arrow="=>"
 	_arrow_thin="->"
 	_dir="\e[33;1mDIR changed\e[0m"
+	_rps_l="█"
+	_rps_r="█"
 fi
 
 bleopt prompt_ps1_final="\e]133;A\a\e[0m\g{bold,fg=${FG_COLOR}}${_arrow} \g{reset}\e]133;B\a\e[0m" \
-	prompt_rps1="${RPS1}\$(RET=\$?; if [[ \$RET != 0 ]]; then echo '\g{bold,fg=red}\g{bold,bg=red}'\$RET'\g{bold,fg=red}█\g{reset}'; fi)" \
+	prompt_rps1="${RPS1}\$(RET=\$?; if [[ \$RET != 0 ]]; then echo '\g{fg=red}${_rps_l}\g{bold,bg=red}'\$RET'\g{fg=red}${_rps_r}\g{reset}'; fi)" \
 	prompt_rps1_transient=1
 
 blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
 	POSTEXEC+="echo -ne '\e]133;D;'\${?}'\a\e[0m'; " \
-	CHPWD="echo -ne '${_dir} ${_arrow_thin}\e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
+	CHPWD="echo -ne '${_dir} ${_arrow_thin} \e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
 
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
 	blehook PREEXEC+="echo -ne '\e]633;E'\${1}'\a\e[0m'; " \

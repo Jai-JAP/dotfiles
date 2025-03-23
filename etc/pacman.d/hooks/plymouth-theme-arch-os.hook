@@ -7,4 +7,4 @@ Target = plymouth-theme-arch-os
 [Action]
 Description = Customizing plymouth arch-os theme
 When = PostTransaction
-Exec = /usr/bin/sed -i -e '/Background\(Start\|End\)Color/s/=.*/=0x2a2a2aff/' -e '/UseEndAnimation=/s/false/true/g' /usr/share/plymouth/themes/arch-os/arch-os.plymouth
+Exec = /usr/bin/sed -i -e '/Background\(Start\|End\)Color/s/=.*/=0x2e2e32ff/' -e '/UseEndAnimation=/s/false/true/g' /usr/share/plymouth/themes/arch-os/arch-os.plymouth

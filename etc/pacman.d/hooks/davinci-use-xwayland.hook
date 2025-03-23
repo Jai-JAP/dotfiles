@@ -11,4 +11,4 @@ Target = davinci-resolve-studio-beta
 Description = Patch DaVinci Resolve desktop shortcuts to use xcb
 Depends = sed
 When = PostTransaction
-Exec = /usr/bin/sed -i -e 's|^Exec=|&env QT_QPA_PLATFORM=xcb |' /usr/share/applications/DaVinciResolve.desktop && /usr/bin/sed -i -e 's|^Exec=|&env QT_QPA_PLATFORM=xcb |' /usr/share/applications/DaVinciControlPanelsSetup.desktop
+Exec = /usr/bin/sh -c "/usr/bin/sed -i -e 's|^Exec=|&env QT_QPA_PLATFORM=xcb |' /usr/share/applications/DaVinciResolve.desktop; /usr/bin/sed -i -e 's|^Exec=|&env QT_QPA_PLATFORM=xcb |' /usr/share/applications/DaVinciControlPanelsSetup.desktop"

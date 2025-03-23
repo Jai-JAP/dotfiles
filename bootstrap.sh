@@ -1,5 +1,10 @@
-#!/bin/bash
 # shellcheck enable=require-variable-braces
+#!/bin/bash
+
+if [ "${0}" != "${BASH_SOURCE[0]}" ] ; then
+  echo -e "\e[31;1mThis script should not be sourced\e[0m" >&2
+  return 1
+fi
 
 hash() {
   sha256sum "$1" | cut -d' ' -f1
@@ -223,7 +228,7 @@ else
 
   process_root_cfgs {"${LOC}",/root}/.config/micro
 
-  for dir in bluetooth modprobe.d pacman.d/hooks profile.d udev wireplumber xdg; do
+  for dir in bluetooth modprobe.d pacman.d/hooks plymouth profile.d udev wireplumber xdg; do
     if [[ -d "${LOC}"/etc/"${dir}" ]]; then
       process_root_cfgs {"${LOC}",}/etc/"${dir}"
     else
@@ -254,7 +259,7 @@ else
 
   if command -v mkinitcpio &>/dev/null; then
     if grep -c "MODULES=()" "/etc/mkinitcpio.conf" 1>/dev/null; then
-      sudo sed -i 's/MODULES=()/MODULES=( i2c_hid i915 )/' /etc/mkinitcpio.conf
+      sudo sed -i 's/MODULES=()/MODULES=( i2c_hid i915 plymouth )/' /etc/mkinitcpio.conf
       echo " - '/etc/mkinitcpio.conf' updated"
       sudo mkinitcpio -P
     else
@@ -319,10 +324,10 @@ else
   mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
     bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind firefox thermald dex jq \
     {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct uv \
-    ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} \
-    libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
-    tlp{,-rdw} {pipewire,gst-plugin}-libcamera easyeffects calf tealdeer linux-keep-modules \
-    "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
+    ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} calf \
+    libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} tealdeer \
+    sb{signtools,ctl} tlp{,-rdw} {pipewire,gst-plugin}-libcamera plymouth{,-theme-arch-os} \
+    easyeffects linux-keep-modules "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 
@@ -402,13 +407,12 @@ else
       echo
     fi
 
-    if systemctl is-enabled gcr-ssh-agent &>/dev/null; then
-      echo -e " - \e[33;1mSSH login agent already setup\e[0m\n" >&2
+    if systemctl --user is-enabled gcr-ssh-agent &>/dev/null; then
+      echo -e " - \e[33;1mSSH login agent already setup\e[0m" >&2
     else
-      echo -e " - \e[32;1mSetting up SSH login...\e[0m\n"
+      echo -e " - \e[33;1mSetting up Gnome SSH Agent...\e[0m"
       sudo systemctl --global enable gcr-ssh-agent &>/dev/null
-      systemctl --user start gcr-ssh-agent.socket
-      systemctl --user start gcr-ssh-agent
+      systemctl --user start gcr-ssh-agent{,.socket}
     fi
 
     echo -e " - \e[33;1mRestoring dconf settings...\e[0m"
@@ -418,20 +422,52 @@ else
   fi
 
   if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/icon.* /var/lib/AccountsService/icons/\"${USER}\""; then
-    echo -e "\e[33;1m-> User logo already setup\e[0m\n" >&2
+    echo -e "\e[33;1m-> User logo already setup.\e[0m\n" >&2
   else
-    echo -e "\e[33;1m-> Customizing User logo\e[0m"
+    echo -e "\e[33;1m-> Customizing User logo.\e[0m"
     copy "${LOC}"/icon.* /var/lib/AccountsService/icons/"${USER}"
     echo -e "[User]\nLanguages=${LANG};\nSession=\nIcon=/var/lib/AccountsService/icons/${USER}\nSystemAccount=false\n" | sudo tee /var/lib/AccountsService/users/"${USER}"
     echo -e " - \e[32;1mUser logo set successfully\e[0m\n"
   fi
 
-  if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
-    echo -e "\e[33;1m-> Bootscreen customisations already applied.\e[0m\n" >&2
+  if sudo test -d /var/lib/sbctl && ! sudo sbctl list-files --json | jq '.[]|.is_signed' | grep -q false; then
+    echo -e "\e[33;1m-> Secure Boot already setup.\e[0m\n" >&2
   else
-    echo -e "\e[33;1m-> Customizing Bootscreen\e[0m"
-    sudo refind-install
-    echo -e " - \e[32;1mRefind installed successfully\e[0m"
+    echo -e "\e[33;1m-> Setting up Secure Boot...\e[0m"
+    if ! sudo test -d "/var/lib/sbctl"; then
+      echo -e " - \e[33;1mCreating Secure Boot Keys.\e[0m"
+      sudo sbctl create-keys
+    fi
+
+    if ! sudo test -f "/etc/refind.d/keys/refind_local.key" -a -f "/etc/refind.d/keys/refind_local.crt" -a -f "/etc/refind.d/keys/refind_local.cer"; then
+      echo -e " - \e[33;1mPreparing Secure Boot Keys for rEFInd.\e[0m"
+      makedir -p /etc/refind.d/keys
+      link /var/lib/sbctl/keys/db/db.key /etc/refind.d/keys/refind_local.key
+      link /var/lib/sbctl/keys/db/db.pem /etc/refind.d/keys/refind_local.crt
+      sudo openssl x509 -in /var/lib/sbctl/keys/db/db.pem -out /etc/refind.d/keys/refind_local.cer -outform DER
+    fi
+
+    for file in /boot/{vmlinuz-linux,efi/EFI/{tools/fwupdx64.efi,Boot/bootx64.efi}}; do
+      if [[ -f "${file}" ]]; then
+        sudo sbctl sign -s "${file}" --quiet
+      fi
+    done
+
+    if ! sudo sbctl list-enrolled-keys | grep -qcv -e "Microsoft" -e ":"; then
+      echo -e " - \e[33;1mEnrolling Secure Boot Keys.\e[0m"
+      sudo chattr -i /sys/firmware/efi/efivars/{KEK,db}-*
+      sudo sbctl enroll-keys -m
+    fi
+
+    echo
+  fi
+
+  if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
+    echo -e "\e[33;1m-> rEFInd already setup as bootloader.\e[0m\n" >&2
+  else
+    echo -e "\e[33;1m-> Configuring rEFInd\e[0m"
+    sudo refind-install --localkeys --usedefault "$(findmnt /boot/efi/ -no SOURCE)"
+    echo -e " - \e[32;1mrEFInd installed successfully\e[0m"
     copy {"${LOC}",/boot/efi/EFI}/refind/refind.conf
     copy {"${LOC}"/refind,/boot}/refind_linux.conf
     ROOT_DEV="$(findmnt -no SOURCE /)"
@@ -454,6 +490,7 @@ else
     popd >/dev/null
     # shellcheck disable=SC2164
     popd >/dev/null
+
     echo
   fi
 
@@ -515,10 +552,19 @@ EOF
 
   tldr -uq
 
+  for kver in /usr/lib/modules/*; do
+    if [[ "${kver}" == $(uname -r) ]]; then
+      if command -v mkinitcpio &>/dev/null; then
+        sudo mkinitcpio -p linux
+      # elif command -v dracut &>/dev/null; then
+      fi
+    fi
+  done
+
   systemctl --user stop wireplumber pipewire -q
   systemctl --user start wireplumber -q
 
-  sudo systemctl enable --now thermald tlp cleanup-linux-modules 2>/dev/null
+  sudo systemctl enable --now thermald tlp cleanup-linux-modules plymouth 2>/dev/null
 
   sudo update-desktop-database
 
