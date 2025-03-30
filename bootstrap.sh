@@ -447,10 +447,8 @@ else
       sudo openssl x509 -in /var/lib/sbctl/keys/db/db.pem -out /etc/refind.d/keys/refind_local.cer -outform DER
     fi
 
-    for file in /boot/{vmlinuz-linux,efi/EFI/{tools/fwupdx64.efi,Boot/bootx64.efi}}; do
-      if [[ -f "${file}" ]]; then
-        sudo sbctl sign -s "${file}" --quiet
-      fi
+    for file in {/boot/vmlinuz-linux*,/usr/lib/fwupd/efi/fwupdx64.efi}; do
+     sudo sbctl sign -s "${file}" --quiet
     done
 
     if ! sudo sbctl list-enrolled-keys | grep -qcv -e "Microsoft" -e ":"; then
@@ -475,6 +473,10 @@ else
     sudo sed -i 's|root=UUID=|&'"${ROOT_UUID}"'|g' /boot/refind_linux.conf
     sudo sed -i 's|ro root=|&'"${ROOT_DEV}"'|g' /boot/refind_linux.conf
     echo -e " - \e[32;1mrefind_linux.conf configured successfully\e[0m\n"
+
+    while IFS= read -r EFI_FILE; do
+      sudo sbctl sign -s "${EFI_FILE}" --quiet
+    done < <(sudo -S sbctl verify <<<"${PASSWORD}" | grep '✓' | awk '{print $2}')
 
     # shellcheck disable=SC2164
     pushd "${HOME}"/.cache/paru/clone >/dev/null
