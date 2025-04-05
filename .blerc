@@ -38,6 +38,9 @@ ble-bind -m emacs -f M-down 'history-search-forward immediate-accept:hide-status
 ble-bind -m emacs -f C-up 'history-prev'
 ble-bind -m emacs -f C-down 'history-next'
 
+ble-bind --csi 5~ 'noop'
+ble-bind --csi 6~ 'noop'
+
 # exec_elapsed_mark=
 # exec_errexit_mark=
 # exec_exit_mark=

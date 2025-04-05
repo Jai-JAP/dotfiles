@@ -59,9 +59,9 @@ if [[ $- == *i* ]]; then
 		# shellcheck source=/dev/null
 		. "${HOME}/.local/share/bash-complete-alias/complete_alias"
 	else # [[ "$TERM_PROGRAM" != "vscode" ]]; then
-		# shellcheck disable=SC1094
+		# shellcheck disable=SC1091
 		. "/usr/share/blesh/ble.sh"
-		# shellcheck disable=SC1094
+		# shellcheck disable=SC1091
 		. "/usr/share/bash-complete-alias/complete_alias"
 
 		if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
