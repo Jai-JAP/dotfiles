@@ -1,13 +1,42 @@
 [Presets]
-Preset0=Balanced
-Preset1=Balanced+
-Preset2=Best
-Preset3=Music
-Preset4=Relax
-Preset5=Soft
-Preset6=Top
-Preset7=Top 2
-Preset8=Treble Relax
+Preset0=A+
+Preset1=A2
+Preset2=Balanced
+Preset3=Balanced+
+Preset4=Bassy
+Preset5=Best
+Preset6=Music
+Preset7=Relax
+Preset8=Soft
+Preset9=Top
+Preset10=Top 2
+Preset11=Treble Relax
+
+[A+]
+Preamp=-6
+Band0=7
+Band1=8
+Band2=6
+Band3=5
+Band4=2
+Band5=3
+Band6=5
+Band7=6
+Band8=6
+Band9=8
+
+[A2]
+Preamp=-6
+Band0=7
+Band1=8
+Band2=6
+Band3=5
+Band4=2
+Band5=0
+Band6=2
+Band7=3
+Band8=4
+Band9=5
 
 [Balanced]
 Preamp=-6
@@ -33,6 +62,19 @@ Band5=4
 Band6=5
 Band7=4
 Band8=3
+Band9=2
+
+[Bassy]
+Preamp=-6
+Band0=6
+Band1=6
+Band2=5
+Band3=2
+Band4=-3
+Band5=-3
+Band6=-2
+Band7=0
+Band8=2
 Band9=2
 
 [Best]
