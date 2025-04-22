@@ -483,11 +483,13 @@ else
     paru -G refind-theme-regular-git
     # shellcheck disable=SC2164
     pushd refind-theme-regular-git >/dev/null
-    sed -i 's|/boot/EFI|/boot/efi/EFI/|' ./PKGBUILD
+    sed -i -e 's|/boot/EFI|/boot/efi/EFI/|' \
+      -e "/install -D/i\ \ sed -i -e '/^[[:alpha:]]/s//#&/g' -e '/icons.*256-96$/s/^#//' -e '/big.*256$/s/^#//' -e '/small.*96$/s/^#//' -e '/banner.*256-96.*dark.*/s/^#//' -e '/selection_big.*256-96.*dark/s/^#//' -e '/selection_small.*256-96.*dark/s/^#//' -e '/font/s/^#//' \"\$srcdir/\${pkgname%-git}/theme.conf\"" \
+      PKGBUILD
     if ! git diff --quiet HEAD -- . ':PKGBUILD'; then
-      git commit -am "Fix refind_home path"
+      git commit -am "Fix refind_home path & tweak theme"
     fi
-    paru -S refind-theme-regular-git --noredownload --noconfirm
+    paru -U --install --noconfirm
     # shellcheck disable=SC2164
     popd >/dev/null
     # shellcheck disable=SC2164
