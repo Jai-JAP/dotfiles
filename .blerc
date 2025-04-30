@@ -67,8 +67,7 @@ ble-face auto_complete='fg=240' \
 	syntax_quoted='fg=136,bold' \
 	syntax_delimiter='fg=88,bold' \
 	syntax_function_name='fg=108,bold' \
-	region_match='fg=white,bg=124' \
-	vbell_reset='reset'
+	region_match='fg=white,bg=124'
 
 if [[ "${EUID}" == 0 ]]; then
 	FG_COLOR=160
