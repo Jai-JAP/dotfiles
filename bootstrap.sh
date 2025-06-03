@@ -327,7 +327,7 @@ else
     ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} calf \
     libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} tealdeer \
     sb{signtools,ctl} tlp{,-rdw} {pipewire,gst-plugin}-libcamera plymouth{,-theme-arch-os} \
-    easyeffects linux-keep-modules "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
+    pigz lbzip2 plzip easyeffects linux-keep-modules "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 
