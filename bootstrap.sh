@@ -324,10 +324,11 @@ else
   mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
     bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind firefox thermald dex jq \
     {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct uv \
-    ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} calf \
+    ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} \
     libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} tealdeer \
     sb{signtools,ctl} tlp{,-rdw} {pipewire,gst-plugin}-libcamera plymouth{,-theme-arch-os} \
-    pigz lbzip2 plzip easyeffects linux-keep-modules "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
+    pigz lbzip2 plzip easyeffects audacious ecasound calf linux-keep-modules \
+    "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
   paru -Syu --needed --noconfirm "${PKGS[@]}"
   echo
 
