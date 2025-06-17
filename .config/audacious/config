@@ -5,10 +5,10 @@ color=43520
 [audacious]
 advance_on_delete=TRUE
 equalizer_active=TRUE
-equalizer_bands=7,7,6,4,3,0,2,4,7,7
+equalizer_bands=6,6,5,3,1,3,3,4,6,6
 equalizer_preamp=-6
-recurse_folders=FALSE
 show_interface=FALSE
+shuffle=TRUE
 
 [audgui]
 filesel_path=/home/jaiap/Music/English
@@ -20,7 +20,7 @@ icon_theme=audacious-flat-dark
 
 [crossfade]
 length=1
-manual_length=1
+manual_length=0.5
 sigmoid_steepness=3
 use_sigmoid=TRUE
 
@@ -28,16 +28,18 @@ use_sigmoid=TRUE
 intensity=1.5
 
 [extra_stereo]
-intensity=1.5
+intensity=3.5
 
 [lyricwiki]
 enable-cache=FALSE
 remote-source=chartlyrics.com
 
 [qtui]
-column_widths=25,25,275,175,50,180,175,25,100,25,75,275,275,275,75,275,175,75
+column_widths=25,25,478,175,50,578,175,25,100,25,142,275,275,275,75,275,175,75
 menu_visible=FALSE
-playlist_columns=playing title artist album length
+player_height=1012
+player_width=1920
+playlist_columns=playing album title artist length
 playlist_headers_bold=TRUE
 statusbar_visible=FALSE
 
