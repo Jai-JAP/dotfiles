@@ -398,7 +398,8 @@ else
       Vitals@CoreCoding.com \
       rounded-window-corners@fxgn \
       quick-settings-tweaks@qwreey \
-      lockkeys@vaina.lt)
+      lockkeys@vaina.lt \
+      caffeine@patapon.info)
 
     if (("${#EXTENSIONS[@]}" == 0)); then
       echo -e " - \e[33;1mExtensions already installed.\e[0m" >&2
@@ -448,8 +449,15 @@ else
       sudo openssl x509 -in /var/lib/sbctl/keys/db/db.pem -out /etc/refind.d/keys/refind_local.cer -outform DER
     fi
 
-    for file in {/boot/vmlinuz-linux*,/usr/lib/fwupd/efi/fwupdx64.efi}; do
-     sudo sbctl sign -s "${file}" --quiet
+    BOOTPART="$(lsblk --output MOUNTPOINTS | grep /boot/)"
+
+    for file in /boot/vmlinuz-linux*; do
+      sudo sbctl sign -s "${file}" --quiet
+    done
+
+    for file in /usr/{lib/fwupd/efi/fwupdx64,share/shim/*}.efi; do
+      sudo sbctl sign -s "${file}" -o "${file}".signed --quiet
+      sudo cp "${file}".signed "${BOOTPART}"/EFI/arch/"${file##*/}"
     done
 
     if ! sudo sbctl list-enrolled-keys | grep -qcv -e "Microsoft" -e ":"; then
@@ -457,7 +465,6 @@ else
       sudo chattr -i /sys/firmware/efi/efivars/{KEK,db}-*
       sudo sbctl enroll-keys -m
     fi
-
     echo
   fi
 

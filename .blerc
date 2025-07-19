@@ -57,7 +57,8 @@ bleopt edit_vbell= \
 	indent_tabs=0 \
 	prompt_ruler=empty-line \
 	prompt_eol_mark=$'\n' \
-	tab_width=2
+	tab_width=2 \
+	vbell_align=panel
 
 ble-face auto_complete='fg=240' \
 	command_builtin='fg=86' \
@@ -67,7 +68,8 @@ ble-face auto_complete='fg=240' \
 	syntax_quoted='fg=136,bold' \
 	syntax_delimiter='fg=88,bold' \
 	syntax_function_name='fg=108,bold' \
-	region_match='fg=white,bg=124'
+	region_match='fg=white,bg=124' \
+	vbell_erase=''
 
 if [[ "${EUID}" == 0 ]]; then
 	FG_COLOR=160
