@@ -9,10 +9,7 @@ if [[ "${TERM_PROGRAM}" != "vscode" && "${TERM}" != "linux" ]]; then
 		RPS1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})\n}'
 
 		if paru -Qq fzf &>/dev/null; then
-			ble-import integration/fzf-completion
 			ble-import integration/fzf-key-bindings
-
-			_fzf_setup_completion path micro
 
 			_ble_contrib_fzf_git_config=key-binding
 			ble-import -d integration/fzf-git
