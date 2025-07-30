@@ -1,15 +1,18 @@
-#!/bin/bash
+``#!/bin/bash
 # shellcheck enable=require-variable-braces
 
-if [[ "${TERM_PROGRAM}" != "vscode" && "${TERM}" != "linux" ]]; then
-	if [[ ! "${PREFIX}" =~ com.termux ]]; then
+if [[ "${TERM}" != "linux" ]]; then
+	if [[ "${TERM_PROGRAM}" != "vscode" && ! "${PREFIX}" =~ com.termux ]]; then
 		ble-import contrib/prompt-git
 
 		# shellcheck disable=SC2016
 		RPS1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})\n}'
 
 		if paru -Qq fzf &>/dev/null; then
+			ble-import integration/fzf-completion
 			ble-import integration/fzf-key-bindings
+
+			_fzf_setup_completion path micro
 
 			_ble_contrib_fzf_git_config=key-binding
 			ble-import -d integration/fzf-git
@@ -54,8 +57,7 @@ bleopt edit_vbell= \
 	indent_tabs=0 \
 	prompt_ruler=empty-line \
 	prompt_eol_mark=$'\n' \
-	tab_width=2 \
-	vbell_align=panel
+	tab_width=2
 
 ble-face auto_complete='fg=240' \
 	command_builtin='fg=86' \
@@ -65,8 +67,7 @@ ble-face auto_complete='fg=240' \
 	syntax_quoted='fg=136,bold' \
 	syntax_delimiter='fg=88,bold' \
 	syntax_function_name='fg=108,bold' \
-	region_match='fg=white,bg=124' \
-	vbell_erase=''
+	region_match='fg=white,bg=124'
 
 if [[ "${EUID}" == 0 ]]; then
 	FG_COLOR=160
