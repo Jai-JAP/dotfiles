@@ -1,4 +1,4 @@
-``#!/bin/bash
+#!/bin/bash
 # shellcheck enable=require-variable-braces
 
 if [[ "${TERM}" != "linux" ]]; then
