@@ -42,7 +42,7 @@ if [[ $- == *i* ]]; then
 	fi
 
 	help() {
-		(command help "$@" 2>/dev/null || "$@" --help) | bat -pl help
+		( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (test "$1" == -c && shift && "$@" --help) ) | bat -pl help
 	}
 
 	if [[ ${EUID} == 0 ]]; then
