@@ -1,14 +1,13 @@
 #!/bin/bash
 # shellcheck enable=require-variable-braces
 
-if [[ "${TERM}" != "linux" ]]; then
-	if [[ "${TERM_PROGRAM}" != "vscode" && ! "${PREFIX}" =~ com.termux ]]; then
+if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" && ! "${PREFIX}" =~ com.termux ]]; then
 		ble-import contrib/prompt-git
 
 		# shellcheck disable=SC2016
 		RPS1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})\n}'
 
-		if paru -Qq fzf &>/dev/null; then
+		if command -v fzf &>/dev/null; then
 			ble-import integration/fzf-completion
 			ble-import integration/fzf-key-bindings
 
@@ -17,8 +16,9 @@ if [[ "${TERM}" != "linux" ]]; then
 			_ble_contrib_fzf_git_config=key-binding
 			ble-import -d integration/fzf-git
 		fi
-	fi
+fi
 
+if [[ "${TERM_PROGRAM}" != "vscode" && "${TERM}" != "linux" ]]; then
 	ble-bind -m emacs -f 'C-h' delete-backward-cword
 	ble-bind -m emacs -f 'C-w' ''
 elif [[ "${TERM}" != "linux" ]]; then
