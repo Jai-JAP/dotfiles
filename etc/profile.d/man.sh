@@ -1,4 +1,9 @@
 #!/bin/bash
 
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+_bat="bat"
+if command -v batcat &>/dev/null; then
+  _bat="batcat"
+fi
+
+export MANPAGER="sh -c 'col -bx | ${_bat} -l man -p'"
 export MANROFFOPT="-c"

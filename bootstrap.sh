@@ -6,6 +6,8 @@ if [ "${0}" != "${BASH_SOURCE[0]}" ] ; then
   return 1
 fi
 
+ARGS=("$@")
+
 hash() {
   sha256sum "$1" | cut -d' ' -f1
 }
@@ -19,10 +21,10 @@ create_cfg_dirs() {
   target_dir=$1
   # shellcheck disable=SC2016
   find . -mindepth 1 -type d \( \
-    \( -exec test -d "${target_dir}/{}" \; \
+    \( -exec test -d "${target_dir}/{}" \; -a \
     -exec sh -c 'echo " - '\''$1'\'' exists" >&2' _ "${target_dir}"/{} \; \) \
     -o \
-    -exec sh -c 'echo -n ' - ' && mkdir -pv "$1"' _ "${target_dir}"/{} \; \
+    -exec sh -c 'echo -n " - " && mkdir -pv "$1"' _ "${target_dir}"/{} \; \
     \)
 }
 
@@ -78,7 +80,7 @@ process_cfgs() {
 }
 
 process_root_cfgs() {
-  sudo bash -c "$(declare -f process_cfgs create_cfg_dirs link_cfg_files makedir); process_cfgs $1 $2"
+  sudo bash -c ''"$(declare -f process_cfgs create_cfg_dirs link_cfg_files makedir)"'; process_cfgs '"$1"' '"$2"''
 }
 
 LOC=$(realpath "$(dirname "$0")")
@@ -87,7 +89,7 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
   PASSWORD=""
   ATTEMPT=0
 
-  faillock --reset
+  faillock --reset 2>/dev/null
   read -r -p "[sudo] Password: " -s PASSWORD
   echo
   sudo -k
@@ -109,7 +111,7 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
   }
 fi
 
-if [[ "$*" =~ -q ]]; then
+if [[ "${ARGS[@]}" =~ -q ]]; then
   exec 3<>"${PREFIX}"/tmp/bootstrap.stderr
   exec 2>&3
 fi
@@ -126,7 +128,7 @@ config_common() {
   if [[ -f "${PREFIX}"/etc/skel/.bash_profile ]]; then
     echo -e " - '${PREFIX}/etc/skel/.bash_profile' exists" >&2
   else
-    echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" | sudo tee "${PREFIX}"/etc/skel/.bash_profile >/dev/null
+    sudo bash -c 'echo -e "#\n# ~/.bash_profile\n#\n\n[[ -f ~/.bashrc ]] && . ~/.bashrc\n" > '"${PREFIX}"'/etc/skel/.bash_profile'
     echo -e " - '${PREFIX}/etc/skel/.bash_profile' created."
   fi
 
@@ -163,9 +165,14 @@ config_common() {
     echo -e " - '~/.bashrc' updated to add customizations\n"
   fi
 
-  for file in .blerc .gitconfig; do
-    link {"${LOC}","${HOME}"}/"${file}"
-  done
+  link {"${LOC}","${HOME}"}/.blerc
+
+  if grep -q "${LOC}/.custom.gitconfig" "${HOME}"/.gitconfig; then
+    echo -e " - '~/.gitconfig' already has customizations applied.\n" >&2
+  else
+    echo -e '\n[include]\n  path = "'"${LOC}"'/.custom.gitconfig"' >>~/.gitconfig
+    echo -e " - '~/.gitconfig' updated to add customizations\n"
+  fi
 }
 
 filter_installed_pkgs() {
@@ -182,10 +189,45 @@ filter_installed_exts() {
   printf "%s\n" "${installed[@]}" | sort | uniq -u
 }
 
-if [[ "${PREFIX}" =~ com.termux ]]; then
+if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
+
+  if [[ "${PREFIX}" =~ com.termux ]]; then
+  	PKGMAN="pkg"
+    echo -e "\e[33;1m-> Customizing Termux installation\e[0m"
+    for file in {colors,termux}.properties font.ttf; do
+      link {"${LOC}/","${HOME}/."}termux/"${file}"
+    done
+    echo
+
+    process_cfgs {"${LOC}","${HOME}"}/.config/micro
+    process_cfgs {"${LOC}"/termux,"${PREFIX}"}/etc
+
+    echo -e "\e[33;1m-> Reloading Termux.\e[0m"
+    termux-reload-settings
+  elif [[ "$(systemd-detect-virt)" == "wsl" ]]; then
+	  PKGMAN="sudo apt"
+	  WSL_EXTRAS=(ripgrep fd-find git-delta)
+
+    for file in btop micro virtualenv ; do
+      process_cfgs {"${LOC}","${HOME}"}/.config/"${file}"
+    done
+    process_root_cfgs {"${LOC}",/root}/.config/micro
+
+    link {"${LOC}",}/etc/profile.d/man.sh
+
+    for file in .bashrc .blerc; do
+      if sudo test -L /root/"${file}" && sudo test -e /root/"${file}"; then
+        echo -e " - '/root/${file}' exists" >&2
+      else
+        link {"${HOME}",/root}/"${file}"
+      fi
+    done
+    echo
+  fi
+
   echo -e "\e[33;1m-> Installing packages.\e[0m"
-  pkg update
-  pkg install -y make gawk micro eza bat bash-completion command-not-found
+  ${PKGMAN} update
+  ${PKGMAN} install -y make gawk micro eza bat bash-completion command-not-found "${WSL_EXTRAS[@]}"
   echo
 
   if [[ -d "${HOME}"/.local/share/blesh ]]; then
@@ -206,21 +248,7 @@ if [[ "${PREFIX}" =~ com.termux ]]; then
     echo -e " - \e[32;1mbash-complete-alias installed succesfully.\e[0m\n"
   fi
 
-  echo -e "\e[33;1m-> Customizing Termux installation\e[0m"
-  for file in {colors,termux}.properties font.ttf; do
-    link {"${LOC}/","${HOME}/."}termux/"${file}"
-  done
-  echo
-
   config_common
-  echo
-
-  process_cfgs {"${LOC}"/termux,"${PREFIX}"}/etc
-  process_cfgs {"${LOC}","${HOME}"}/.config/micro
-
-  echo -e "\e[33;1m-> Reloading Termux.\e[0m"
-  termux-reload-settings
-
 else
   config_common
 
@@ -251,7 +279,7 @@ else
   #   sudo sed -i '/Defaults pwfeedback/s/^#*[[:space:]]*//' /etc/sudoers
   #   echo -e "Enabled password feedback for sudo prompt.\n"
   # elif [[ ! -f /etc/sudoers.d/0_pwfeedback ]]; then
-  #   echo -e "##\n## Enable Password Feeback with asterisks (*)\n##\n\nDefaults pwfeedback\n" | sudo tee /etc/sudoers.d/0_pwfeedback >/dev/null
+  #   sudo bash -c 'echo -e "##\n## Enable Password Feeback with asterisks (*)\n##\n\nDefaults pwfeedback\n" > /etc/sudoers.d/0_pwfeedback'
   #   echo -e "Enabled password feedback for sudo prompt.\n"
   # else
   #   echo -e "Password feedback for sudo prompt already enabled."
@@ -270,7 +298,7 @@ else
     if [[ -f /etc/dracut.conf.d/custom.conf ]]; then
       echo -e " - '/etc/dracut.conf.d/custom.conf' exists\n" >&2
     else
-      echo -e "omit_dracutmodules+=\" qemu qemu-net \"\nforce_drivers+=\" i915 \"\n" | sudo tee /etc/dracut.conf.d/custom.conf >/dev/null
+      sudo bash -c 'echo -e "omit_dracutmodules+=\" qemu qemu-net \"\nforce_drivers+=\" i915 \"\n" > /etc/dracut.conf.d/custom.conf'
       echo -e " - '/etc/dracut.conf.d/custom.conf' created\n"
     fi
   fi
@@ -286,12 +314,12 @@ else
     if sudo test -L /root/"${file}" && sudo test -e /root/"${file}"; then
       echo -e " - '/root/${file}' exists" >&2
     else
-      sudo ln -svf {"${HOME}",/root}/"${file}"
+      link {"${HOME}",/root}/"${file}"
     fi
   done
   echo
 
-  if [[ "$*" =~ -q ]]; then exec 3>&2; fi
+  if [[ "${ARGS[@]}" =~ -q ]]; then exec 3>&2; fi
 
   if command -v paru &>/dev/null; then
     echo -e "\e[33;1m-> \e[32;1mparu\e[33;1m package manager already installed.\n" >&2
@@ -423,12 +451,12 @@ else
     echo
   fi
 
-  if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/icon.* /var/lib/AccountsService/icons/\"${USER}\""; then
+  if sudo bash -c ''"$(declare -f hash_equal)"'; hash_equal '"${LOC}"'/icon.* /var/lib/AccountsService/icons/'"${USER}"''; then
     echo -e "\e[33;1m-> User logo already setup.\e[0m\n" >&2
   else
     echo -e "\e[33;1m-> Customizing User logo.\e[0m"
     copy "${LOC}"/icon.* /var/lib/AccountsService/icons/"${USER}"
-    echo -e "[User]\nLanguages=${LANG};\nSession=\nIcon=/var/lib/AccountsService/icons/${USER}\nSystemAccount=false\n" | sudo tee /var/lib/AccountsService/users/"${USER}"
+    sudo bash -c 'echo -e "[User]\nLanguages='"${LANG}"';\nSession=\nIcon=/var/lib/AccountsService/icons/'"${USER}"'\nSystemAccount=false\n" > /var/lib/AccountsService/users/'"${USER}"''
     echo -e " - \e[32;1mUser logo set successfully\e[0m\n"
   fi
 
@@ -468,7 +496,7 @@ else
     echo
   fi
 
-  if sudo bash -c "$(declare -f hash_equal); hash_equal \"${LOC}\"/refind/refind.conf /boot/efi/EFI/refind/refind.conf" && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
+  if sudo bash -c ''"$(declare -f hash_equal)"'; hash_equal '"${LOC}"'/refind/refind.conf /boot/efi/EFI/refind/refind.conf' && sudo test -d /boot/efi/EFI/refind/themes/refind-theme-regular; then
     echo -e "\e[33;1m-> rEFInd already setup as bootloader.\e[0m\n" >&2
   else
     echo -e "\e[33;1m-> Configuring rEFInd\e[0m"

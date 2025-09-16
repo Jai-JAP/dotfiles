@@ -1,6 +1,5 @@
 {
     "basename": true,
-    "clipboard": "terminal",
     "hlsearch": true,
     "mkparents": true,
     "scrollbar": true,
