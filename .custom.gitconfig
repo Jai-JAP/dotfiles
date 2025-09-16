@@ -1,0 +1,43 @@
+[alias]
+  history = log --all --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
+[core]
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only --features=interactive
+
+[diff]
+  colorMoved = default
+
+[merge]
+  conflictstyle = diff3
+
+[delta]
+  features = decorations
+  file-added-label = "added:"
+  file-modified-label = "modified:"
+  file-removed-label = 'removed:'
+  file-renamed-label = 'renamed:'
+  hunk-header-style =
+  hyperlinks = true
+  hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+  line-numbers = true
+  navigate = true
+  pager = less -+X -FR~ --mouse
+  true-color = always
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[init]
+  defaultBranch = main
+
+[fetch]
+  prune = true
