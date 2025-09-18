@@ -46,7 +46,7 @@ if [[ $- == *i* ]]; then
   fi
 
   help() {
-    ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (test "$1" == -c && shift && "$@" --help) ) | ${_bat} -pl help
+    ( ( test "$1" != "-c" && command help "$@" 2> /dev/null ) || ( (test "$1" == -c && shift); "$@" --help ) ) | ${_bat} -pl help
   }
 
   if [[ ${EUID} == 0 ]]; then
@@ -78,5 +78,26 @@ if [[ $- == *i* ]]; then
 
   if ! shopt -q login_shell && [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"
+  fi
+
+  if [[ "$(systemd-detect-virt)" == "wsl" ]]; then
+    command_not_found_handle() {
+      if command -v "$1.exe" &> /dev/null; then
+        CMD="$1.exe"
+        shift; shift;
+        ${CMD} "$@"
+      elif [ -x /usr/lib/command-not-found ]; then
+        /usr/lib/command-not-found -- "$1";
+        return $?;
+      else
+        if [ -x /usr/share/command-not-found/command-not-found ]; then
+          /usr/share/command-not-found/command-not-found -- "$1";
+          return $?;
+        else
+          printf "%s: command not found\n" "$1" 1>&2;
+          return 127;
+        fi;
+      fi
+    }
   fi
 fi

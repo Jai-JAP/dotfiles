@@ -140,6 +140,8 @@ config_common() {
 
   echo >&2
 
+  sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
+
   local custom_bashrc
   custom_bashrc="\n# customisations\n\n# shellcheck disable=SC1091\n. \"${LOC}/.custom.bashrc\""
 
@@ -267,7 +269,6 @@ else
     link {"${LOC}",}/etc/"${file}"
   done
 
-  sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
   sudo sed -i -e '/Color/s/^#[[:space:]]//' \
     -e '/VerbosePkgLists/s/^#[[:space:]]//' \
     -e '/ILoveCandy/s/^/# /' \
