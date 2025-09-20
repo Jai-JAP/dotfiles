@@ -573,7 +573,7 @@ EOF
   systemctl --user stop wireplumber pipewire -q
   systemctl --user start wireplumber -q
 
-  sudo systemctl enable --now thermald tlp cleanup-linux-modules plymouth 2>/dev/null
+  sudo systemctl enable --now thermald tlp cleanup-linux-modules plymouth app-com.mitchellh.ghostty 2>/dev/null
 
   sudo update-desktop-database
 

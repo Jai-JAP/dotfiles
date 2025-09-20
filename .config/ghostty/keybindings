@@ -2,7 +2,6 @@ keybind = super+enter=toggle_tab_overview
 
 keybind = unconsumed:ctrl+enter=ignore
 keybind = f11=toggle_fullscreen
-keybind = f12=toggle_window_decorations
 
 keybind = ctrl+shift+plus=increase_font_size:1
 keybind = ctrl+kp_add=increase_font_size:1
@@ -27,3 +26,5 @@ keybind = unconsumed:shift+page_down=ignore
 
 keybind = unconsumed:ctrl+shift+left=ignore
 keybind = unconsumed:ctrl+shift+right=ignore
+
+keybind = global:super+`=toggle_quick_terminal

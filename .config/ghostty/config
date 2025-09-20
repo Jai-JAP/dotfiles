@@ -16,21 +16,35 @@ font-family = "Symbols Nerd Font Mono"
 cursor-opacity = 0.8
 cursor-style = bar
 cursor-style-blink = true
+cursor-click-to-move = false
 
-background-opacity = 0.9
+bell-features = system,attention
+
+minimum-contrast = 2
+
+background-opacity = 0.95
+background-blur = true
 
 mouse-hide-while-typing = true
+mouse-shift-capture = true
 
 unfocused-split-opacity = 0.5
 
 # wait-after-command = true
+abnormal-command-exit-runtime = 1000
 
 link-url = true
+link-previews = true
 
 window-padding-x = 4
 window-padding-y = 3,1
 window-padding-balance = true
 window-padding-color = background
+
+quick-terminal-position = bottom
+quick-terminal-size = 40%, 60%
+quick-terminal-screen = mouse
+quick-terminal-autohide = true
 
 # 24 + 2 for error correction
 window-height = 26 
@@ -43,10 +57,13 @@ resize-overlay-position = bottom-right
 clipboard-read = allow
 clipboard-write = allow
 clipboard-paste-protection = true
+clipboard-trim-trailing-spaces = true
 copy-on-select = false
 
 linux-cgroup = always
 
-shell-integration-features = cursor,title
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
 
-adw-toolbar-style = raised
+gtk-toolbar-style = raised
+
+quit-after-last-window-closed = false
