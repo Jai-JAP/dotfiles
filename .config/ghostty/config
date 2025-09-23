@@ -33,7 +33,7 @@ window-padding-balance = true
 window-padding-color = background
 
 # 24 + 2 for error correction
-window-height = 26 
+window-height = 26
 window-width = 80
 window-step-resize = true
 

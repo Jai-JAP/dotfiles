@@ -42,7 +42,7 @@ link_cfg_files() {
 }
 
 link() {
-  if [[ -L "$2" && -e "$2" ]]; then
+  if sudo test -L "$2" -a -e "$2"; then
     echo " - '$2' exists" >&2
   else
     echo -n " - "
@@ -52,7 +52,7 @@ link() {
 
 copy() {
   echo -n " - "
-  if [[ -w "$2" || -w "$(dirname "$2")" ]]; then
+  if sudo test -w "$2" -o -w "$(dirname "$2")"; then
     cp -v "$1" "$2" 2>/dev/null
   else
     sudo cp -v "$1" "$2" 2>/dev/null
@@ -60,7 +60,7 @@ copy() {
 }
 
 makedir() {
-  if [[ -d "$1" ]]; then
+  if sudo test -d "$1"; then
     echo " - '$1' exists" >&2
   else
     echo -n " - "
@@ -111,7 +111,7 @@ if [[ ! "${PREFIX}" =~ com.termux ]]; then
   }
 fi
 
-if [[ "${ARGS[@]}" =~ -q ]]; then
+if [[ "${ARGS[*]}" =~ -q ]]; then
   exec 3<>"${PREFIX}"/tmp/bootstrap.stderr
   exec 2>&3
 fi
@@ -124,6 +124,7 @@ config_common() {
   echo -e "\e[33;1m-> Linking all config files.\e[0m"
 
   makedir "${PREFIX}"/etc/skel
+  echo >&2
 
   if [[ -f "${PREFIX}"/etc/skel/.bash_profile ]]; then
     echo -e " - '${PREFIX}/etc/skel/.bash_profile' exists" >&2
@@ -215,6 +216,8 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     done
     process_root_cfgs {"${LOC}",/root}/.config/micro
 
+    makedir /root/.local/share/
+
     link {"${LOC}",}/etc/profile.d/man.sh
 
     for file in .bashrc .blerc; do
@@ -239,6 +242,8 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}"/tmp/ble.sh
     make -C "${PREFIX}"/tmp/ble.sh install PREFIX="${HOME}/.local"
     rm -rf "${PREFIX}"/tmp/ble.sh
+
+    link {"${HOME}",/root}/.local/share/blesh
     echo -e " - \e[32;1mble.sh installed succesfully.\e[0m\n"
   fi
 
@@ -320,7 +325,7 @@ else
   done
   echo
 
-  if [[ "${ARGS[@]}" =~ -q ]]; then exec 3>&2; fi
+  if [[ "${ARGS[*]}" =~ -q ]]; then exec 3>&2; fi
 
   if command -v paru &>/dev/null; then
     echo -e "\e[33;1m-> \e[32;1mparu\e[33;1m package manager already installed.\n" >&2

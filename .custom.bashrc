@@ -32,7 +32,6 @@ if [[ $- == *i* ]]; then
   _bat="bat"
   if command -v batcat &>/dev/null; then
     _bat="batcat"
-    alias bat="batcat"
   fi
 
   # shellcheck disable=SC2139
@@ -46,7 +45,10 @@ if [[ $- == *i* ]]; then
   fi
 
   help() {
-    ( ( test "$1" != "-c" && command help "$@" 2> /dev/null ) || ( (test "$1" == -c && shift); "$@" --help ) ) | ${_bat} -pl help
+    ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (
+      (test "$1" == -c && shift)
+      "$@" --help
+    )) | ${_bat} -pl help
   }
 
   if [[ ${EUID} == 0 ]]; then
@@ -55,16 +57,16 @@ if [[ $- == *i* ]]; then
     PS1='\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\w\[\e[00m\] \n \[\e[01;32m\]\$_\[\e[00m\] '
   fi
 
-  export COMPAL_AUTO_UNMASK=1
-
   if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     # shellcheck source=/dev/null
     . "${HOME}/.local/share/blesh/ble.sh"
+
     # shellcheck source=/dev/null
     . "${HOME}/.local/share/bash-complete-alias/complete_alias"
   else # if [[ "${TERM_PROGRAM}" != "vscode" ]]; then
     # shellcheck disable=SC1091
     . "/usr/share/blesh/ble.sh"
+
     # shellcheck disable=SC1091
     . "/usr/share/bash-complete-alias/complete_alias"
 
@@ -74,30 +76,11 @@ if [[ $- == *i* ]]; then
     fi
   fi
 
+  # . "$(dirname "${BASH_SOURCE[0]}")"/extras/alias-completions.sh
   complete -F _complete_alias "${!BASH_ALIASES[@]}"
+
 
   if ! shopt -q login_shell && [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"
-  fi
-
-  if [[ "$(systemd-detect-virt)" == "wsl" ]]; then
-    command_not_found_handle() {
-      if command -v "$1.exe" &> /dev/null; then
-        CMD="$1.exe"
-        shift; shift;
-        ${CMD} "$@"
-      elif [ -x /usr/lib/command-not-found ]; then
-        /usr/lib/command-not-found -- "$1";
-        return $?;
-      else
-        if [ -x /usr/share/command-not-found/command-not-found ]; then
-          /usr/share/command-not-found/command-not-found -- "$1";
-          return $?;
-        else
-          printf "%s: command not found\n" "$1" 1>&2;
-          return 127;
-        fi;
-      fi
-    }
   fi
 fi
