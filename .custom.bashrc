@@ -16,6 +16,8 @@ if [[ $- == *i* ]]; then
   shopt -s dirspell
   shopt -s expand_aliases
   shopt -s no_empty_cmd_completion
+  shopt -s progcomp
+  shopt -s progcomp_alias
   set -C
 
   HISTCONTROL=ignoreboth
@@ -60,25 +62,15 @@ if [[ $- == *i* ]]; then
   if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     # shellcheck source=/dev/null
     . "${HOME}/.local/share/blesh/ble.sh"
-
-    # shellcheck source=/dev/null
-    . "${HOME}/.local/share/bash-complete-alias/complete_alias"
   else # if [[ "${TERM_PROGRAM}" != "vscode" ]]; then
     # shellcheck disable=SC1091
     . "/usr/share/blesh/ble.sh"
-
-    # shellcheck disable=SC1091
-    . "/usr/share/bash-complete-alias/complete_alias"
 
     if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
       # shellcheck source=/dev/null
       . "$(code --locate-shell-integration-path bash 2>/dev/null)"
     fi
   fi
-
-  # . "$(dirname "${BASH_SOURCE[0]}")"/extras/alias-completions.sh
-  complete -F _complete_alias "${!BASH_ALIASES[@]}"
-
 
   if ! shopt -q login_shell && [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"

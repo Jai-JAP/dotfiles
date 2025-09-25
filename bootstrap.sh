@@ -247,14 +247,6 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     echo -e " - \e[32;1mble.sh installed succesfully.\e[0m\n"
   fi
 
-  if [[ -d "${HOME}"/.local/share/bash-complete-alias ]]; then
-    echo -e "\e[33;1m-> bash-complete-alias already installed\e[0m\n" >&2
-  else
-    echo -e "\e[33;1m-> Installing bash-complete-alias\e[0m"
-    git clone --depth 1 https://github.com/cykerway/complete-alias "${HOME}"/.local/share/bash-complete-alias
-    echo -e " - \e[32;1mbash-complete-alias installed succesfully.\e[0m\n"
-  fi
-
   config_common
 else
   config_common
@@ -355,11 +347,11 @@ else
     GNOME_PKGS=(gnome-extensions-cli {adw-gtk,papirus-icon,bibata-cursor,firefox-gnome}-theme
       kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader)
   fi
-  mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi eza micro wl-clipboard \
-    bat git-delta blesh-git bash-complete-alias shellcheck shfmt refind firefox thermald dex jq \
-    {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct uv \
+  mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi micro wl-clipboard \
+    eza bat git-delta blesh-git shellcheck shfmt refind firefox thermald dex jq tealdeet uv \
+    {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct \
     ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} \
-    libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} tealdeer \
+    libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \
     sb{signtools,ctl} tlp{,-rdw} {pipewire,gst-plugin}-libcamera plymouth{,-theme-arch-os} \
     pigz lbzip2 plzip easyeffects audacious ecasound calf linux-keep-modules \
     "${GNOME_PKGS[@]}" "${MKINITCPIO_PKGS[@]}")
