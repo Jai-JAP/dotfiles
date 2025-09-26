@@ -348,7 +348,7 @@ else
       kvantum-theme-libadwaita-git libgda6 webp-pixbuf-loader)
   fi
   mapfile -t PKGS < <(filter_installed_pkgs ghostty fzf ripgrep fd yazi micro wl-clipboard \
-    eza bat git-delta blesh-git shellcheck shfmt refind firefox thermald dex jq tealdeet uv \
+    eza bat git-delta blesh-git shellcheck shfmt refind firefox thermald dex jq tealdeer uv \
     {visual-studio-code,hoppscotch,onlyoffice,brave,keymapper}-bin kvantum{,-qt5} qt{5,6}ct \
     ttf-{fira-code,nerd-fonts-symbols{,-mono}} intel-{media-{driver,sdk},compute-runtime} \
     libvdpau-va-gl libva-{intel-driver,utils} vdpauinfo vulkan-{intel,mesa-layers,tools} \

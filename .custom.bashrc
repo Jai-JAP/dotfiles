@@ -72,6 +72,12 @@ if [[ $- == *i* ]]; then
     fi
   fi
 
+  for alias in $(alias -p | cut -d' ' -f2 | cut -d'=' -f1); do
+    if ( type -P "${alias}" && complete -p "${alias}" ) &>/dev/null; then
+      complete -r "${alias}"
+    fi
+  done
+
   if ! shopt -q login_shell && [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
     alias logout="gnome-session-quit --no-prompt"
   fi
