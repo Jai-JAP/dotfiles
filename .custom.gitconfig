@@ -1,18 +1,5 @@
-[user]
-  name = Jai-JAP
-  email = jai.jap.318@gmail.com
-
-[credential "https://github.com"]
-  helper = !/usr/bin/gh auth git-credential
-
-[credential "https://gist.github.com"]
-  helper = !/usr/bin/gh auth git-credential
-
 [alias]
   history = log --all --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-
-[safe]
-	directory = /opt/flutter
 
 [core]
   pager = delta
@@ -20,8 +7,8 @@
 [interactive]
   diffFilter = delta --color-only --features=interactive
 
-# [diff]
-#   colorMoved = default
+[diff]
+  colorMoved = default
 
 [merge]
   conflictstyle = diff3
@@ -42,12 +29,15 @@
 
 [delta "interactive"]
   keep-plus-minus-markers = false
+
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
 [init]
-	defaultBranch = main
+  defaultBranch = main
+
 [fetch]
-	prune = true
+  prune = true
