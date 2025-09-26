@@ -195,7 +195,7 @@ filter_installed_exts() {
 if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
 
   if [[ "${PREFIX}" =~ com.termux ]]; then
-  	PKGMAN="pkg"
+    PKGMAN="pkg"
     echo -e "\e[33;1m-> Customizing Termux installation\e[0m"
     for file in {colors,termux}.properties font.ttf; do
       link {"${LOC}/","${HOME}/."}termux/"${file}"
@@ -208,8 +208,8 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     echo -e "\e[33;1m-> Reloading Termux.\e[0m"
     termux-reload-settings
   elif [[ "$(systemd-detect-virt)" == "wsl" ]]; then
-	  PKGMAN="sudo apt"
-	  WSL_EXTRAS=(ripgrep fd-find git-delta)
+    PKGMAN="sudo apt"
+    WSL_EXTRAS=(ripgrep fd-find git-delta)
 
     for file in btop micro virtualenv ; do
       process_cfgs {"${LOC}","${HOME}"}/.config/"${file}"

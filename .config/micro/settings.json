@@ -1,10 +1,10 @@
 {
-    "basename": true,
-    "hlsearch": true,
-    "mkparents": true,
-    "scrollbar": true,
-    "scrollbarchar": " ",
-    "tabhighlight": true,
-    "tabsize": 2,
-    "tabstospaces": true
+  "basename": true,
+  "hlsearch": true,
+  "mkparents": true,
+  "scrollbar": true,
+  "scrollbarchar": " ",
+  "tabhighlight": true,
+  "tabsize": 2,
+  "tabstospaces": true
 }
