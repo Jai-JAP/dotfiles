@@ -52,7 +52,7 @@ link() {
 
 copy() {
   echo -n " - "
-  if sudo test -w "$2" -o -w "$(dirname "$2")"; then
+  if test -w "$2" -o -w "$(dirname "$2")"; then
     cp -v "$1" "$2" 2>/dev/null
   else
     sudo cp -v "$1" "$2" 2>/dev/null
@@ -141,7 +141,11 @@ config_common() {
 
   echo >&2
 
-  sudo sed -i '/^EDITOR=/s/=.*/=micro/g' /etc/environment
+  if grep -q '^EDITOR=' "${PREFIX}/etc/environment"; then
+    sudo sed -i '/^EDITOR=/s/=.*/=micro/' "${PREFIX}/etc/environment"
+  else
+    echo 'EDITOR=micro' | sudo tee -a "${PREFIX}/etc/environment" &>/dev/null
+  fi
 
   local custom_bashrc
   custom_bashrc="\n# customisations\n\n# shellcheck disable=SC1091\n. \"${LOC}/.custom.bashrc\""

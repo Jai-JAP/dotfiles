@@ -25,8 +25,6 @@ if [[ -r /usr/share/bash-completion/bash_completion ]]; then
   . /usr/share/bash-completion/bash_completion
 fi
 
-[[ $- != *i* ]] && return
-
 use_color=true
 
 # Set colorful PS1 only on colorful terminals.
@@ -114,3 +112,8 @@ ex() {
     echo "'$1' is not a valid file"
   fi
 }
+
+if [[ -r "${HOME}"/.bash_aliases ]]; then
+  # shellcheck disable=SC1091
+  . "${HOME}"/.bash_aliases
+fi

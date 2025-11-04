@@ -40,7 +40,11 @@ if [[ $- == *i* ]]; then
   alias cat="${_bat} -p"
   alias rm="rm -I"
 
-  alias venv="virtualenv"
+  if command -v virtualenv &>/dev/null; then
+    alias venv="virtualenv"
+  else
+    alias venv="python3 -m venv"
+  fi
 
   if [[ ! "${PREFIX}" =~ com.termux ]]; then
     alias ctl="systemctl"
