@@ -1,7 +1,9 @@
 #!/bin/bash
 # shellcheck enable=require-variable-braces
 
-if [ "${0}" != "${BASH_SOURCE[0]}" ] ; then
+{
+
+if [ "${0}" != "${BASH_SOURCE[0]}" ]; then
   echo -e "\e[31;1mThis script should not be sourced\e[0m" >&2
   return 1
 fi
@@ -144,7 +146,7 @@ config_common() {
   if grep -q '^EDITOR=' "${PREFIX}/etc/environment"; then
     sudo sed -i '/^EDITOR=/s/=.*/=micro/' "${PREFIX}/etc/environment"
   else
-    echo 'EDITOR=micro' | sudo tee -a "${PREFIX}/etc/environment" &>/dev/null
+    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/environment"'
   fi
 
   local custom_bashrc
@@ -215,7 +217,7 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     PKGMAN="sudo apt"
     WSL_EXTRAS=(ripgrep fd-find git-delta)
 
-    for file in btop micro virtualenv ; do
+    for file in btop micro virtualenv; do
       process_cfgs {"${LOC}","${HOME}"}/.config/"${file}"
     done
     process_root_cfgs {"${LOC}",/root}/.config/micro
@@ -620,3 +622,5 @@ EOF
     echo -en "\e[A"
   fi
 fi
+
+}
