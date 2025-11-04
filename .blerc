@@ -57,7 +57,8 @@ bleopt edit_vbell= \
 	indent_tabs=0 \
 	prompt_ruler=empty-line \
 	prompt_eol_mark=$'\n' \
-	tab_width=2
+	tab_width=2 \
+	vbell_align=panel
 
 ble-face auto_complete='fg=240' \
 	command_builtin='fg=86' \
@@ -95,7 +96,8 @@ bleopt prompt_ps1_final="\e]133;A\a\e[0m\g{bold,fg=${FG_COLOR}}${_arrow} \g{rese
 
 blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
 	POSTEXEC+="echo -ne '\e]133;D;'\${?}'\a\e[0m'; " \
-	CHPWD="echo -ne '${_dir} ${_arrow_thin} \e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; "
+	CHPWD="echo -ne '${_dir} ${_arrow_thin} \e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; " \
+  DETACH="[[ \${FUNCNAME[-1]} == ble-reload ]] && echo; "
 
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
 	blehook PREEXEC+="echo -ne '\e]633;E'\${1}'\a\e[0m'; " \
