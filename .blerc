@@ -100,7 +100,7 @@ blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
   DETACH="[[ \${FUNCNAME[-1]} == ble-reload ]] && echo; "
 
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
-	blehook PREEXEC+="echo -ne '\e]633;E'\${1}'\a\e[0m'; " \
+	blehook PREEXEC+="echo -ne '\e]633;E;'\${1}'\a\e[0m'; " \
 		CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
 fi
 
