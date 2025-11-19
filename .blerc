@@ -18,12 +18,9 @@ if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" && ! "${PREFIX}" =~ 
 		fi
 fi
 
-if [[ "${TERM_PROGRAM}" != "vscode" && "${TERM}" != "linux" ]]; then
+if [[ "${TERM}" != "linux" ]]; then
 	ble-bind -m emacs -f 'C-h' delete-backward-cword
-	ble-bind -m emacs -f 'C-w' ''
-elif [[ "${TERM}" != "linux" ]]; then
 	ble-bind -m emacs -f 'C-w' delete-backward-cword
-	ble-bind -m emacs -f 'C-h' ''
 else
 	ble-bind -m emacs -f 'C-h' ''
 	ble-bind -m emacs -f 'C-w' ''
