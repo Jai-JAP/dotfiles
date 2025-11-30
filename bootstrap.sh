@@ -425,7 +425,7 @@ else
       gsconnect@andyholmes.github.io \
       just-perfection-desktop@just-perfection \
       legacyschemeautoswitcher@joshimukul29.gmail.com \
-      pano@elhan.io \
+      copyous@boerdereinar.dev \
       unblank@sun.wxg@gmail.com \
       Vitals@CoreCoding.com \
       rounded-window-corners@fxgn \
