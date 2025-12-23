@@ -136,7 +136,7 @@ config_common() {
   fi
 
   if [[ -f "${HOME}"/.bash_profile ]]; then
-    echo -e " - '~/.bash_profile' exists" >&2
+    echo -e " - '${HOME}/.bash_profile' exists" >&2
   else
     copy {"${PREFIX}/etc/skel","${HOME}"}/.bash_profile
   fi
@@ -146,7 +146,7 @@ config_common() {
   if grep -q '^EDITOR=' "${PREFIX}/etc/environment"; then
     sudo sed -i '/^EDITOR=/s/=.*/=micro/' "${PREFIX}/etc/environment"
   else
-    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/profile.d/editor.sh"'
+    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/environment"'
   fi
 
   local custom_bashrc
@@ -158,29 +158,29 @@ config_common() {
   echo -e "${custom_bashrc}" | tee -a "${tmp_bashrc}" &>/dev/null
 
   if hash_equal {"${LOC}","${PREFIX}"}/etc/skel/.bashrc && hash_equal "${HOME}"/.bashrc "${tmp_bashrc}"; then
-    echo -e " - '${PREFIX}/etc/skel/.bashrc' & '~/.bashrc' already upto date\n" >&2
+    echo -e " - '${PREFIX}/etc/skel/.bashrc' & '${HOME}/.bashrc' already upto date\n" >&2
     rm "${tmp_bashrc}"
   else
     sudo rm "${PREFIX}"/etc/skel/.bashrc "${tmp_bashrc}"
     copy {"${LOC}","${PREFIX}"}/etc/skel/.bashrc
     copy {"${LOC}"/etc/skel,"${HOME}"}/.bashrc
-    echo -e " - '${PREFIX}/etc/skel/.bashrc' & '~/.bashrc' updated successfully\n"
+    echo -e " - '${PREFIX}/etc/skel/.bashrc' & '${HOME}/.bashrc' updated successfully\n"
   fi
 
   if grep -q "${LOC}/.custom.bashrc" "${HOME}"/.bashrc; then
-    echo -e " - '~/.bashrc' already has customizations applied.\n" >&2
+    echo -e " - '${HOME}/.bashrc' already has customizations applied.\n" >&2
   else
-    echo -e "${custom_bashrc}" >>~/.bashrc
-    echo -e " - '~/.bashrc' updated to add customizations\n"
+    echo -e "${custom_bashrc}" >>"${HOME}/.bashrc"
+    echo -e " - '${HOME}/.bashrc' updated to add customizations\n"
   fi
 
   link {"${LOC}","${HOME}"}/.blerc
 
   if grep -q "${LOC}/.custom.gitconfig" "${HOME}"/.gitconfig; then
-    echo -e " - '~/.gitconfig' already has customizations applied.\n" >&2
+    echo -e " - '${HOME}/.gitconfig' already has customizations applied.\n" >&2
   else
-    echo -e '\n[include]\n  path = "'"${LOC}"'/.custom.gitconfig"' >>~/.gitconfig
-    echo -e " - '~/.gitconfig' updated to add customizations\n"
+    echo -e '\n[include]\n  path = "'"${LOC}"'/.custom.gitconfig"' >>"${HOME}/.gitconfig"
+    echo -e " - '${HOME}/.gitconfig' updated to add customizations\n"
   fi
 }
 
@@ -225,6 +225,8 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
     makedir /root/.local/share/
 
     link {"${LOC}",}/etc/profile.d/man.sh
+    link {"${LOC}",}/etc/profile.d/less.sh
+    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/profile.d/editor.sh"'
 
     for file in .bashrc .blerc; do
       if sudo test -L /root/"${file}" && sudo test -e /root/"${file}"; then
@@ -254,6 +256,8 @@ if [[ "${PREFIX}" =~ com.termux || "$(systemd-detect-virt)" == "wsl" ]]; then
   fi
 
   config_common
+
+  git config --global delta.hyperlinks-file-link-format "vscode://file$(wslpath -m /){path}:{line}"
 else
   config_common
 
