@@ -146,7 +146,7 @@ config_common() {
   if grep -q '^EDITOR=' "${PREFIX}/etc/environment"; then
     sudo sed -i '/^EDITOR=/s/=.*/=micro/' "${PREFIX}/etc/environment"
   else
-    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/environment"'
+    sudo bash -c 'echo "EDITOR=micro" >> "${PREFIX}/etc/profile.d/editor.sh"'
   fi
 
   local custom_bashrc
