@@ -1,3 +1,3 @@
 #!/bin/sh
 
-export LESS="-+X -FgiKsR~ -x2 --mouse"
+export LESS="-+X -FgiKsSR~ -x2 --mouse"
