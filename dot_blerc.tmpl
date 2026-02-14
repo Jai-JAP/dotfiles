@@ -1,0 +1,116 @@
+#!/bin/bash
+# shellcheck enable=require-variable-braces
+# shellcheck disable=all
+
+if [[ "${TERM}" != "linux" ]]; then
+	ble-bind -m emacs -f 'C-h' delete-backward-cword
+	ble-bind -m emacs -f 'C-w' delete-backward-cword
+else
+	ble-bind -m emacs -f 'C-h' ''
+	ble-bind -m emacs -f 'C-w' ''
+	ble-bind -m emacs -f 'C-M-?' delete-backward-cword
+
+	bleopt complete_auto_complete=
+fi
+
+ble-bind -m emacs -f M-up 'history-search-backward immediate-accept:hide-status:action=load:empty=history-move'
+ble-bind -m emacs -f M-down 'history-search-forward immediate-accept:hide-status:action=load:empty=history-move'
+
+ble-bind -m emacs -f C-up 'history-prev'
+ble-bind -m emacs -f C-down 'history-next'
+
+ble-bind --csi 5~ 'noop'
+ble-bind --csi 6~ 'noop'
+
+# exec_elapsed_mark=
+# exec_errexit_mark=
+# exec_exit_mark=
+bleopt edit_vbell= \
+	complete_skip_matched=on \
+	decode_error_char_vbell= \
+	decode_error_cseq_vbell= \
+	decode_error_kseq_vbell= \
+	edit_magic_accept=autocd \
+	edit_marker= \
+	edit_marker_error= \
+	history_default_point=end-of-logical-line \
+	indent_offset=2 \
+	indent_tabs=0 \
+	prompt_ruler=empty-line \
+	prompt_eol_mark=$'\n' \
+	tab_width=2 \
+	vbell_align=panel
+
+ble-face auto_complete='fg=240' \
+	command_builtin='fg=86' \
+	command_builtin_dot='fg=86' \
+	command_function='fg=108,bold' \
+	syntax_quotation='fg=124,bold' \
+	syntax_quoted='fg=136,bold' \
+	syntax_delimiter='fg=88,bold' \
+	syntax_function_name='fg=108,bold' \
+	region_match='fg=white,bg=124'
+
+if [[ "${TERM}" != "linux" ]]; then
+	_arrow="󱦰 "
+	_arrow_thin=" "
+	_rps_l=""
+	_dir="󰉋 "
+	_rps_r="█"
+else
+	_arrow="=>"
+	_arrow_thin="->"
+	_dir="\e[33;1mDIR changed\e[0m"
+	_rps_l="█"
+	_rps_r="█"
+fi
+
+if [[ "${EUID}" == 0 ]]; then
+	PS1_FG_COLOR=160
+else
+	PS1_FG_COLOR=70
+fi
+
+bleopt prompt_ps1_final="\e]133;A\a\e[0m\g{bold,fg=${PS1_FG_COLOR}}${_arrow} \g{reset}\e]133;B\a\e[0m" \
+	prompt_rps1="${RPS1}\$(RET=\$?; if [[ \$RET != 0 ]]; then echo '\g{fg=red}${_rps_l}\g{bold,bg=red}'\$RET'\g{fg=red}${_rps_r}\g{reset}'; fi)" \
+	prompt_rps1_transient=1
+
+blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
+	POSTEXEC+="echo -ne '\e]133;D;'\${?}'\a\e[0m'; " \
+	CHPWD="echo -ne '${_dir} ${_arrow_thin} \e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; " \
+  DETACH="[[ \${FUNCNAME[-1]} == ble-reload ]] && echo; "
+
+{{ if ne .deviceConfig.installType "termux" -}}
+if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" ]]; then
+		ble-import contrib/prompt-git
+
+		# shellcheck disable=SC2016
+		RPS1='${_ble_contrib_prompt_git_base:+\q{contrib/git-branch} (\q{contrib/git-hash})\n}'
+
+		if command -v fzf &>/dev/null; then
+			ble-import integration/fzf-completion
+			ble-import integration/fzf-key-bindings
+
+			_fzf_setup_completion path micro
+
+			_ble_contrib_fzf_git_config=key-binding
+			ble-import -d integration/fzf-git
+		fi
+fi
+
+if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
+	blehook PREEXEC+="echo -ne '\e]633;E;'\${1}'\a\e[0m'; " \
+		CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
+fi
+
+{{ end -}}
+
+#shellcheck disable=SC2016
+ble/function#advice around ble/widget/default/accept-line '
+  ble-edit/content/clear-arg
+  [[ ${_ble_edit_str//["${_ble_term_IFS}"]} ]] && ble/function#advice/do'
+
+#shellcheck disable=SC2016
+ble/function#advice around ble/widget/discard-line '
+  ble-edit/content/clear-arg
+  [[ ${_ble_edit_str//["${_ble_term_IFS}"]} ]] && ble/function#advice/do'

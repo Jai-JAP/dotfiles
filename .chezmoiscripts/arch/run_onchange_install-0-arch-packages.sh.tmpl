@@ -1,0 +1,77 @@
+#!/bin/bash
+# shellcheck disable=all
+
+{{ $packages := include "packages/arch.yaml" | fromYaml -}}
+# packages checksum: {{ $packages | toString | sha1sum }}
+
+{{ includeTemplate "utils/logger.sh.tmpl" . }}
+{{ includeTemplate "utils/filter_installed.sh" . | trim }}
+
+{
+  {{ if not  (lookPath "paru") }}
+    log_info "paru not found, installing it now..."
+    
+    {{ if not (lookPath "git") }}
+      sudo pacman -Sy --noconfirm git
+    {{- end }}
+
+    tmpdir=$(mktemp -d)
+    git clone --filter=tree:0 --sparse --no-checkout --depth 1 "https://github.com/archlinuxcn/repo" "$tmpdir"
+    git -C "$tmpdir" sparse-checkout init --cone
+    git -C "$tmpdir" sparse-checkout add archlinuxcn/paru
+    git -C "$tmpdir" checkout
+    
+    pushd "$tmpdir/archlinuxcn/paru/"
+    makepkg -rs --noconfirm
+    sudo pacman -U --noconfirm ./paru-[0-9]*.pkg.*
+    popd
+    
+    rm -rf "$tmpdir"
+
+    log_success "paru installed successfully."
+
+  {{ else }}
+    log_warning "paru is already installed."
+
+  {{ end -}}
+
+  {{- $allPackages := list -}}
+  {{- $allPackages = concat $allPackages $packages.common -}}
+
+  {{- if and (eq .deviceConfig.installType "desktop") (hasKey $packages.desktop) -}}
+    {{- $allPackages = concat $allPackages $packages.desktop -}}
+
+    {{- if and (eq .deviceConfig.gpu "intel") (hasKey $packages "intel") -}}
+      {{- $allPackages = concat $allPackages $packages.intel -}}
+    {{- end -}}
+    {{- if and (eq .deviceConfig.gpu "amd") (hasKey $packages "amd") -}}
+      {{- $allPackages = concat $allPackages $packages.amd -}}
+    {{- end -}}
+    {{- if and (eq .deviceConfig.gpu "nvidia") (hasKey $packages "nvidia") -}}
+      {{- $allPackages = concat $allPackages $packages.nvidia -}}
+    {{- end -}}
+
+    {{- if and (eq (env "XDG_SESSION_DESKTOP") "GNOME") (hasKey $packages "gnome") -}}
+      {{- $allPackages = concat $allPackages $packages.gnome -}}
+    {{- end -}}
+    {{- if and (eq (env "XDG_SESSION_DESKTOP") "KDE") (hasKey $packages "kde") -}}
+      {{- $allPackages = concat $allPackages $packages.kde -}}
+    {{- end -}}
+  {{- else if and (eq .deviceConfig.installType "server") (hasKey $packages "server") -}}
+    {{- $allPackages = concat $allPackages $packages.server -}}
+  {{- else if and (eq .deviceConfig.installType "wsl") (hasKey $packages "wsl") -}}
+    {{- $allPackages = concat $allPackages $packages.wsl -}}
+  {{- end -}}
+
+  packages_to_install=({{ join " " $allPackages }})
+
+  mapfile -t packages_filtered < <(filter_installed paru -Qq -- "${packages_to_install[@]}")
+
+  if (( ${#packages_filtered[@]} )); then
+    log_info "Installing Arch Packages"
+    paru -Syu --noconfirm --needed "${packages_filtered[@]}"
+  else
+    log_info "All packages are already installed."
+  fi
+
+}

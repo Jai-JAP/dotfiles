@@ -1,0 +1,11 @@
+common:
+  - make
+  - gawk
+  - ripgrep
+  - fd-find
+  - micro
+  - eza
+  - bat
+  - bash-completion
+  - command-not-found
+  - tealdeer

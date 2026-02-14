@@ -1,0 +1,35 @@
+#!/bin/bash
+# shellcheck disable=all
+
+{{ includeTemplate "utils/logger.sh.tmpl" . }}
+
+set -e
+
+GCM_DIR="/usr/local/share/gcm"
+LATEST_VERSION=$(curl -s https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.tag_name')
+
+if [ -z "$LATEST_VERSION" ]; then
+  log_error "Failed to fetch latest version of Git Credential Manager."
+  exit 1
+fi
+
+ARCH="{{ .chezmoi.arch | replace "amd64" "x64" }}"
+LATEST_URL="https://github.com/git-ecosystem/git-credential-manager/releases/download/${LATEST_VERSION}/gcm-win-${ARCH}-${LATEST_VERSION/#v/}.zip"
+
+log_info "Downloading latest Git Credential Manager..."
+curl -fsSL "$LATEST_URL" -o /tmp/gcm.zip
+
+log_info "Installing to $GCM_DIR..."
+sudo mkdir -p "$GCM_DIR"
+sudo unzip /tmp/gcm.zip -d "$GCM_DIR"
+sudo chmod a+x "$GCM_DIR/git-credential-manager.exe"
+
+log_info "Configuring git to use GCM..."
+git config --global credential.helper "$GCM_DIR/git-credential-manager.exe"
+git config --global credential.https://dev.azure.com.useHttpPath true
+
+/mnt/c/Windows/System32/setx.exe WSLENV $WSLENV:GIT_EXEC_PATH/wp
+
+rm /tmp/gcm.zip
+
+log_success "Git Credential Manager installed successfully!"

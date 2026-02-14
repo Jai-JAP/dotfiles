@@ -1,0 +1,63 @@
+{{- $pathPrefix := "" -}}
+{{- if eq .deviceConfig.installType "wsl" -}}
+	{{- $pathPrefix = output "wslpath" "-m" "/" | trimAll "/\n" -}}
+{{- end -}}
+
+[user]
+  name = {{ .user.name }}
+  email = {{ .user.email }}
+
+{{ if eq .deviceConfig.installType "wsl" -}}
+[credential]
+  helper = /usr/local/share/gcm/git-credential-manager.exe
+
+[credential "https://dev.azure.com"]
+  useHttpPath = true
+{{- end }}
+
+[alias]
+  history = log --all --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
+[core]
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only --features=interactive
+
+[diff]
+  colorMoved = default
+
+[merge]
+  conflictstyle = diff3
+
+[delta]
+  features = decorations
+  file-added-label = "added:"
+  file-modified-label = "modified:"
+  file-removed-label = 'removed:'
+  file-renamed-label = 'renamed:'
+  hunk-header-style =
+  hyperlinks = true
+  hyperlinks-file-link-format = "vscode://file/{{ $pathPrefix }}/{path}:{line}"
+  line-numbers = true
+  navigate = true
+  pager = less -+X -FgiKsR~ -x2 --mouse
+  true-color = always
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[init]
+  defaultBranch = main
+
+[fetch]
+  prune = true
+
+[push]
+  autoSetupRemote = true

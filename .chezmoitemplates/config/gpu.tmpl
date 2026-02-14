@@ -1,0 +1,9 @@
+{{- if eq .chezmoi.os "linux" -}}
+  {{- $detected := output "bash" "-c" "lspci | grep -i 'vga\\|3d\\|2d'" | trim -}}
+  {{- if contains "NVIDIA" $detected -}}nvidia
+  {{- else if contains "AMD" $detected -}}amd
+  {{- else if contains "Intel" $detected -}}intel
+  {{- else -}}unknown
+  {{- end -}}
+{{- else -}}unknown
+{{- end -}}

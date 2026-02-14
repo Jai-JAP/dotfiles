@@ -1,0 +1,70 @@
+common:
+  - less
+  - fzf
+  - ripgrep
+  - fd
+  - yazi
+  - micro
+  - eza
+  - bat
+  - git-delta
+  - bash-completion
+  - blesh-git
+  - shellcheck
+  - shfmt
+  - jq
+  - tealdeer
+  - wget
+  - pigz
+  - lbzip2
+  - plzip
+desktop:
+  - ghostty
+  - wl-clipboard
+  - visual-studio-code-bin
+  - onlyoffice-bin
+  - helium-browser-bin
+  - keymapper-bin
+  - kvantum
+  - kvantum-qt5
+  - vdpauinfo
+  - libvdpau-va-gl
+  - vulkan-mesa-layers
+  - vulkan-tools
+  - sbsigntools
+  - sbctl
+  - tlp
+  - tlp-rdw
+  - pipewire
+  - pipewire-pulse
+  - pipewire-alsa
+  - pipewire-jack
+  - pipewire-v4l2
+  - pipewire-libcamera
+  - wireplumber
+  - gst-plugin-pipewire
+  - gst-plugin-libcamera
+  - plymouth
+  - plymouth-theme-arch-os
+  - linux-keep-modules
+  - qt5ct
+  - qt6ct
+server: []
+wsl: 
+  - xdg-utils
+gnome:
+  - gnome-desktop
+  - gnome-extensions-cli
+  - adw-gtk-theme
+  - papirus-icon-theme
+  - bibata-cursor-theme
+  - kvantum-theme-libadwaita-git
+  - libgda6
+  - webp-pixbuf-loader
+intel:
+  - libva-utils
+  - intel-media-driver
+  - intel-media-sdk
+  - intel-compute-runtime
+  - libva-intel-driver
+  - vulkan-intel

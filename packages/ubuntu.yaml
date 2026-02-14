@@ -1,0 +1,21 @@
+common:
+  - make
+  - gawk
+  - fzf
+  - ripgrep
+  - fd-find
+  - micro
+  - eza
+  - bat
+  - git-delta
+  - bash-complation
+  - shellcheck
+  - shfmt
+  - jq
+  - tealdeer
+  - pigz
+  - lbzip2
+  - plzip
+server: []
+wsl: 
+  - xdg-utils

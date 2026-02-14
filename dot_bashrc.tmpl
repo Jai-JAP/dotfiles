@@ -1,0 +1,140 @@
+#!/bin/bash
+# shellcheck enable=require-variable-braces
+# shellcheck disable=all
+
+[[ $- != *i* ]] && return
+
+case ${TERM} in
+  Eterm* | alacritty* | aterm* | foot* | gnome* | konsole* | kterm* | putty* | rxvt* | tmux* | xterm*)
+    # shellcheck disable=SC2016
+    PROMPT_COMMAND+=('printf "\e]0;%s@%s: %s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"');;
+  screen*)
+    # shellcheck disable=SC2016
+    PROMPT_COMMAND+=('printf "\e_%s@%s: %s\e\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"');;
+esac
+
+if [[ ${EUID} == 0 ]]; then
+  PS1='${SUDO_USER:+(\[\e[01;33m$SUDO_USER\e[0m\]) }\[\e[01;31m\]\u@\h\[\e[00m\]: \[\e[01;34m\]\w\[\e[00m\] \n \[\e[01;31m\]\$_\[\e[00m\] '
+else
+  PS1='\[\e[01;32m\]\u@\h\[\e[00m\]: \[\e[01;34m\]\w\[\e[00m\] \n \[\e[01;32m\]\$_\[\e[00m\] '
+fi
+
+export LS_OPTIONS='--color=auto'
+
+bind 'set completion-ignore-case on'
+bind 'set match-hidden-files off'
+bind -x '"\C-l":clear'
+shopt -s autocd
+shopt -s cdspell
+shopt -s checkwinsize
+shopt -s dirspell
+shopt -s expand_aliases
+shopt -s histappend
+shopt -s no_empty_cmd_completion
+shopt -s progcomp
+shopt -s progcomp_alias
+set -C
+
+if [[ -r /usr/share/bash-completion/bash_completion ]]; then
+  # shellcheck disable=SC1091
+  . /usr/share/bash-completion/bash_completion
+fi
+
+if [[ -r "${HOME}"/.bash_aliases ]]; then
+  # shellcheck disable=SC1091
+  . "${HOME}"/.bash_aliases
+fi
+
+HISTCONTROL=ignoreboth
+
+if [[ "${TERM}" != "linux" ]]; then
+  _ls_icons="--icons"
+fi
+
+# shellcheck disable=SC2139
+alias ls="eza -ghoM --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
+# shellcheck disable=SC2139
+alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
+
+{{ $bat := "bat" -}}
+{{- if eq .deviceConfig.osType "ubuntu" -}}
+{{ $bat = "batcat" -}}
+{{- end -}}
+
+alias cat="{{ $bat }} -p"
+alias rm="rm -I"
+
+if command -v virtualenv &>/dev/null; then
+  alias venv="virtualenv"
+else
+  alias venv="python3 -m venv"
+fi
+
+{{ if ne .deviceConfig.installType "termux" -}}
+alias ctl="systemctl"
+
+{{ end -}}
+
+alias grep='grep --colour=auto'
+alias egrep='egrep --colour=auto'
+alias fgrep='fgrep --colour=auto'
+
+help() {
+  ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (
+    (test "$1" == -c && shift)
+    "$@" --help
+  ) ) | {{ $bat }} -pl help
+}
+
+if [[ -d "{{ .chezmoi.sourceDir }}/extras" ]]; then
+  for file in "{{ .chezmoi.sourceDir }}/extras"/*; do
+    if [[ -f "$file" ]]; then
+      # shellcheck disable=SC1090
+      . "$file"
+    fi
+  done
+fi
+
+{{ if or (eq .deviceConfig.installType "termux") (ne .deviceConfig.osType "arch") -}}
+. "${HOME}/.local/share/blesh/ble.sh"
+{{- else -}}
+. "/usr/share/blesh/ble.sh"
+
+{{ end -}}
+
+{{ if eq .deviceConfig.installType "wsl" -}}
+command_not_found_handle() {
+  local cmd="$1"
+  shift
+
+  if command -v "$cmd.exe" >/dev/null 2>&1; then
+    "$cmd.exe" "$@"
+    return
+  fi
+
+  echo "command not found: $cmd" >&2
+  return 127
+}
+
+{{ end -}}
+
+{{ if eq .deviceConfig.installType "desktop" -}}
+if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
+  . "$(code --locate-shell-integration-path bash 2>/dev/null)"
+fi
+
+{{ end -}}
+
+while read -r line; do
+  if [[ $line =~ ^alias[[:space:]]+([^=]+)=\'(.*)\'$ ]]; then
+    alias_name=${BASH_REMATCH[1]}
+    alias_value=(${BASH_REMATCH[2]})
+    if [[ "${alias_name}" != "${alias_value[0]}" ]] && ( type -P "${alias_name}" && complete -p "${alias_name}" ) &>/dev/null; then
+      complete -r "${alias_name}"
+    fi
+  fi
+done < <(alias -p)
+
+{{ if eq (env "XDG_SESSION_DESKTOP") "GNOME" -}}
+alias logout="gnome-session-quit --no-prompt"
+{{- end }}

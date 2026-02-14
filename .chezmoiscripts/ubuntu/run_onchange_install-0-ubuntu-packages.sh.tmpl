@@ -1,0 +1,33 @@
+#!/bin/bash
+# shellcheck disable=all
+
+{{ $packages := include "packages/ubuntu.yaml" | fromYaml -}}
+# packages checksum: {{ $packages | toString | sha1sum }}
+
+{{ includeTemplate "utils/logger.sh.tmpl" . }}
+{{ includeTemplate "utils/filter_installed.sh" . | trim }}
+
+{
+
+  {{- $allPackages := list -}}
+  {{- $allPackages = concat $allPackages $packages.common -}}
+
+  {{- if and (eq .deviceConfig.installType "server") (hasKey $packages "server") -}}
+    {{- $allPackages = concat $allPackages $packages.server -}}
+  {{- else if and (eq .deviceConfig.installType "wsl") (hasKey $packages "wsl") -}}
+    {{- $allPackages = concat $allPackages $packages.wsl -}}
+  {{- end -}}
+
+  packages_to_install=({{ join " " $allPackages }})
+
+  mapfile -t packages_filtered < <(filter_installed dpkg-query -W -f="${package}\n" "2>/dev/null" -- "${packages_to_install[@]}")
+
+  if (( ${#packages_filtered[@]} )); then
+    log_info "Installing Ubuntu Packages"
+    sudo apt-get update
+    sudo apt-get upgrade -y "${packages_filtered[@]}"
+  else
+    log_info "All packages are already installed."
+  fi
+
+}

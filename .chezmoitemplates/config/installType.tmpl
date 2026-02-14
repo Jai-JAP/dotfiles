@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "linux" -}}
+  {{- $defaultTarget := output "systemctl" "get-default" | trim -}}
+  
+  {{- if hasSuffix "WSL2" (output "uname" "-r" | trim) -}}wsl
+  {{- else if hasPrefix "graphical" $defaultTarget -}}desktop
+  {{- else -}}server
+  {{- end -}}
+{{- end -}}
