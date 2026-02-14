@@ -3,33 +3,79 @@
 
 #{{ includeTemplate "utils/logger.sh.tmpl" . }}
 
-set -e
+set -euo pipefail
 
 GCM_DIR="/usr/local/share/gcm"
-LATEST_VERSION=$(curl -s https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.tag_name')
+GCM_EXE="$GCM_DIR/git-credential-manager.exe"
+ARCH='#{{ .chezmoi.arch | replace "amd64" "x64" }}'
 
-if [ -z "$LATEST_VERSION" ]; then
+get_installed_version() {
+  if [ -x "$GCM_EXE" ]; then
+    "$GCM_EXE" --version 2>/dev/null | grep -oE '[0-9]+(\.[0-9]+){2}' || true
+  fi
+}
+
+get_latest_version() {
+  local tag
+  tag="$(curl -fsSL https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/latest | jq -r '.tag_name')"
+  [ -n "$tag" ] && [ "$tag" != "null" ] || return 1
+  echo "${tag#v}"
+}
+
+version_lt() {
+  # returns 0 if $1 < $2
+  [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" != "$2" ] && [ "$1" != "$2" ]
+}
+
+install_or_update_gcm() {
+  local latest_ver="$1"
+  local url tmpdir zip
+
+  url="https://github.com/git-ecosystem/git-credential-manager/releases/download/v${latest_ver}/gcm-win-${ARCH}-${latest_ver}.zip"
+  tmpdir="$(mktemp -d)"
+  zip="$tmpdir/gcm.zip"
+  trap 'rm -rf "$tmpdir"' EXIT
+
+  log_info "Downloading Git Credential Manager v${latest_ver}..."
+  wget -qc --show-progress --progress=bar:force:noscroll -O "$zip" "$url"
+
+  log_info "Installing to $GCM_DIR..."
+  sudo mkdir -p "$GCM_DIR"
+  sudo unzip -o "$zip" -d "$GCM_DIR" >/dev/null
+  sudo chmod a+x "$GCM_EXE"
+
+  /mnt/c/Windows/System32/setx.exe WSLENV "$WSLENV:GIT_EXEC_PATH/wp" >/dev/null || true
+
+  log_success "Git Credential Manager v${latest_ver} installed successfully!"
+}
+
+INSTALLED_VERSION="$(get_installed_version || true)"
+
+log_info "Checking latest Git Credential Manager version..."
+LATEST_VERSION="$(get_latest_version)" || {
   log_error "Failed to fetch latest version of Git Credential Manager."
   exit 1
+}
+
+if [ -n "${INSTALLED_VERSION:-}" ] && [ "$INSTALLED_VERSION" = "$LATEST_VERSION" ]; then
+  log_success "Git Credential Manager is already up to date (v${INSTALLED_VERSION}). Skipping."
+  exit 0
 fi
 
-ARCH="#{{ .chezmoi.arch | replace 'amd64' 'x64' }}"
-LATEST_URL="https://github.com/git-ecosystem/git-credential-manager/releases/download/${LATEST_VERSION}/gcm-win-${ARCH}-${LATEST_VERSION/#v/}.zip"
+if [ -z "${INSTALLED_VERSION:-}" ]; then
+  log_info "Git Credential Manager not installed. Installing v${LATEST_VERSION}..."
+  install_or_update_gcm "$LATEST_VERSION"
+  exit 0
+fi
 
-log_info "Downloading latest Git Credential Manager..."
-curl -fsSL "$LATEST_URL" -o /tmp/gcm.zip
-
-log_info "Installing to $GCM_DIR..."
-sudo mkdir -p "$GCM_DIR"
-sudo unzip /tmp/gcm.zip -d "$GCM_DIR"
-sudo chmod a+x "$GCM_DIR/git-credential-manager.exe"
-
-log_info "Configuring git to use GCM..."
-git config --global credential.helper "$GCM_DIR/git-credential-manager.exe"
-git config --global credential.https://dev.azure.com.useHttpPath true
-
-/mnt/c/Windows/System32/setx.exe WSLENV "$WSLENV:GIT_EXEC_PATH/wp"
-
-rm /tmp/gcm.zip
-
-log_success "Git Credential Manager installed successfully!"
+if version_lt "$INSTALLED_VERSION" "$LATEST_VERSION"; then
+  read -r -p "Update Git Credential Manager from v${INSTALLED_VERSION} to v${LATEST_VERSION}? [Y/n] " ans
+  ans="${ans:-Y}"
+  if [[ "$ans" =~ ^[Yy]$ ]]; then
+    install_or_update_gcm "$LATEST_VERSION"
+  else
+    log_info "Update skipped by user (installed v${INSTALLED_VERSION}, latest v${LATEST_VERSION})."
+  fi
+else
+  log_success "Installed Git Credential Manager (v${INSTALLED_VERSION}) is not older than latest (v${LATEST_VERSION}). Skipping."
+fi
