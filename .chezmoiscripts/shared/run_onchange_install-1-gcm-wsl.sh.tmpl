@@ -1,7 +1,7 @@
 #!/bin/bash
-# shellcheck disable=all
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
-{{ includeTemplate "utils/logger.sh.tmpl" . }}
+#{{ includeTemplate "utils/logger.sh.tmpl" . }}
 
 set -e
 
@@ -13,7 +13,7 @@ if [ -z "$LATEST_VERSION" ]; then
   exit 1
 fi
 
-ARCH="{{ .chezmoi.arch | replace "amd64" "x64" }}"
+ARCH="#{{ .chezmoi.arch | replace 'amd64' 'x64' }}"
 LATEST_URL="https://github.com/git-ecosystem/git-credential-manager/releases/download/${LATEST_VERSION}/gcm-win-${ARCH}-${LATEST_VERSION/#v/}.zip"
 
 log_info "Downloading latest Git Credential Manager..."
@@ -28,7 +28,7 @@ log_info "Configuring git to use GCM..."
 git config --global credential.helper "$GCM_DIR/git-credential-manager.exe"
 git config --global credential.https://dev.azure.com.useHttpPath true
 
-/mnt/c/Windows/System32/setx.exe WSLENV $WSLENV:GIT_EXEC_PATH/wp
+/mnt/c/Windows/System32/setx.exe WSLENV "$WSLENV:GIT_EXEC_PATH/wp"
 
 rm /tmp/gcm.zip
 

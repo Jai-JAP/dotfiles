@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck enable=require-variable-braces
-# shellcheck disable=all
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
 [[ $- != *i* ]] && return
 
@@ -56,12 +56,13 @@ alias ls="eza -ghoM --smart-group --git --no-time --no-permissions --group-direc
 # shellcheck disable=SC2139
 alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-directories-first --hyperlink --no-quotes -I .git ${_ls_icons}"
 
-{{ $bat := "bat" -}}
-{{- if eq .deviceConfig.osType "ubuntu" -}}
-{{ $bat = "batcat" -}}
-{{- end -}}
+#{{- $bat := "bat" -}}
+#{{- if eq .deviceConfig.osType "ubuntu" -}}
+#{{-    $bat = "batcat" -}}
+#{{- end -}}
 
-alias cat="{{ $bat }} -p"
+# shellcheck disable=SC2139,SC2154,SC2250
+alias cat="#{{ $bat }} -p"
 alias rm="rm -I"
 
 if command -v virtualenv &>/dev/null; then
@@ -70,24 +71,25 @@ else
   alias venv="python3 -m venv"
 fi
 
-{{ if ne .deviceConfig.installType "termux" -}}
+#{{ if ne .deviceConfig.installType "termux" -}}
 alias ctl="systemctl"
 
-{{ end -}}
+#{{ end -}}
 
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
 
+# shellcheck disable=SC1083,SC1073,SC1009
 help() {
   ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (
     (test "$1" == -c && shift)
     "$@" --help
-  ) ) | {{ $bat }} -pl help
+  ) ) | exec #{{ $bat }} -pl help
 }
 
-if [[ -d "{{ .chezmoi.sourceDir }}/extras" ]]; then
-  for file in "{{ .chezmoi.sourceDir }}/extras"/*; do
+if [[ -d "#{{ .chezmoi.sourceDir }}/extras" ]]; then
+  for file in "#{{ .chezmoi.sourceDir }}/extras"/*; do
     if [[ -f "$file" ]]; then
       # shellcheck disable=SC1090
       . "$file"
@@ -95,14 +97,16 @@ if [[ -d "{{ .chezmoi.sourceDir }}/extras" ]]; then
   done
 fi
 
-{{ if or (eq .deviceConfig.installType "termux") (ne .deviceConfig.osType "arch") -}}
+#{{ if or (eq .deviceConfig.installType "termux") (ne .deviceConfig.osType "arch") -}}
+# shellcheck disable=SC1091,SC1094
 . "${HOME}/.local/share/blesh/ble.sh"
-{{- else -}}
+#{{- else -}}
+# shellcheck disable=SC1091,SC1094
 . "/usr/share/blesh/ble.sh"
 
-{{ end -}}
+#{{ end -}}
 
-{{ if eq .deviceConfig.installType "wsl" -}}
+#{{ if eq .deviceConfig.installType "wsl" -}}
 command_not_found_handle() {
   local cmd="$1"
   shift
@@ -116,25 +120,26 @@ command_not_found_handle() {
   return 127
 }
 
-{{ end -}}
+#{{ end -}}
 
-{{ if eq .deviceConfig.installType "desktop" -}}
+#{{ if eq .deviceConfig.installType "desktop" -}}
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
+  # shellcheck disable=SC1090
   . "$(code --locate-shell-integration-path bash 2>/dev/null)"
 fi
 
-{{ end -}}
+#{{ end -}}
 
 while read -r line; do
   if [[ $line =~ ^alias[[:space:]]+([^=]+)=\'(.*)\'$ ]]; then
-    alias_name=${BASH_REMATCH[1]}
-    alias_value=(${BASH_REMATCH[2]})
+    alias_name="${BASH_REMATCH[1]}"
+    alias_value=("${BASH_REMATCH[2]}")
     if [[ "${alias_name}" != "${alias_value[0]}" ]] && ( type -P "${alias_name}" && complete -p "${alias_name}" ) &>/dev/null; then
       complete -r "${alias_name}"
     fi
   fi
 done < <(alias -p)
 
-{{ if eq (env "XDG_SESSION_DESKTOP") "GNOME" -}}
+#{{ if eq (env "XDG_SESSION_DESKTOP") "GNOME" -}}
 alias logout="gnome-session-quit --no-prompt"
-{{- end }}
+#{{- end }}

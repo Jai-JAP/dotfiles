@@ -1,20 +1,22 @@
 #!/bin/bash
-# shellcheck disable=all
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
-{{ $packages := include "packages/termux.yaml" | fromYaml -}}
-# packages checksum: {{ $packages | toString | sha1sum }}
+#{{ $packages := include "packages/termux.yaml" | fromYaml -}}
+# packages checksum: #{{ $packages | toString | sha1sum }}
 
-{{ includeTemplate "utils/logger.sh.tmpl" . }}
-{{ includeTemplate "utils/filter_installed.sh" . | trim }}
+#{{ includeTemplate "utils/logger.sh.tmpl" . }}
+#{{ includeTemplate "utils/filter_installed.sh" . | trim }}
 
 {
 
-  {{- $allPackages := list -}}
-  {{- $allPackages = concat $allPackages $packages.common }}
+  #{{- $allPackages := list -}}
+  #{{- $allPackages = concat $allPackages $packages.common }}
 
-  packages_to_install=({{ join " " $allPackages }})
+  packages_to_install=(
+    #{{ join " " $allPackages }}
+  )
 
-  mapfile -t packages_filtered < <(filter_installed dpkg-query -W -f="${package}\n" "2>/dev/null" -- "${packages_to_install[@]}")
+  mapfile -t packages_filtered < <(filter_installed dpkg-query -W -f="\${package}\n" "2>/dev/null" -- "${packages_to_install[@]}")
 
   if (( ${#packages_filtered[@]} )); then
     log_info "Installing Termux Packages"

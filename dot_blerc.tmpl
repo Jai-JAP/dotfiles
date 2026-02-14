@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck enable=require-variable-braces
-# shellcheck disable=all
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
 if [[ "${TERM}" != "linux" ]]; then
 	ble-bind -m emacs -f 'C-h' delete-backward-cword
@@ -80,7 +80,7 @@ blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
 	CHPWD="echo -ne '${_dir} ${_arrow_thin} \e[33;1m'; pwd | sed 's|'${HOME}'|~|'; echo -ne '\e[0m'; " \
   DETACH="[[ \${FUNCNAME[-1]} == ble-reload ]] && echo; "
 
-{{ if ne .deviceConfig.installType "termux" -}}
+#{{ if ne .deviceConfig.installType "termux" -}}
 if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" ]]; then
 		ble-import contrib/prompt-git
 
@@ -103,7 +103,7 @@ if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
 		CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
 fi
 
-{{ end -}}
+#{{ end -}}
 
 #shellcheck disable=SC2016
 ble/function#advice around ble/widget/default/accept-line '
