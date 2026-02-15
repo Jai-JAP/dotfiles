@@ -1,3 +1,4 @@
 {{- if (has .chezmoi.osRelease.id (list "arch" "endeavoros")) -}}arch
 {{- else if (has .chezmoi.osRelease.id (list "ubuntu")) -}}ubuntu
+{{- else if (eq .chezmoi.os "android") -}}android
 {{- end -}}

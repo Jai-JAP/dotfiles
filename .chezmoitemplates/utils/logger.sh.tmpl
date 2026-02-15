@@ -1,35 +1,28 @@
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 log_success() {
   echo -e "\033[0;32m✓ [Success]: \033[0m $*"
 }
 
 log_info() {
-  {{- if ge .logLevel 1 }}
-    echo -e "\033[0;34mℹ [Info]: \033[0m $*"
-  {{- else }}
-    return
-  {{- end }}
+#{{- if ge .logLevel 1 }}
+  echo -e "\033[0;34mℹ [Info]: \033[0m $*"
+#{{ else }} :; #{{ end -}}
 }
 
 log_warning() {
-  {{- if ge .logLevel 2 }}
-    echo -e "\033[0;33m⚠ [Warning]: \033[0m $*"
-  {{- else }}
-    return
-  {{- end }}
+#{{- if ge .logLevel 2 }} 
+  echo -e "\033[0;33m⚠ [Warning]: \033[0m $*"
+#{{ else }} :; #{{ end -}}
 }
 
 log_error() {
-  {{- if ge .logLevel 3 }}
-    echo -e "\033[0;31m✗ [Error]: \033[0m $*" >&2
-  {{- else }}
-    return
-  {{- end }}
+#{{- if ge .logLevel 3 }} 
+  echo -e "\033[0;31m✗ [Error]: \033[0m $*" >&2
+#{{ else }} :; #{{ end -}}
 }
 
 log_debug() {
-  {{- if ge .logLevel 4 }}
-    echo -e "\033[0;90m? [Debug]: \033[0m $*"
-  {{- else }}
-    return
-  {{- end }}
+#{{- if ge .logLevel 4 }}
+  echo -e "\033[0;90m? [Debug]: \033[0m $*"
+#{{ else }} :; #{{ end -}}
 }

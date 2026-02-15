@@ -1,20 +1,11 @@
-{{- if ne .deviceConfig.osType "arch" }}
-	.chezmoiscripts/arch/*
-{{ end -}}
-
-{{- if ne .deviceConfig.osType "ubuntu" }}
-	.chezmoiscripts/ubuntu/*
-{{ end -}}
-
 {{- if ne .deviceConfig.installType "wsl" -}}
-	.chezmoiscripts/shared/run_once_install-gcm-wsl.sh.tmpl
+	.chezmoiscripts/run_once_install-gcm-wsl.sh.tmpl
 {{ end -}}
 
 {{- if eq .deviceConfig.installType "termux" -}}
 	.chezmoiscripts/run_00-setup-sudo-caching.sh
 	.dot_termux/*
 {{- else -}}
-	.chezmoiscripts/termux/*
 {{ end -}}
 
 packages/*

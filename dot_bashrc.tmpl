@@ -59,7 +59,7 @@ alias tree="eza -ghoMT --smart-group --git --no-time --no-permissions --group-di
 #{{- $bat := "bat" -}}
 #{{- if eq .deviceConfig.osType "ubuntu" -}}
 #{{-    $bat = "batcat" -}}
-#{{- end -}}
+#{{- end }}
 
 # shellcheck disable=SC2139,SC2154,SC2250
 alias cat="#{{ $bat }} -p"
@@ -72,6 +72,7 @@ else
 fi
 
 #{{ if ne .deviceConfig.installType "termux" -}}
+alias sudo="sudo "
 alias ctl="systemctl"
 
 #{{ end -}}
@@ -90,9 +91,9 @@ help() {
 
 if [[ -d "#{{ .chezmoi.sourceDir }}/extras" ]]; then
   for file in "#{{ .chezmoi.sourceDir }}/extras"/*; do
-    if [[ -f "$file" ]]; then
+    if [[ -f "${file}" ]]; then
       # shellcheck disable=SC1090
-      . "$file"
+      . "${file}"
     fi
   done
 fi
@@ -111,12 +112,12 @@ command_not_found_handle() {
   local cmd="$1"
   shift
 
-  if command -v "$cmd.exe" >/dev/null 2>&1; then
-    "$cmd.exe" "$@"
+  if command -v "${cmd}.exe" >/dev/null 2>&1; then
+    "${cmd}.exe" "$@"
     return
   fi
 
-  echo "command not found: $cmd" >&2
+  echo "command not found: ${cmd}" >&2
   return 127
 }
 
@@ -140,6 +141,8 @@ while read -r line; do
   fi
 done < <(alias -p)
 
-#{{ if eq (env "XDG_SESSION_DESKTOP") "GNOME" -}}
+#{{- if eq (env "XDG_SESSION_DESKTOP") "GNOME" }}
+
 alias logout="gnome-session-quit --no-prompt"
+
 #{{- end }}
