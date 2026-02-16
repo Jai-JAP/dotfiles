@@ -1,0 +1,18 @@
+#!/bin/bash
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
+
+#{{- $sudo := "" }}
+#{{- if ne .deviceConfig.installType "termux" -}}
+#{{-   $sudo = "sudo " -}}
+#{{- end -}}
+
+#{{ includeTemplate "utils/logger.sh.tmpl" . }}
+
+if [[ -d /usr/local/share/blesh ]]; then
+  log_info "Installing ble.sh"
+  git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}"/tmp/ble.sh
+  #{{ $sudo -}} make -C "${PREFIX}/tmp/ble.sh" install PREFIX="${PREFIX}/usr/local"
+  rm -rf "${PREFIX}"/tmp/ble.sh
+
+  log_success "ble.sh installed succesfully."
+fi

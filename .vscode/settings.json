@@ -1,9 +1,8 @@
 {
   "files.associations": {
+    "*.tmpl": "go-template",
     "*.sh.tmpl": "shellscript",
     "*.yaml.tmpl": "yaml",
-    "*.tmpl": "go-template",
-    ".chezmoiignore.tmpl": "ignore",
     "dot_bash_profile": "shellscript",
     "dot_bashrc.tmpl": "shellscript",
     "dot_blerc.tmpl": "shellscript",

@@ -81,32 +81,6 @@ alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
 
-# shellcheck disable=SC1083,SC1073,SC1009
-help() {
-  ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (
-    (test "$1" == -c && shift)
-    "$@" --help
-  ) ) | exec #{{ $bat }} -pl help
-}
-
-if [[ -d "#{{ .chezmoi.sourceDir }}/extras" ]]; then
-  for file in "#{{ .chezmoi.sourceDir }}/extras"/*; do
-    if [[ -f "${file}" ]]; then
-      # shellcheck disable=SC1090
-      . "${file}"
-    fi
-  done
-fi
-
-#{{ if or (eq .deviceConfig.installType "termux") (ne .deviceConfig.osType "arch") -}}
-# shellcheck disable=SC1091,SC1094
-. "${HOME}/.local/share/blesh/ble.sh"
-#{{- else -}}
-# shellcheck disable=SC1091,SC1094
-. "/usr/share/blesh/ble.sh"
-
-#{{ end -}}
-
 #{{ if eq .deviceConfig.installType "wsl" -}}
 command_not_found_handle() {
   local cmd="$1"
@@ -122,6 +96,36 @@ command_not_found_handle() {
 }
 
 #{{ end -}}
+
+# shellcheck disable=SC1083,SC1073,SC1009
+help() {
+  ( (test "$1" != "-c" && command help "$@" 2>/dev/null) || (
+    (test "$1" == -c && shift)
+#{{- if eq .deviceConfig.installType "wsl" }}
+    unset -f command_not_found_handle &>/dev/null
+#{{- end }}
+    "$@" --help
+  ) ) | exec #{{ $bat }} -pl help
+}
+
+if [[ -d "#{{ .chezmoi.sourceDir }}/extras" ]]; then
+  for file in "#{{ .chezmoi.sourceDir }}/extras"/*; do
+    if [[ -f "${file}" ]]; then
+      # shellcheck disable=SC1090
+      . "${file}"
+    fi
+  done
+fi
+
+#{{ if or (eq .deviceConfig.installType "termux") (ne .deviceConfig.osType "arch") -}}
+# shellcheck disable=SC1091,SC1094
+. "/usr/local/share/blesh/ble.sh"
+#{{- else -}}
+# shellcheck disable=SC1091,SC1094
+. "/usr/share/blesh/ble.sh"
+
+#{{ end -}}
+
 
 #{{ if eq .deviceConfig.installType "desktop" -}}
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then

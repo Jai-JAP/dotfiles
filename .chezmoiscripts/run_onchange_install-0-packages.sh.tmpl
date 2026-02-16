@@ -9,7 +9,7 @@
 # packages checksum: #{{ $packages | toString | sha1sum }}
 
 #{{ includeTemplate "utils/logger.sh.tmpl" . }}
-#{{ includeTemplate "utils/filter_installed.sh" . | trim }}
+#{{ includeTemplate "utils/filter_installed.sh" . }}
 
 {
 #{{- if eq .deviceConfig.osType "arch" -}}
