@@ -1,4 +1,4 @@
-{{- if ne .deviceConfig.osType "arch" -}}
+{{- if eq .deviceConfig.osType "arch" -}}
 .chezmoiscripts/run_onchange_install-1-external-packages.tmpl
 {{ end -}}
 
@@ -12,6 +12,5 @@
 {{- else -}}
 {{ end -}}
 
-packages/*
-extras/*
-others/*
+packages/**
+others/**
