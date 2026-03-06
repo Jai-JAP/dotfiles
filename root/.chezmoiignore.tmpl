@@ -1,0 +1,22 @@
+{{- if ne .deviceConfig.osType "arch" -}}
+etc/modify_pacman.conf
+etc/paru.conf
+etc/pacman.d/**
+{{ end -}}
+
+{{- if ne .deviceConfig.installType "desktop" }}
+etc/bluetooth/**
+etc/dracut.conf.d/**
+etc/pacman/hooks/plymouth-theme-arch-os.hook
+etc/pacman/hooks/refind-install.hook
+etc/plymouth/**
+etc/profile.d/firefox-gestures.sh
+etc/profile.d/flutter-chrome-executable.sh
+etc/profile.d/qt.sh
+etc/profile.d/xcursor.sh
+etc/wireplumber/**
+{{ end -}}
+
+{{- if not .customization.sudo.pwfeedback }}
+etc/sudoers.d/0_pwfeedback
+{{ end -}}

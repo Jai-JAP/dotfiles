@@ -7,12 +7,117 @@
 #{{- end }}
 
 #{{ includeTemplate "utils/logger.sh.tmpl" . }}
+#{{ includeTemplate "utils/filter_installed.sh" . }}
 
-if ! [[ -d "${PREFIX}/usr/local/share/blesh" || -d "${PREFIX}/usr/share/blesh" ]]; then
+if ! [[ -d "${PREFIX:-/usr/local}/share/blesh" || -d "/usr/share/blesh" ]]; then
   log_info "Installing ble.sh"
-  git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}"/tmp/ble.sh
-  #{{ $sudo -}} make -C "${PREFIX}/tmp/ble.sh" install PREFIX="${PREFIX}/usr/local"
+  git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh "${PREFIX}/tmp/ble.sh"
+  #{{ $sudo -}} make -C "${PREFIX}/tmp/ble.sh" install PREFIX="${PREFIX:-/usr/local}/"
   rm -rf "${PREFIX}/tmp/ble.sh"
 
   log_success "ble.sh installed succesfully."
 fi
+
+#{{ if eq .deviceConfig.installType "desktop" -}}
+if [[ "${XDG_CURRENT_DESKTOP:-}" == "GNOME" ]]; then
+  # apps-menu@gnome-shell-extensions.gcampax.github.com
+  # arcmenu@arcmenu.com
+  # auto-move-windows@gnome-shell-extensions.gcampax.github.com
+  # custom-accent-colors@demiskp
+  # dash-to-panel@jderose9.github.com
+  # drive-menu@gnome-shell-extensions.gcampax.github.com
+  # forge@jmmaranan.com
+  # gtk4-ding@smedius.gitlab.com
+  # launch-new-instance@gnome-shell-extensions.gcampax.github.com
+  # native-window-placement@gnome-shell-extensions.gcampax.github.com
+  # places-menu@gnome-shell-extensions.gcampax.github.com
+  # screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
+  # space-bar@luchrioh
+  # user-theme@gnome-shell-extensions.gcampax.github.com
+  # window-list@gnome-shell-extensions.gcampax.github.com
+  # windowsNavigator@gnome-shell-extensions.gcampax.github.com
+  # workspace-indicator@gnome-shell-extensions.gcampax.github.com
+  # light-style@gnome-shell-extensions.gcampax.github.com
+  # openbar@neuromorph
+
+  exts_to_install=(
+    Bluetooth-Battery-Meter@maniacx.github.com 
+    appindicatorsupport@rgcjonas.gmail.com 
+    blur-my-shell@aunetx 
+    dash-to-dock@micxgx.gmail.com 
+    gnome-ui-tune@itstime.tech 
+    gsconnect@andyholmes.github.io 
+    just-perfection-desktop@just-perfection 
+    legacyschemeautoswitcher@joshimukul29.gmail.com 
+    copyous@boerdereinar.dev 
+    unblank@sun.wxg@gmail.com 
+    Vitals@CoreCoding.com 
+    rounded-window-corners@fxgn 
+    quick-settings-tweaks@qwreey 
+    lockkeys@vaina.lt
+    caffeine@patapon.info
+  )
+
+  mapfile -t exts_filtered < <(filter_installed \
+    gext list --only-uuid -- \
+    "${exts_to_install[@]}" 
+  )
+
+  if (("${#exts_filtered[@]}" > 0)); then
+    log_info "Installing Gnome extensions"
+    gext install "${exts_filtered[@]}"
+  else 
+    log_info "All Gnome extensions are already installed."
+  fi
+
+  if systemctl --user is-enabled gcr-ssh-agent &>/dev/null; then
+    log_info "SSH login agent already setup"
+  else
+    log_info "Setting up Gnome SSH Agent"
+    sudo systemctl --global enable gcr-ssh-agent &>/dev/null
+    systemctl --user start gcr-ssh-agent{,.socket}
+  fi
+
+  dconf load / <<'EOF'
+#{{ includeTemplate "others/dconf-settings.ini.tmpl" . }}
+EOF
+  log_success "Gnome settings restored."
+fi
+
+#{{ end -}}
+
+#{{- if eq .deviceConfig.installType "termux" }}
+log_info "Creating termux pkg autocomplete script"
+
+cat <<'EOF' > "${PREFIX}/share/bash-completion/completions/pkg"
+#!/bin/bash
+
+_comp_pkg() {
+  local current previous options package_command installed_command packages
+  COMPREPLY=()
+  current="${COMP_WORDS[COMP_CWORD]}"
+  previous="${COMP_WORDS[@]::${#COMP_WORDS[@]}-1}"
+  options="--check-mirror autoclean clean files install list-all list-installed reinstall search show uninstall upgrade update"
+  package_command="install|show"
+  installed_command="files|reinstall|uninstall"
+
+  # >&2 echo ${previous}
+  if [[ ${previous} =~ ${package_command} ]]; then
+    packages=$(pkg list-all 2>/dev/null | tail -n +2 | cut -d '/' -f 1)
+    COMPREPLY=($(compgen -W "$packages" -- ${current}))
+    return 0
+  elif [[ ${previous} =~ ${installed_command} ]]; then
+    packages=$(pkg list-installed 2>/dev/null | tail -n +2 | cut -d '/' -f 1)
+    COMPREPLY=($(compgen -W "$packages" -- ${current}))
+    return 0
+  else
+    COMPREPLY=($(compgen -W "${options}" -- ${current}))
+    return 0
+  fi
+
+}
+
+complete -F _comp_pkg pkg
+EOF
+
+#{{ end -}}

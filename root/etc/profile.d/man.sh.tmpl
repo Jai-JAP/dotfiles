@@ -1,0 +1,11 @@
+#!/hint/sh
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
+
+#{{- $bat := "bat" -}}
+#{{- if eq .deviceConfig.osType "ubuntu" -}}
+#{{-    $bat = "batcat" -}}
+#{{- end }}
+
+# shellcheck disable=SC2154
+export MANPAGER="sh -c 'col -bx | #{{ $bat }} -l man -p'"
+export MANROFFOPT="-c"

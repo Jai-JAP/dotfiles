@@ -1,0 +1,5 @@
+##
+## Enable Password Feeback with asterisks (*)
+##
+
+Defaults pwfeedback

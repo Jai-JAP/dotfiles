@@ -4,7 +4,7 @@
 {{- $sourceDir := joinPath .chezmoi.workingTree "root" -}}
 sourceDir: "{{ $sourceDir }}"
 
-destDir: "/"
+destDir: "{{ joinPath (env "PREFIX") "/" }}"
 
 diff:
   exclude:

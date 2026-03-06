@@ -1,0 +1,8 @@
+compress="zstd"
+add_drivers+=" plymouth "
+
+{{- if eq .deviceConfig.gpu "nvidia" }}
+force_drivers+=" nvidia nvidia_modeset nvidia_uvm nvidia_drm "
+{{ else if eq .deviceConfig.gpu "intel" }}
+force_drivers+=" i915 "
+{{ end -}}

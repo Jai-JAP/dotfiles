@@ -8,6 +8,7 @@
 
 {{- if eq .deviceConfig.installType "termux" -}}
 .chezmoiscripts/run_before_00-setup-sudo-caching.sh
+.chezmoiscripts/run_onchange_after_00-rootmoi.sh.tmpl
 .dot_termux/*
 {{- else -}}
 {{ end -}}

@@ -1,0 +1,12 @@
+#!/bin/bash
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
+
+#{{ if eq  .deviceConfig.installType "desktop" -}}
+
+sudo dracut-rebuild
+
+systemctl --user stop wireplumber pipewire -q
+systemctl --user start wireplumber -q
+
+sudo systemctl enable --now thermald tlp cleanup-linux-modules plymouth app-com.mitchellh.ghostty 2>/dev/null
+#{{- end }}
