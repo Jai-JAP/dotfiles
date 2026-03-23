@@ -63,9 +63,9 @@ alias() {
   done
 }
 
-if [[ -r ./.bash_tweaks ]]; then
-  # shellcheck disable=SC1091
-  . ./.bash_tweaks
+if [[ -r ~/.bash_tweaks ]]; then
+  # shellcheck disable=SC1090
+  . ~/.bash_tweaks
 fi
 
 HISTCONTROL=ignoreboth
@@ -128,6 +128,7 @@ help() {
   } | exec #{{ $bat }} -pl help
 }
 
+#{{ if not (hasKey . "nonRootUser" ) -}}
 if [[ -d "#{{ .chezmoi.workingTree }}/extras" ]]; then
   for file in "#{{ .chezmoi.workingTree }}/extras"/*.sh; do
     if [[ -f "${file}" ]]; then
@@ -137,16 +138,17 @@ if [[ -d "#{{ .chezmoi.workingTree }}/extras" ]]; then
   done
 fi
 
-#{{ if eq .deviceConfig.installType "desktop" -}}
+#{{   if eq .deviceConfig.installType "desktop" -}}
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
   # shellcheck disable=SC1090
   . "$(code --locate-shell-integration-path bash 2>/dev/null)"
 fi
 
-#{{ end -}}
+#{{   end -}}
 
-#{{- if eq (env "XDG_SESSION_DESKTOP") "GNOME" }}
+#{{-   if eq (env "XDG_SESSION_DESKTOP") "GNOME" }}
 
 alias logout="gnome-session-quit --no-prompt"
 
+#{{   end -}}
 #{{ end -}}

@@ -1,11 +1,1 @@
-#!/hint/bash
-# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
-
-#{{- if eq .deviceConfig.installType "termux" }}
-# shellcheck disable=SC2155
-export USER="$(id -un)"
-
-#{{ end -}}
-
-# shellcheck disable=SC1091
-[[ -f ./.bashrc ]] && . ./.bashrc
+../home/dot_bash_profile

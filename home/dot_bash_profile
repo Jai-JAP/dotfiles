@@ -7,5 +7,5 @@ export USER="$(id -un)"
 
 #{{ end -}}
 
-# shellcheck disable=SC1091
-[[ -f ./.bashrc ]] && . ./.bashrc
+# shellcheck disable=SC1090
+[[ -f ~/.bashrc ]] && . ~/.bashrc

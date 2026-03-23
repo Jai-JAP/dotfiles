@@ -14,5 +14,5 @@ status:
     - always
 
 data:
-  non_root_user: "{{ .chezmoi.username }}"
+  nonRootUser: "{{ .chezmoi.username }}"
   {{- $chezmoiData | toYaml | nindent 2 }}

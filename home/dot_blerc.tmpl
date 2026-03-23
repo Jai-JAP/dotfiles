@@ -81,6 +81,7 @@ blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
   DETACH="[[ \${FUNCNAME[-1]} == ble-reload ]] && echo; "
 
 #{{ if ne .deviceConfig.installType "termux" -}}
+#{{    if not (hasKey . "nonRootUser" ) -}}
 if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" ]]; then
 		ble-import contrib/prompt-git
 
@@ -98,6 +99,8 @@ if [[ "${TERM}" != "linux" && "${TERM_PROGRAM}" != "vscode" ]]; then
 		fi
 fi
 
+#{{ end -}}
+
 if [[ "${TERM_PROGRAM}" == "vscode" ]]; then
 	blehook PREEXEC+="echo -ne '\e]633;E;'\${1}'\a\e[0m'; " \
 		CHPWD+="echo -ne '\e]633;P;Cwd='\$(pwd)'\a\e[0m'; "
@@ -114,3 +117,8 @@ ble/function#advice around ble/widget/default/accept-line '
 ble/function#advice around ble/widget/discard-line '
   ble-edit/content/clear-arg
   [[ ${_ble_edit_str//["${_ble_term_IFS}"]} ]] && ble/function#advice/do'
+
+ble-import -d config/github678-expand-command-suffix -C '
+  bleopt edit_magic_expand+=github678-expand-command-suffix
+  bleopt edit_magic_accept+=github678-expand-command-suffix
+  bleopt github678_expand_command_suffix=exe:sh:bash'
