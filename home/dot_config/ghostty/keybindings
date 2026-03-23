@@ -1,0 +1,30 @@
+keybind = super+enter=toggle_tab_overview
+
+keybind = unconsumed:ctrl+enter=ignore
+keybind = f11=toggle_fullscreen
+
+keybind = ctrl+shift+plus=increase_font_size:1
+keybind = ctrl+kp_add=increase_font_size:1
+keybind = ctrl+kp_0=reset_font_size
+keybind = ctrl+kp_subtract=decrease_font_size:1
+
+keybind = ctrl+shift+page_up=ignore
+keybind = ctrl+shift+page_down=ignore
+keybind = unconsumed:ctrl+shift+down=jump_to_prompt:+1
+keybind = unconsumed:ctrl+shift+up=jump_to_prompt:-1
+
+keybind = ctrl+page_up=scroll_page_up
+keybind = ctrl+page_down=scroll_page_down
+
+keybind = alt+page_up=scroll_to_top
+keybind = alt+page_down=scroll_to_bottom
+
+keybind = unconsumed:shift+home=ignore
+keybind = unconsumed:shift+end=ignore
+keybind = unconsumed:shift+page_up=ignore
+keybind = unconsumed:shift+page_down=ignore
+
+keybind = unconsumed:ctrl+shift+left=ignore
+keybind = unconsumed:ctrl+shift+right=ignore
+
+keybind = global:super+`=toggle_quick_terminal

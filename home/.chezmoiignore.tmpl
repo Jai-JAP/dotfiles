@@ -6,6 +6,24 @@
 .chezmoiscripts/run_onchange_install-1-gcm-wsl.sh.tmpl
 {{ end -}}
 
+{{- if ne .deviceConfig.installType "desktop" -}}
+.config/audacious/**
+.config/easyeffects/**
+.config/ghostty/**
+.config/Kvantum/**
+.config/qt5ct/**
+.config/qt6ct/**
+.config/wezterm/**
+.config/background
+.config/brave-flags.conf
+.config/chromium-flags.conf
+.config/code-flags.conf
+.config/discord-flags.conf
+.config/discord.conf
+.config/electron-flags.conf
+.config/helium-browser-flags.conf
+{{ end -}}
+
 {{- if eq .deviceConfig.installType "termux" -}}
 .chezmoiscripts/run_before_00-setup-sudo-caching.sh
 .chezmoiscripts/run_onchange_after_00-rootmoi.sh.tmpl
