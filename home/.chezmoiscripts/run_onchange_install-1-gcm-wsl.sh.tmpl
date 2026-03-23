@@ -29,7 +29,7 @@ version_lt() {
 
 install_or_update_gcm() {
   local latest_ver="$1"
-  local url tmpdir zip
+  local url zip
 
   url="https://github.com/git-ecosystem/git-credential-manager/releases/download/v${latest_ver}/gcm-win-${ARCH}-${latest_ver}.zip"
   tmpdir="$(mktemp -d)"
