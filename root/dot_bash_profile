@@ -1,1 +1,0 @@
-../home/dot_bash_profile
