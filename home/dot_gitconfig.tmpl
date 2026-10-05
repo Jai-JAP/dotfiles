@@ -1,19 +1,31 @@
 {{- $pathPrefix := "" -}}
+{{- $gitCredHelper := "manager" -}}
+{{- $gitCredStore := "secretservice" -}}
 {{- if eq .deviceConfig.installType "wsl" -}}
 	{{- $pathPrefix = output "wslpath" "-m" "/" | trimAll "/\n" -}}
+  {{- $gitCredHelper = "/usr/local/share/gcm/git-credential-manager.exe" -}}
+  {{- $gitCredStore = "wincredman" -}}
 {{- end -}}
 
 [user]
   name = {{ .user.name }}
   email = {{ .user.email }}
 
-{{ if eq .deviceConfig.installType "wsl" -}}
 [credential]
-  helper = /usr/local/share/gcm/git-credential-manager.exe
+{{- if  ne .deviceConfig.installType "termux" }}
+  helper = {{ $gitCredHelper }}
+  credentialStore = {{ $gitCredStore }}
 
 [credential "https://dev.azure.com"]
   useHttpPath = true
-{{- end }}
+
+[credential "https://github.com"]
+  useHttpPath = false
+  provider = generic
+
+{{ else if eq .deviceConfig.installType "termux" }}
+  helper = !gh auth git-credential
+{{ end -}}
 
 [alias]
   history = log --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative 

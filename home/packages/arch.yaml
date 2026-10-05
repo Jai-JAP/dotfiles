@@ -18,10 +18,12 @@ common:
   - pigz
   - lbzip2
   - plzip
+  - unzip
 desktop:
   - ghostty
   - wl-clipboard
   - visual-studio-code-bin
+  - git-credential-manager-bin
   - onlyoffice-bin
   - helium-browser-bin
   - keymapper-bin

@@ -17,11 +17,7 @@
 
   log_info "paru not found, installing it now..."
     
-#{{-     if not (lookPath "git") }}
-
-  sudo pacman -Sy --noconfirm git
-
-#{{-     end }}
+  sudo pacman -Sy --noconfirm base-devel git
 
   tmpdir=$(mktemp -d)
   git clone --filter=tree:0 --sparse --no-checkout --depth 1 "https://github.com/archlinuxcn/repo" "$tmpdir"
@@ -29,18 +25,22 @@
   git -C "$tmpdir" sparse-checkout add archlinuxcn/paru
   git -C "$tmpdir" checkout
     
-  pushd "$tmpdir/archlinuxcn/paru/" &>/dev/null || log_error "Failed to change directory to paru build directory" && exit 
+  if ! pushd "$tmpdir/archlinuxcn/paru/" &>/dev/null; then
+    log_error "Failed to change directory to paru build directory"
+    exit
+  fi
+
   makepkg -rs --noconfirm
   sudo pacman -U --noconfirm ./paru-[0-9]*.pkg.*
   popd  || log_error "Failed to change directory back to current working directory" && exit 
-    
+
   rm -rf "$tmpdir"
 
   log_success "paru installed successfully."
 
 #{{-   else }}
 
-  log_warning "paru is already installed."
+  log_info "paru is already installed."
 
 #{{-  end -}}
 #{{- end -}}
@@ -88,7 +88,7 @@
     # shellcheck disable=SC2154
     log_info "Installing #{{ $packageList | title }} Packages"
 #{{ if eq .deviceConfig.osType "arch" }}
-    ~paru -Syu --noconfirm --needed "${packages_filtered[@]}"
+    paru -Syu --noconfirm --needed "${packages_filtered[@]}"
 #{{- else if eq .deviceConfig.osType "ubuntu" }}
     sudo apt-get update
     sudo apt-get install -y --no-install-recommends "${packages_filtered[@]}"

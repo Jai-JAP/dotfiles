@@ -44,7 +44,9 @@ install_or_update_gcm() {
   sudo unzip -o "$zip" -d "$GCM_DIR" >/dev/null
   sudo chmod a+x "$GCM_EXE"
 
-  /mnt/c/Windows/System32/setx.exe WSLENV "$WSLENV:GIT_EXEC_PATH/wp" >/dev/null || true
+  if ! [[ :"$(cmd.exe /c 'echo %WSLENV%' 2>/dev/null)": = *:GIT_EXEC_PATH/wp:* ]]; then
+    /mnt/c/Windows/System32/setx.exe WSLENV "$WSLENV:GIT_EXEC_PATH/wp" >/dev/null || true
+  fi
 
   log_success "Git Credential Manager v${latest_ver} installed successfully!"
 }

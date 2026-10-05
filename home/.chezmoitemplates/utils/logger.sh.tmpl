@@ -1,4 +1,5 @@
 # chezmoi:template:left-delimiter="#{{" right-delimiter=}}
+#{{- /* remove empty lines */ -}}
 log_success() {
   echo -e "\033[0;32m✓ [Success]: \033[0m $*"
 }
