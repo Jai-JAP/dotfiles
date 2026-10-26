@@ -54,6 +54,12 @@ desktop:
 server: []
 wsl: 
   - xdg-utils
+  - wayland
+  - wayland-protocols
+  - wayland-utils
+  - libxkbcommon
+  - gtk3
+  - scrcpy
 gnome:
   - gnome-desktop
   - gnome-extensions-cli

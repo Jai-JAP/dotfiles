@@ -15,13 +15,13 @@
 {{- if  ne .deviceConfig.installType "termux" }}
   helper = {{ $gitCredHelper }}
   credentialStore = {{ $gitCredStore }}
+  githubAccountFiltering = false
 
 [credential "https://dev.azure.com"]
   useHttpPath = true
 
 [credential "https://github.com"]
-  useHttpPath = false
-  provider = generic
+  username = {{ .user.githubUsername }}
 
 {{ else if eq .deviceConfig.installType "termux" }}
   helper = !gh auth git-credential

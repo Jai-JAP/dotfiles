@@ -7,6 +7,7 @@ data:
   user:
     name: {{ promptStringOnce . "name" "Name" }}
     email: {{ promptStringOnce . "email" "Email Address" }}
+    githubUsername: {{ promptStringOnce . "githubUsername" "Github Username" }}
   deviceConfig:
     gpu: {{ $gpu }}
     installType: {{ $installType }}
