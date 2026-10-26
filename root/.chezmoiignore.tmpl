@@ -17,6 +17,10 @@ etc/profile.d/xcursor.sh
 etc/wireplumber/**
 {{ end -}}
 
+{{- if ne .deviceConfig.installType "wsl" }}
+etc/profile.d/wsl.sh
+{{ end -}}
+
 {{- if not .customization.sudo.pwfeedback }}
 etc/sudoers.d/0_pwfeedback
 {{ end -}}
