@@ -1,0 +1,113 @@
+[settings]
+experimental = true
+auto_update = true
+
+[tools]
+aws = { version = "latest", symlink_bins = "true" }
+azure = { version = "latest", uvx_args = "--with pip --with MarkupSafe==2.0.1 --python 3.14" }
+azure-kubelogin = "latest"
+bat = "latest"
+bun = "latest"
+claude = "latest"
+codex = "latest"
+copilot = "latest"
+delta = "latest"
+eza = "latest"
+github-cli = "latest"
+helm = "latest"
+jq = "latest"
+k9s = "latest"
+kubecolor = "latest"
+kubectl = "latest"
+kubie = "latest"
+lazydocker = "latest"
+rg = "latest"
+tealdeer = "latest"
+usage = "latest"
+uv = "latest"
+yazi = "latest"
+yq = "latest"
+"pipx:argcomplete" = "latest"
+"pipx:pgcli" = { version = "latest", uvx_args = "--with psycopg[binary]" }
+
+[tools."github:micro-editor/micro"]
+version = "latest"
+
+[tools."github:micro-editor/micro".platforms]
+linux-x64 = { asset_pattern  = "micro-*-linux64.tar.gz" }
+windows-x64 = { asset_pattern  = "micro-*-win64.zip" }
+
+[env]
+KUBECONFIG = { value = "/mnt/c/Users/{{ exec(command='whoami.exe || whoami') | split(pat='\\\\') | last }}/.kube/config", tools = true }
+
+[hooks]
+postinstall = '''
+  echo "Running Post-Install hook..."
+
+  mkdir -p ~/.local/share/bash-completion/completions
+  mise_pkg_version() { jq -nr --argjson data "$(mise list "$1" --json)" '$data[0].version'; }
+  bashcompdir="$HOME/.local/share/bash-completion/completions"
+
+  mise completion bash > "$bashcompdir/mise"
+
+  echo "complete -C \"$(dirname "$(mise which aws)")/aws_completer\" aws" > "$bashcompdir/aws"
+  cp "$(dirname "$(mise which az)")/az.completion.sh" "$bashcompdir/az"
+  kubelogin completion bash > "$bashcompdir/kubelogin"
+  bat --completion bash > "$bashcompdir/bat"
+  bun completions > "$bashcompdir/bun"
+  cat <<-EOF >> "$bashcompdir/bunx"
+  #!/hint/bash
+	# make bunx complete like "bun x" by sourcing bun's completion
+	# and reusing _bun_completions with "x" inserted as the subcommand
+	source "$bashcompdir/bun"
+	_bunx_completions() {
+	    local orig_words=("\${COMP_WORDS[@]}")
+	    local orig_cword="\${COMP_CWORD}"
+	    COMP_WORDS=(bun x "\${COMP_WORDS[@]:1}")
+	    COMP_CWORD=\$((COMP_CWORD + 1))
+	    _bun_completions
+	    COMP_WORDS=("\${orig_words[@]}")
+	    COMP_CWORD="\${orig_cword}"
+	}
+	complete -F _bunx_completions bunx
+	EOF
+  curl -fSsL "https://github.com/cldotdev/claude-bash-completion/raw/master/claude-completion.bash" > "$bashcompdir/claude"
+  codex completion bash > "$bashcompdir/codex"
+  copilot completion bash > "$bashcompdir/copilot"
+  delta --generate-completion bash > "$bashcompdir/delta"
+  curl -fSsL "https://github.com/eza-community/eza/raw/v$(mise_pkg_version eza)/completions/bash/eza" > "$bashcompdir/eza"
+  gh completion -s bash > "$bashcompdir/gh"
+  helm completion bash > "$bashcompdir/helm"
+  curl -fSsL "https://github.com/perlpunk/shell-completions/raw/master/bash/jq.bash" -o "$bashcompdir/jq"
+  k9s completion bash > "$bashcompdir/k9s"
+  kubectl completion bash | sed "/^[[:space:]]*complete /s/\<kubectl\>/kubecolor/g" > "$bashcompdir/kubecolor"
+  kubectl completion bash > "$bashcompdir/kubectl"
+  curl -fSsL "https://github.com/kubie-org/kubie/raw/v$(mise_pkg_version kubie)/completion/kubie.bash" -o "$bashcompdir/kubie"
+  # No completions for lazydocker
+  rg --generate complete-bash > "$bashcompdir/rg"
+  curl -fSsL "https://github.com/tealdeer-rs/tealdeer/releases/download/v$(mise_pkg_version tealdeer)/completions_bash" -o "$bashcompdir/tealdeer"
+  # No completions for usage
+  uv generate-shell-completion bash > "$bashcompdir/uv"
+  uvx --generate-shell-completion bash > "$bashcompdir/uvx"
+  cp "$(mise where yazi)"/yazi-*/completions/ya.bash "$bashcompdir/ya"
+  cp "$(mise where yazi)"/yazi-*/completions/yazi.bash "$bashcompdir/yazi"
+  yq completion bash > "$bashcompdir/yq"
+  # No completions for argcomplete
+  _PGCLI_COMPLETE=bash_source pgcli > "$bashcompdir/pgcli"
+
+  complete -F _minimal micro > "$bashcompdir/micro"
+
+  mkdir -p ~/.kube
+  cat <<-EOF > ~/.kube/kubie.yaml
+	configs:
+	  include:
+	    - ${KUBECONFIG}
+	EOF
+'''
+
+[shell_alias]
+kube = "kubecolor"
+kubectl = "kubecolor"
+tf = "terraform"
+tldr = "tealdeer"
+
