@@ -72,7 +72,7 @@ else
 fi
 
 bleopt prompt_ps1_final="\e]133;A\a\e[0m\g{bold,fg=${PS1_FG_COLOR}}${_arrow} \g{reset}\e]133;B\a\e[0m" \
-	prompt_rps1="${RPS1}\$(RET=\$?; if [[ \$RET != 0 ]]; then echo '\g{fg=red}${_rps_l}\g{bold,bg=red}'\$RET'\g{fg=red}${_rps_r}\g{reset}'; fi)" \
+	prompt_rps1="${RPS1}\$(RET=\$?; [[ \$RET != 0 ]] && echo '\g{fg=red}${_rps_l}\g{bold,bg=red}'\$RET'\g{fg=red}${_rps_r}\g{reset}')" \
 	prompt_rps1_transient=1
 
 blehook PREEXEC+="echo -ne '\e]133;C\a\e[0m'; " \
