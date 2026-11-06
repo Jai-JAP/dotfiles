@@ -19,6 +19,11 @@ else
   PS1='\[\e[01;32m\]\u@\h\[\e[00m\]: \[\e[01;34m\]\w\[\e[00m\] \n \[\e[01;32m\]\$_\[\e[00m\] '
 fi
 
+#{{ if eq .deviceConfig.installType "termux" -}}
+# shellcheck disable=SC2155
+export USER="$(id -un)"
+#{{- end }}
+
 bind 'set completion-ignore-case on'
 bind 'set match-hidden-files off'
 bind -x '"\C-l":clear'

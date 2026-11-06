@@ -23,10 +23,9 @@
 
 [credential "https://github.com"]
   username = {{ .user.githubUsername }}
-
 {{ else if eq .deviceConfig.installType "termux" }}
   helper = !gh auth git-credential
-{{ end -}}
+{{- end }}
 
 [alias]
   history = log --graph --pretty=format:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative 
