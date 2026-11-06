@@ -1,4 +1,4 @@
-#!/bin/bash
+#!#{{ lookPath "bash" }}
 # chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
 #{{ $packageList := .deviceConfig.osType -}}
@@ -69,7 +69,7 @@
   # shellcheck disable=SC1143
   mapfile -t packages_filtered < <(filter_installed \
     #{{ if eq .deviceConfig.osType "arch" }}paru -Qq -- \
-    #{{ else if or (eq .deviceConfig.osType "ubuntu") (eq .deviceConfig.installType "termux") }}dpkg-query -W -f='\${package}\n' -- \
+    #{{ else if or (eq .deviceConfig.osType "ubuntu") (eq .deviceConfig.installType "termux") }}dpkg-query -W -f='${package}\n' -- \
     #{{ end -}}
     "${packages_to_install[@]}"
   )

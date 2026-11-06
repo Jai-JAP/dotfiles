@@ -1,9 +1,9 @@
 {{- if eq .deviceConfig.osType "arch" -}}
-.chezmoiscripts/run_onchange_install-1-external-packages.tmpl
+.chezmoiscripts/install-1-external-packages.sh
 {{ end -}}
 
 {{- if ne .deviceConfig.installType "wsl" -}}
-.chezmoiscripts/run_onchange_install-1-gcm-wsl.sh.tmpl
+.chezmoiscripts/install_external-1-gcm-wsl.sh
 {{ end -}}
 
 {{- if ne .deviceConfig.installType "desktop" -}}
@@ -25,10 +25,11 @@
 {{ end -}}
 
 {{- if eq .deviceConfig.installType "termux" -}}
-.chezmoiscripts/run_before_00-setup-sudo-caching.sh
-.chezmoiscripts/run_onchange_after_00-rootmoi.sh.tmpl
+.chezmoiscripts/00-setup-sudo-caching.sh
+.chezmoiscripts/00-rootmoi.sh
+.chezmoiscripts/01-setup-cleanup.sh
+{{ else -}}
 .dot_termux/*
-{{- else -}}
 {{ end -}}
 
 packages/**
