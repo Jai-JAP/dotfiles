@@ -23,4 +23,4 @@ status:
 
 data:
   nonRootUser: "{{ .chezmoi.username }}"
-  {{- $chezmoiData | toYaml | nindent 2 }}
+  {{- $chezmoiData | toYaml | trim | nindent 2 }}
