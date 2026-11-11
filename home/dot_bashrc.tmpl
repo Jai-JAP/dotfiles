@@ -22,7 +22,8 @@ fi
 #{{ if eq .deviceConfig.installType "termux" -}}
 # shellcheck disable=SC2155
 export USER="$(id -un)"
-#{{- end }}
+
+#{{ end -}}
 
 bind 'set completion-ignore-case on'
 bind 'set match-hidden-files off'

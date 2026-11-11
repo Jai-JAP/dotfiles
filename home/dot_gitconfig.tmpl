@@ -23,7 +23,7 @@
 
 [credential "https://github.com"]
   username = {{ .user.githubUsername }}
-{{ else if eq .deviceConfig.installType "termux" }}
+{{- else if eq .deviceConfig.installType "termux" }}
   helper = !gh auth git-credential
 {{- end }}
 
