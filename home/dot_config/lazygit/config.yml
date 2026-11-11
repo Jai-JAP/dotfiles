@@ -1,0 +1,23 @@
+gui:
+  tabWidth: 2
+  nerdFontsVersion: 3
+  wrapLinesInDiffView: false
+  useHunkModeInDiffView: false
+
+git:
+  diffRenderers:
+    - command: delta --paging=never
+
+keybinding:
+  universal:
+    scrollLeft: <left>
+    scrollRight: <right>
+    scrollUp: <up>
+    scrollDown: <down>
+    prevBlock: <backtab>
+    nextBlock: <tab>
+  main:
+    prevHunk: <c+up>
+    nextHunk: <c+down>
+
+notARepository: quit
