@@ -1,5 +1,8 @@
 {
   "basename": true,
+{{- if eq .deviceConfig.installType "termux" }}
+  "clipboard": "external",
+{{- end }}
   "hlsearch": true,
   "mkparents": true,
   "scrollbar": true,
