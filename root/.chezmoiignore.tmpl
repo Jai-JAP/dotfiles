@@ -1,5 +1,5 @@
 {{- if ne .deviceConfig.osType "arch" -}}
-etc/modify_pacman.conf
+etc/pacman.conf
 etc/paru.conf
 etc/pacman.d/**
 {{ end -}}
@@ -19,6 +19,11 @@ etc/wireplumber/**
 
 {{- if ne .deviceConfig.installType "wsl" }}
 etc/profile.d/wsl.sh
+{{ end -}}
+
+{{- if eq .deviceConfig.installType "termux" }}
+etc/environment
+etc/sudoers.d
 {{ end -}}
 
 {{- if not .customization.sudo.pwfeedback }}
