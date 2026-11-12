@@ -12,6 +12,9 @@ common:
   - shellcheck
   - shfmt
   - jq
+  - curl
+  - wget
+  - unzip
   - tealdeer
   - pigz
   - lbzip2

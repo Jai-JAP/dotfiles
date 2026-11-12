@@ -26,8 +26,6 @@
 
 {{- if eq .deviceConfig.installType "termux" -}}
 .chezmoiscripts/00-setup-sudo-caching.sh
-.chezmoiscripts/00-rootmoi.sh
-.chezmoiscripts/01-setup-cleanup.sh
 {{ else -}}
 .dot_termux/*
 {{ end -}}

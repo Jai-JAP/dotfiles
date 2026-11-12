@@ -13,6 +13,7 @@ common:
   - shellcheck
   - shfmt
   - jq
+  - curl
   - tealdeer
   - wget
   - pigz

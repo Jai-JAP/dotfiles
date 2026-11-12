@@ -1,4 +1,5 @@
 #!#{{ lookPath "bash" }}
+# shellcheck disable=SC2096,SC2239
 # chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
 #{{- $sudo := "" -}}
@@ -7,7 +8,6 @@
 #{{- end }}
 
 #{{ includeTemplate "utils/logger.sh.tmpl" . }}
-#{{ includeTemplate "utils/filter_installed.sh" . }}
 
 if ! [[ -d "${PREFIX:-/usr/local}/share/blesh" || -d "/usr/share/blesh" ]]; then
   log_info "Installing ble.sh"
@@ -19,6 +19,8 @@ if ! [[ -d "${PREFIX:-/usr/local}/share/blesh" || -d "/usr/share/blesh" ]]; then
 fi
 
 #{{ if eq .deviceConfig.installType "desktop" -}}
+#{{   includeTemplate "utils/filter_installed.sh" . }}
+
 if [[ "${XDG_CURRENT_DESKTOP:-}" == "GNOME" ]]; then
   # apps-menu@gnome-shell-extensions.gcampax.github.com
   # arcmenu@arcmenu.com

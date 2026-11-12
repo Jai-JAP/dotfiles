@@ -63,7 +63,7 @@ alias() {
   for arg in "$@"; do
     if [[ ${arg} =~ ^([^=]+)=[\'\"]?(.*)[\'\"]?$ ]]; then
       alias_name="${BASH_REMATCH[1]}"
-      mapfile -t alias_value <<< "${BASH_REMATCH[2]}"
+      mapfile -t alias_value <<<"${BASH_REMATCH[2]}"
       [[ "${alias_name}" != "${alias_value[0]}" ]] && complete -r "${alias_name}" &>/dev/null
     fi
   done
@@ -108,7 +108,7 @@ alias ctl="systemctl"
 
 # shellcheck disable=SC1083,SC1073,SC1009
 help() {
- {
+  {
     if [[ "$1" == "-c" ]]; then
       shift; "$@" --help; return
     fi
@@ -117,7 +117,7 @@ help() {
       local name="$1"
       local -a alias_cmd
 
-      read -r -a alias_cmd <<< "$(alias "${name}" | cut -d\' -f2)"
+      read -r -a alias_cmd <<<"$(alias "${name}" | cut -d\' -f2)"
 
       echo -ne "Alias definition:\n  "
       alias "${name}"

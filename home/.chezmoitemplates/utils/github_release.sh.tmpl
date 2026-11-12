@@ -1,0 +1,48 @@
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
+#{{- /* remove empty lines */ -}}
+#{{ includeTemplate "utils/logger.sh.tmpl" . }}
+
+get_latest_version() {
+  local tag
+  tag="$(curl -fsSL "https://api.github.com/repos/$1/releases/latest" | jq -r '.tag_name')"
+  [ -n "$tag" ] && [ "$tag" != "null" ] || return 1
+  echo "${tag#v}"
+}
+
+version_lt() { [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" != "$2" ] && [ "$1" != "$2" ]; }
+
+install_external() {
+  local name="$1" repo="$2"
+  local INSTALLED_VERSION LATEST_VERSION ans
+
+  INSTALLED_VERSION="$(get_installed_version || true)"
+
+  log_info "Checking latest ${name} version..."
+  LATEST_VERSION="$(get_latest_version "$repo")" || {
+    log_error "Failed to fetch latest version of ${name}."
+    exit 1
+  }
+
+  if [ -n "${INSTALLED_VERSION:-}" ] && [ "$INSTALLED_VERSION" = "$LATEST_VERSION" ]; then
+    log_success "${name} is already up to date (v${INSTALLED_VERSION}). Skipping."
+    exit 0
+  fi
+
+  if [ -z "${INSTALLED_VERSION:-}" ]; then
+    log_info "${name} not installed. Installing v${LATEST_VERSION}..."
+    install_or_update "$LATEST_VERSION"
+    exit 0
+  fi
+
+  if version_lt "$INSTALLED_VERSION" "$LATEST_VERSION"; then
+    read -r -p "Update ${name} from v${INSTALLED_VERSION} to v${LATEST_VERSION}? [Y/n] " ans
+    ans="${ans:-Y}"
+    if [[ "$ans" =~ ^[Yy]$ ]]; then
+      install_or_update "$LATEST_VERSION"
+    else
+      log_info "Update skipped by user (installed v${INSTALLED_VERSION}, latest v${LATEST_VERSION})."
+    fi
+  else
+    log_success "Installed ${name} (v${INSTALLED_VERSION}) is not older than latest (v${LATEST_VERSION}). Skipping."
+  fi
+}

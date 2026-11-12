@@ -1,8 +1,9 @@
-#!/bin/bash
+#!#{{ lookPath "bash" }}
+# shellcheck disable=SC2096,SC2239
 # chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 
 #{{ $rootSourceDir := joinPath .chezmoi.workingTree "root" -}}
-# root config checksum: #{{ output "sh" "-c" (printf "find %s -type f -print0 | sort -z | xargs -r0 sha256sum | sha256sum" $rootSourceDir) }}
+# root config checksum: #{{ output "sh" "-c" (printf "find %s -type f -print0 | sort -z | xargs -r0 sha256sum | sha256sum" $rootSourceDir) | trim }}
 
 #{{ includeTemplate "utils/logger.sh.tmpl" . }}
 
@@ -64,13 +65,21 @@ done
 #{{- $configDir := joinPath .chezmoi.homeDir ".config/rootmoi" -}}
 #{{- $configFile := joinPath $configDir "rootmoi.yaml" -}}
 #{{- $persistentStateFile := joinPath $configDir "rootmoistate.boltdb" -}}
-#{{- $cacheDir := joinPath .chezmoi.homeDir ".cache/rootmoi" }}
+#{{- $cacheDir := joinPath .chezmoi.homeDir ".cache/rootmoi" -}}
+
+#{{- $sudo := "" -}}
+#{{- if ne .deviceConfig.installType "termux" -}}
+#{{-   $sudo = "sudo -E " -}}
+#{{- end }}
 
 log_info "Applying root dotfiles"
 log_debug "rootmoi" "${args[@]}"
 
-# shellcheck disable=SC2232
-sudo --preserve-env chezmoi "${args[@]}" \
-  --config='#{{ $configFile }}' \
-  --persistent-state='#{{ $persistentStateFile }}' \
-  --cache='#{{ $cacheDir }}'
+#shellcheck disable=SC2016
+{
+  #{{ $sudo -}}
+    chezmoi "${args[@]}" \
+    --config='#{{ $configFile }}' \
+    --persistent-state='#{{ $persistentStateFile }}' \
+    --cache='#{{ $cacheDir }}'
+}

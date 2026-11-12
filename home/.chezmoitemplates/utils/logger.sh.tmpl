@@ -24,6 +24,6 @@ log_error() {
 
 log_debug() {
 #{{- if ge .logLevel 4 }}
-  echo -e "\033[0;90m? [Debug]: \033[0m $*"
+  echo -e "\033[0;90m? [Debug]: \033[0m $*" >&2
 #{{ else }} :; #{{ end -}}
 }

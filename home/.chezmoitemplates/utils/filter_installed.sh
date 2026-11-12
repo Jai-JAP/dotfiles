@@ -1,3 +1,4 @@
+# chezmoi:template:left-delimiter="#{{" right-delimiter=}}
 filter_installed() {
   local installed=()
   local cmd=()
@@ -13,6 +14,9 @@ filter_installed() {
 
   mapfile -t installed < <("${cmd[@]}" "${packages[@]}" 2>/dev/null)
 
+  log_debug "Filtered pre-installed packages: ${installed[*]}"
+
   installed+=("${packages[@]}")
   printf "%s\n" "${installed[@]}" | sort | uniq -u
 }
+#{{- /* remove empty lines */ -}}

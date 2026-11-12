@@ -2,7 +2,7 @@
 {{- $gitCredHelper := "manager" -}}
 {{- $gitCredStore := "secretservice" -}}
 {{- if eq .deviceConfig.installType "wsl" -}}
-	{{- $pathPrefix = output "wslpath" "-m" "/" | trimAll "\n" -}}
+	{{- $pathPrefix = output "wslpath" "-m" "/" | trim -}}
   {{- $gitCredHelper = "/usr/local/share/gcm/git-credential-manager.exe" -}}
   {{- $gitCredStore = "wincredman" -}}
 {{- end -}}
